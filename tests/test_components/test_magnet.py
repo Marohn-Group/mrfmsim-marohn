@@ -168,6 +168,18 @@ class TestRectangularMagnet(MagnetTester):
 
         np.allclose(magnet.Bz(x, y, z), magnet.Bz(x, y, -z), rtol=1e-10)
 
+    def test_rectmagnet_Bz(self):
+        """Test the rectangular magnet based on the numeric simulation
+        
+        If treat the magnet as a rectangular wire, the magnetization at the center 
+        of the wire is µMs/πR, where R is from center to the edge.
+        """
+        magnet = RectangularMagnet(
+            length=[10.0, 10.0, 10.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
+        )
+        assert np.allclose(magnet.Bz(0, 0, 10), 242.608295227, rtol=1e-10)
+
+
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzx(self, magnet, x, y, z):
         """Test bzx_func by using against gradient of bz"""
