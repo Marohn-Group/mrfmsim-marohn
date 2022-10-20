@@ -29,12 +29,12 @@ class SphereMagnet(ComponentBase):
         .. math::
             B_z = \dfrac{\mu_0 M_s}{3}
             \left( 3 \dfrac{Z^2}{R^5} - \dfrac{1}{R^3} \right)
-            R = \sqrt{dx^2+dy^2+dz^2}
+            R = \sqrt{X^2+Y^2+Z^2}
         Here :math:`(x,y,z)` is the location at which we want to know the
         field;
-        :math:`(x_0,y_0,z_0)` is the location of the center of the magnet;
-        :math:`r` is the radius of the magnet; :math:`dx = (x-x_0)/r`,
-        :math:`dy = (y-y_0)/r`, and :math:`dz = (z-z_0)/r` are normalized
+        :math:`(x_0, y_0, z_0)` is the location of the center of the magnet;
+        :math:`r` is the radius of the magnet; :math:`X = (x-x_0)/r`,
+        :math:`Y = (y-y_0)/r`, and :math:`Z = (z-z_0)/r` are normalized
         distances to the center of the magnet;
         :math:`\mu_0 M_s` is the magnetic sphere's saturation
         magnetization in mT.
@@ -73,14 +73,14 @@ class SphereMagnet(ComponentBase):
         r"""Calcualte magnetic field gradient :math:`B_{zx}`
         :math:`B_{zx} \equiv \partial B_z / \partial x`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-1}` ].
-        With :math:`dx`, :math:`dy`, :math:`dz`, :math:`R`, :math:`r`, and
+        With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
         :math:`\mu_0 M_s` defined in Bz(x, y, z), the magnetic field
         gradient is calculated as
         .. math::
             B_{zx} = \dfrac{\partial B_z}{\partial z}
             = \dfrac{\mu_0 M_s}{r} X \:
             \left( \dfrac{1}{R^5} - 5 \dfrac{Z^2}{R^7} \right)
-            R = \sqrt{dx^2+dy^2+dz^2}
+            R = \sqrt{X^2+Y^2+Z^2}
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -104,8 +104,8 @@ class SphereMagnet(ComponentBase):
     def _bzx(dx, dy, dz):
         """Internal calculation for bzx, optimized with numba
         :param dx: normalized distances to the center of the magnet in x
-        :param dx: normalized distances to the center of the magnet in y
-        :param dx: normalized distances to the center of the magnet in z
+        :param dy: normalized distances to the center of the magnet in y
+        :param dz: normalized distances to the center of the magnet in z
         :type: np.array
         :return: bzx without pre-term
         :rtype: np.array
@@ -120,7 +120,7 @@ class SphereMagnet(ComponentBase):
         r"""Calculate magnetic field second derivative :math:`B_{zxx}`
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-2}` ]. The inputs are
-        With :math:`dx`, :math:`dy`, :math:`dz`, :math:`R`, :math:`r`, and
+        With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
         :math:`\mu_0 M_s` defined as above, the magnetic field
         second derivative is calculated as
         .. math::
@@ -128,7 +128,7 @@ class SphereMagnet(ComponentBase):
             = \dfrac{\mu_0 M_s}{r^2} \:
             \left( \dfrac{1}{R^5} - 5 \dfrac{X^2}{R^7}
             - 5 \dfrac{Z^2}{R^7} + 35 \dfrac{X^2 Z^2}{R^9} \right)
-            R = \sqrt{dx^2+dy^2+dz^2}
+            R = \sqrt{X^2+Y^2+Z^2}
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -152,8 +152,8 @@ class SphereMagnet(ComponentBase):
     def _bzxx(dx, dy, dz):
         """Internal calculation for bzxx, optimized with numba
         :param dx: normalized distances to the center of the magnet in x
-        :param dx: normalized distances to the center of the magnet in y
-        :param dx: normalized distances to the center of the magnet in z
+        :param dy: normalized distances to the center of the magnet in y
+        :param dz: normalized distances to the center of the magnet in z
         :type: np.array
         :return: bzxx without pre-term
         :rtype: np.array
