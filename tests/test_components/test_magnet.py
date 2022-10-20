@@ -171,13 +171,16 @@ class TestRectangularMagnet(MagnetTester):
     def test_rectmagnet_Bz(self):
         """Test the rectangular magnet based on the numeric simulation
         
-        If treat the magnet as a rectangular wire, the magnetization at the center 
-        of the wire is µMs/πR, where R is from center to the edge.
+        If treat the magnet as a square loop wire, the magnetization at z
+        distance away from the center of the magnet can be calculated using
+        Biot–Savart law. We use this measurement against a a thin film
+        magnet with the size of 10, 10, 1 nm, and calculate the field that
+        is 2 nm away from the center of the magnet. (The unit of B is mT)
         """
         magnet = RectangularMagnet(
-            length=[10.0, 10.0, 10.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
+            length=[10.0, 10.0, 1.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
         )
-        assert np.allclose(magnet.Bz(0, 0, 10), 242.608295227, rtol=1e-10)
+        assert np.allclose(magnet.Bz(0, 0, 2), 134.23, rtol=1e-2)
 
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
