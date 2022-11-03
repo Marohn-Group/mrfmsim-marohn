@@ -45,15 +45,17 @@ class MagnetTester:
 
     def check_bz(self, magnet, x, y, z, theory):
         """Test Bz calculation against theory"""
-        assert np.allclose(magnet.Bz(x, y, z), theory, rtol=1e-12)
+        assert np.allclose(magnet.bz_method(x, y, z), theory, rtol=1e-12)
 
     def check_bzx(self, magnet, x, y, z):
         """test Bzx at selected points against estimation from Bz calculation"""
 
         dx = 0.001
 
-        Bzx_est = (magnet.Bz(x + 0.5 * dx, y, z) - magnet.Bz(x - 0.5 * dx, y, z)) / dx
-        Bzx_sim = magnet.Bzx(x, y, z)
+        Bzx_est = (
+            magnet.bz_method(x + 0.5 * dx, y, z) - magnet.bz_method(x - 0.5 * dx, y, z)
+        ) / dx
+        Bzx_sim = magnet.bzx_method(x, y, z)
 
         assert np.allclose(Bzx_est, Bzx_sim, rtol=1e-9)
 
@@ -63,9 +65,10 @@ class MagnetTester:
         dx = 0.001
 
         Bzxx_est = (
-            magnet.Bzx(x + 0.5 * dx, y, z) - magnet.Bzx(x - 0.5 * dx, y, z)
+            magnet.bzx_method(x + 0.5 * dx, y, z)
+            - magnet.bzx_method(x - 0.5 * dx, y, z)
         ) / dx
-        Bzxx_sim = magnet.Bzxx(x, y, z)
+        Bzxx_sim = magnet.bzxx_method(x, y, z)
 
         assert np.allclose(Bzxx_est, Bzxx_sim, rtol=1e-9)
 
@@ -158,19 +161,23 @@ class TestRectangularMagnet(MagnetTester):
         Bzxx - even function in x direction
         """
 
-        np.allclose(magnet.Bz(x, y, z), magnet.Bz(-x, y, z), rtol=1e-10)
-        np.allclose(magnet.Bzx(x, y, z), -magnet.Bzx(-x, y, z), rtol=1e-10)
-        np.allclose(magnet.Bzxx(x, y, z), magnet.Bzxx(-x, y, z), rtol=1e-10)
+        np.allclose(magnet.bz_method(x, y, z), magnet.bz_method(-x, y, z), rtol=1e-10)
+        np.allclose(
+            magnet.bzx_method(x, y, z), -magnet.bzx_method(-x, y, z), rtol=1e-10
+        )
+        np.allclose(
+            magnet.bzxx_method(x, y, z), magnet.bzxx_method(-x, y, z), rtol=1e-10
+        )
 
     @pytest.mark.parametrize("x, y, z", [(0.0, 0.0, np.arange(50, 100, 5))])
     def test_rectmagnet_Bz_symmetry_z(self, magnet, x, y, z):
         """Test bz_func of RectMagnet symmetry in z direction"""
 
-        np.allclose(magnet.Bz(x, y, z), magnet.Bz(x, y, -z), rtol=1e-10)
+        np.allclose(magnet.bz_method(x, y, z), magnet.bz_method(x, y, -z), rtol=1e-10)
 
     def test_rectmagnet_Bz(self):
         """Test the rectangular magnet based on the numeric simulation
-        
+
         If treat the magnet as a square loop wire, the magnetization at z
         distance away from the center of the magnet can be calculated using
         Biot–Savart law. We use this measurement against a a thin film
@@ -180,8 +187,7 @@ class TestRectangularMagnet(MagnetTester):
         magnet = RectangularMagnet(
             length=[10.0, 10.0, 1.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
         )
-        assert np.allclose(magnet.Bz(0, 0, 2), 134.23, rtol=1e-2)
-
+        assert np.allclose(magnet.bz_method(0, 0, 2), 134.23, rtol=1e-2)
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzx(self, magnet, x, y, z):
