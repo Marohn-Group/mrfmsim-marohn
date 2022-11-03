@@ -160,7 +160,7 @@ B0:
   description: longitudinal magnetic field
   latex_label: '$B_0 \: [\mathrm{mT},]$'
   format: ":.3f"
-ts_sep:
+h:
   unit: "[nm]"
   description: cantilever tip to sample separation
   latex_latex: '$tip_\mathrm{separation}$'

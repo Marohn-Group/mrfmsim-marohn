@@ -78,10 +78,10 @@ class Grid(ComponentBase):
         ]
 
 
-    def extend_grid_method(self, num_expand):
-        """Extend grid by number of points x, y, z direction"""
+    def extend_grid_method(self, ext_pts):
+        """Extend grid by number of points in x, y, z direction (one side)"""
 
-        ext_shape = self.grid_shape + np.array(num_expand) * 2
+        ext_shape = self.grid_shape + np.array(ext_pts) * 2
         ext_range = (ext_shape - [1, 1, 1]) * self.grid_step
         extents = self.grid_extents(ext_range, self.grid_origin)
 
