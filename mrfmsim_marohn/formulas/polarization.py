@@ -13,7 +13,7 @@ KB = 1.3806504e4  # aN nm K^{-1} - Boltzmann constant
 
 
 @numba.jit(nopython=True, parallel=True)
-def rel_dpol_sat(B_offset, B1, db_sat, dB_hom):
+def rel_dpol_sat(B_offset, B1, dB_sat, dB_hom):
     r"""Relative change in polarization for steady-state
     Compute and return the sample's *relative* steady-state spin
     polarization
@@ -42,7 +42,7 @@ def rel_dpol_sat(B_offset, B1, db_sat, dB_hom):
     :rtype: np.array, same shape as B_offset
     """
 
-    s2_term = (B1 ** 2) / (db_sat ** 2)  # S-squared term
+    s2_term = (B1 ** 2) / (dB_sat ** 2)  # S-squared term
 
     return -1 * s2_term / (1 + B_offset ** 2 / dB_hom ** 2 + s2_term)
 
