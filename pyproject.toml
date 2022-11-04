@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "mrfmsim_marohn"
-version = "unreleased"
+version = "0.0.1"
 description = "Marohn group magnetic resonance force microscopy experiments"
 authors = ["Peter Sun <hs859@cornell.edu>", "John Marohn <jam99@cornell.edu>"]
 maintainers = ["Peter Sun <hs859@cornell.edu>"]
 repository = "https://www.github.coecis.cornell.edu/Marohn-Group/MrfmSim"
 # adds all subpackages and the units.yaml file
 packages = [{ include = "mrfmsim_marohn/*.py" }, { include = "mrfmsim_marohn/**/*.py" }]
-include = ["mrfmsim_marohn/units.yaml"]
+include = ["mrfmsim_marohn/units.yaml", "mrfmsim_marohn/experiments/*.yaml"]
 readme = "README.rst"
 
 [tool.poetry.dependencies]
