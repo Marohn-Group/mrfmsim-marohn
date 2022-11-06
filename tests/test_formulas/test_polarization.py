@@ -194,7 +194,7 @@ def test_rel_dol_sat_td_smallsteps(sample_e):
     """Test rel_dol_sat_td_smallsteps
     Small steps approximation should have the same result as regular
     when Bzx stays the same, given that delta_B_offset has the same
-    sign as Bzx
+    sign as Bzx.
     """
 
     Bzx = np.ones(3)
