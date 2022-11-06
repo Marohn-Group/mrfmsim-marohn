@@ -132,9 +132,6 @@ class TestSphereMagnet(MagnetTester):
 
 class TestRectangularMagnet(MagnetTester):
     """Tests RectangularMagnet
-
-    TODO
-        Test absolute magnet bz calculation
     """
 
     magnet_str = """\
