@@ -9,7 +9,9 @@ import pytest
 @pytest.fixture
 def sample_e():
     """Electron sample"""
-    return Sample(spin_type="electron", temperature=0.001, T1=1.0, T2=1.0, spin_density=10.0)
+    return Sample(
+        spin_type="electron", temperature=0.001, T1=1.0, T2=1.0, spin_density=10.0
+    )
 
 
 @pytest.fixture
@@ -18,17 +20,17 @@ def sample_h():
     return Sample(spin_type="1H", temperature=4.2, T1=10, T2=5e-6, spin_density=49.0)
 
 
-def test_rel_dpol_sat(sample_e):
+def test_rel_dpol_sat_steadystate(sample_e):
     """Test the *absolute* tolerance
 
     Sample -> e -> electron spin, J = 1/2, high field limit
     """
 
-    p1 = pol.rel_dpol_sat(0.0, 0.0, sample_e.dB_sat, sample_e.dB_hom)
+    p1 = pol.rel_dpol_sat_steadystate(0.0, 0.0, sample_e.dB_sat, sample_e.dB_hom)
     # depolarized
-    p2 = pol.rel_dpol_sat(0.0, 1.0, sample_e.dB_sat, sample_e.dB_hom)
+    p2 = pol.rel_dpol_sat_steadystate(0.0, 1.0, sample_e.dB_sat, sample_e.dB_hom)
     # polarized
-    p3 = pol.rel_dpol_sat(100.0, 1.0e-3, sample_e.dB_sat, sample_e.dB_hom)
+    p3 = pol.rel_dpol_sat_steadystate(100.0, 1.0e-3, sample_e.dB_sat, sample_e.dB_hom)
 
     assert np.allclose([0.0, -1.0, 0.0], [p1, p2, p3])
 
@@ -101,7 +103,7 @@ def test_rel_dpol_periodic_irrad_cont(sample_e):
         t_on=10 * sample_e.T1,
         t_off=0,
     )
-    rpol = pol.rel_dpol_sat(0, 1.0, sample_e.dB_sat, sample_e.dB_hom)
+    rpol = pol.rel_dpol_sat_steadystate(0, 1.0, sample_e.dB_sat, sample_e.dB_hom)
 
     assert np.isclose(rpol_cont, rpol)
 
@@ -135,3 +137,104 @@ def test_rel_dpol_periodic_irrad_off_res(sample_e):
     )
 
     assert np.isclose(rpol_off_res, 0.0)
+
+
+def test_rel_dpol_sat_td(sample_e):
+    """Test rel_dpol_sat_td when offset is 0
+
+    When the offset is 0, the result should be 0
+
+    Here we construct a 1D grid size of 3, and
+    extended grid size of 5
+    """
+    Bzx = np.random.rand(3)
+    ext_B_offset = np.zeros([5])
+
+    rpol = pol.rel_dpol_sat_td(
+        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000
+    )
+
+    assert np.array_equal(rpol, [0, 0, 0])
+
+
+def test_rel_dpol_sat_td_symmetry(sample_e):
+    """Test rel_dpol_sat_td is symmetric around the initial and final offset
+
+    Here we construct a 1D grid size of 3, and the extended grid size of 5
+    """
+    Bzx = np.random.rand(3)
+    ext_B_offset_a = np.array([2, 0, 0, 0, 2])
+    ext_B_offset_b = np.array([0, 2, 2, 2, 0])
+
+    rpol_a = pol.rel_dpol_sat_td(
+        Bzx, 1.0, ext_B_offset_a, [1], sample_e.Gamma, sample_e.T2, 2000
+    )
+    rpol_b = pol.rel_dpol_sat_td(
+        Bzx, 1.0, ext_B_offset_b, [1], sample_e.Gamma, sample_e.T2, 2000
+    )
+    assert np.array_equal(rpol_a, rpol_b)
+
+
+def test_rel_dpol_sat_td_without_td(sample_e):
+    """Test rel_dpol_sat_td completely saturate spins if no td component
+
+    Here we construct a 1D grid size of 3, and the extended grid size of 5
+    """
+    Bzx = np.zeros(3)
+    ext_B_offset = np.random.rand(5)
+
+    rpol = pol.rel_dpol_sat_td(
+        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000
+    )
+
+    assert np.array_equal(rpol, [-1, -1, -1])
+
+
+def test_rel_dol_sat_td_smallsteps(sample_e):
+    """Test rel_dol_sat_td_smallsteps
+    Small steps approximation should have the same result as regular
+    when Bzx stays the same, given that delta_B_offset has the same
+    sign as Bzx
+    """
+
+    Bzx = np.ones(3)
+    ext_Bzx = np.ones(5)
+    ext_B_offset = np.random.rand(1) * np.array([1, 2, 3, 4, 5])
+
+    rpol_td = pol.rel_dpol_sat_td(
+        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000.0
+    )
+
+    rpol_smallsteps = pol.rel_dpol_sat_td_smallsteps(
+        1.0, ext_Bzx, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000.0
+    )
+
+    assert np.array_equal(rpol_td, rpol_smallsteps)
+
+
+def test_rel_dpol_multipulse_no_pol(sample_e):
+    """Test rel_dpol_multipulse when relative polarization is 0"""
+
+    rpol = pol.rel_dpol_multipulse(0, sample_e.T1, 1.0)
+    assert rpol == 0
+
+
+def test_rel_dpol_multipulse_short(sample_e):
+    """Test rel_dpol_multipulse when pulse time difference is short
+
+    Because time between pulses are short and the equation ignores
+    relaxation during pulses,
+    """
+
+    rpol = pol.rel_dpol_multipulse(-1, sample_e.T1, 0.001)
+    assert np.isclose(rpol, -1, atol=0.001)
+
+
+def test_rel_dpol_multipulse_long(sample_e):
+    """Test rel_dpol_multipulse when time between pulses are long
+    In this case, the final polarization should be
+    relaxed to 1 and change in polarization 0
+    """
+
+    rpol = pol.rel_dpol_multipulse(-0.5, sample_e.T1, 500.0)
+    assert np.isclose(rpol, 0, atol=0.001)

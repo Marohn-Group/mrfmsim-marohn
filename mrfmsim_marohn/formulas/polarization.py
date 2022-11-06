@@ -7,13 +7,15 @@
 
 import numba
 import numpy as np
+import signal
+from .math import as_strided_x
 
 HBAR = 1.054571628e-7  # aN nm s - reduced Planck constant
 KB = 1.3806504e4  # aN nm K^{-1} - Boltzmann constant
 
 
 @numba.jit(nopython=True, parallel=True)
-def rel_dpol_sat(B_offset, B1, dB_sat, dB_hom):
+def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
     r"""Relative change in polarization for steady-state
     Compute and return the sample's *relative* steady-state spin
     polarization
@@ -42,9 +44,9 @@ def rel_dpol_sat(B_offset, B1, dB_sat, dB_hom):
     :rtype: np.array, same shape as B_offset
     """
 
-    s2_term = (B1 ** 2) / (dB_sat ** 2)  # S-squared term
+    s2_term = (B1**2) / (dB_sat**2)  # S-squared term
 
-    return -1 * s2_term / (1 + B_offset ** 2 / dB_hom ** 2 + s2_term)
+    return -1 * s2_term / (1 + B_offset**2 / dB_hom**2 + s2_term)
 
 
 @numba.jit(nopython=True, parallel=True)
@@ -139,11 +141,11 @@ def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
     """
 
     r1 = 1 / T1
-    s2_term = B1 ** 2 / dB_sat ** 2  # S-squared term
+    s2_term = B1**2 / dB_sat**2  # S-squared term
 
-    e_on = np.exp(-r1 * t_on * (1 + s2_term / (1 + B_offset ** 2 / dB_hom ** 2)))
+    e_on = np.exp(-r1 * t_on * (1 + s2_term / (1 + B_offset**2 / dB_hom**2)))
     e_off = np.exp(-r1 * t_off)
-    ratio = s2_term / (1 + B_offset ** 2 / dB_hom ** 2 + s2_term)
+    ratio = s2_term / (1 + B_offset**2 / dB_hom**2 + s2_term)
 
     return -ratio * (
         (1 / r1)
@@ -187,3 +189,57 @@ def rel_dpol_nut(B_offset, B1, Gamma, T_p):
     rel_dpol = np.cos(theta * np.sqrt(omega_term)) / omega_term - 1
 
     return rel_dpol
+
+
+def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
+    """Relative change in polarization for time dependent saturation
+
+    The result is not a steady state solution because it ignores T1 relaxation
+    """
+    # ignore division error the Exp takes care of the inf
+    np.seterr(divide="ignore", invalid="ignore")
+
+    omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
+
+    atan_omega_i = omega_offset_atan[: -ext_pts[0] * 2]
+    atan_omega_f = omega_offset_atan[ext_pts[0] * 2 :]
+
+    rt = Gamma * B1**2 * np.abs((atan_omega_i - atan_omega_f) / Bzx / tip_v)
+    dpol = np.exp(-np.nan_to_num(rt))
+
+    return dpol - 1
+
+
+def rel_dpol_sat_td_smallsteps(B1, ext_Bzx, ext_B_offset, ext_pts, Gamma, T2, tip_v):
+    """Small step approximation of the time dependent relative change in polarization"""
+    # ignore division error
+    np.seterr(divide="ignore", invalid="ignore")
+    omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
+
+    # using strides are faster than convolution on large datasets
+    offset_atan_diff = np.diff(omega_offset_atan)
+    Bzx_rmean = as_strided_x(ext_Bzx, 2).mean(axis=1)
+
+    f_array = np.nan_to_num(np.abs((offset_atan_diff) / Bzx_rmean))
+    f_array_sum = as_strided_x(f_array, ext_pts[0] * 2).sum(axis=1)
+
+    rt = Gamma * B1**2 * f_array_sum / tip_v
+
+    dpol = np.exp(-rt)
+
+    return dpol - 1
+
+
+def rel_dpol_multipulse(rel_dpol, T1, dt_pulse):
+    """Calculate average relative change in polarization after multiple pulses
+
+    The formula ignores relaxation during pulses.
+    :param float dt_pulse: time between pulses
+    """
+
+    pol = rel_dpol + 1
+
+    t_r = dt_pulse / T1
+    rel_dpol_avg = (np.exp(t_r) - 1) * rel_dpol / t_r / (np.exp(t_r) - pol)
+
+    return rel_dpol_avg
