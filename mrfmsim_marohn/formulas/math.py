@@ -136,4 +136,3 @@ def ogrid_method(method, ogrid):
     """
 
     return method(*ogrid)
-
