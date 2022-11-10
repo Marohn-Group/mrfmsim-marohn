@@ -14,4 +14,4 @@ Added
 ^^^^^^^
 - add components "Grid", "Sample", "Magnet" and "Cantilever".
 - add formulas with sub category: "math", "magnetization", "polarization"
-- add cornellesr experiment
+- add cornellesr and cornelltdesr experiments

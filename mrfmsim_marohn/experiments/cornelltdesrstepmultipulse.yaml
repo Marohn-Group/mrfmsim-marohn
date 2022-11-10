@@ -1,20 +1,20 @@
 !Experiment
 name: CornellTDESRMultiPulsesStepped
-version: 2022.11.6
+version: 2022.11.10
 graph:
     !Graph
     name: cornell_esr_graph
     grouped_edges:
         - [extended ogrid, extended sample ogrid]
         - [extended sample ogrid, extended Bz]
-        - [sample ogrid, Bzxx]
+        - [sample ogrid, trapz field gradient]
         - [extended sample ogrid, extended Bzx]
         - [extended Bz, extended B total]
         - [extended B total, [extended B offset, B total]]
         - [B total, equilibrium magnetization per spin]
         - [[extended B offset, extended Bzx], relative polarization change]
         - [relative polarization change, averaged relative polarization change]
-        - [[equilibrium magnetization per spin, Bzxx, averaged relative polarization change], signal]
+        - [[equilibrium magnetization per spin, trapz field gradient, averaged relative polarization change], signal]
     node_objects:
         extended ogrid:
             func: !Func mrfmsim.ancillary.execute
@@ -44,10 +44,9 @@ graph:
             func: !Func mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bzx_method, ext_sample_ogrid]
             output: ext_Bzx
-        Bzxx:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzxx_method, sample_ogrid]
-            output: Bzxx
+        trapz field gradient:
+            func: !Func mrfmsim_marohn.formulas.xtrapz_field_gradient
+            output: trapz_Bzxx
         equilibrium magnetization per spin:
             func: !Func mrfmsim_marohn.formulas.mz_eq
             output: mz_eq
@@ -63,14 +62,15 @@ graph:
             output: rel_dpol_avg
         signal:
             func: !Func mrfmsim_marohn.formulas.hex_mul_sum
-            inputs: [Bzxx, rel_dpol_avg, mz_eq, spin_density, grid_voxel]
+            inputs: [trapz_Bzxx, rel_dpol_avg, mz_eq, spin_density, grid_voxel]
             output: dk_spin
 
 component_substitutes:
-    magnet: [Bz_method, Bzx_method, Bzxx_method]
+    magnet: [Bz_method, Bzx_method]
     sample: [J, Gamma, spin_density, temperature, T1, T2]
     grid: [grid_array, grid_shape, grid_voxel, extend_grid_method]
 
 description: Simulates a Cornell-style frequency shift magnetic resonance force
     microscope experiment considering the time dependent nature of the saturation,
-    averaged over multiple pulses and with small step approximation.
+    averaged over multiple pulses and with small step approximation. The function
+    is modified for small tip, where the field calculation uses trapezoidal integral. 

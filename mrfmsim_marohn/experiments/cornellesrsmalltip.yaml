@@ -1,18 +1,19 @@
 !Experiment
-name: CornellTDESR
-version: 2022.11.6
+name: CornellESRSmallTip
+version: 2022.11.10
 graph:
     !Graph
     name: cornell_esr_graph
     grouped_edges:
         - [extended ogrid, extended sample ogrid]
         - [extended sample ogrid, extended Bz]
-        - [sample ogrid, [Bzxx, Bzx]]
+        - [sample ogrid, trapz field gradient]
         - [extended Bz, extended B total]
         - [extended B total, [extended B offset, B total]]
         - [B total, equilibrium magnetization per spin]
-        - [[extended B offset, Bzx], relative polarization change]
-        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], signal]
+        - [extended B offset, minimum absolute x offset]
+        - [minimum absolute x offset, relative polarization change]
+        - [[equilibrium magnetization per spin, trapz field gradient, relative polarization change], signal]
     node_objects:
         extended ogrid:
             func: !Func mrfmsim.ancillary.execute
@@ -22,6 +23,10 @@ graph:
             func: !Func mrfmsim_marohn.formulas.ogrid_sub
             inputs: [ext_ogrid, h]
             output: ext_sample_ogrid
+        sample ogrid:
+            func: !Func mrfmsim_marohn.formulas.ogrid_sub
+            inputs: [grid_array, h]
+            output: sample_ogrid
         extended Bz:
             func: !Func mrfmsim.ancillary.execute
             inputs: [Bz_method, ext_sample_ogrid]
@@ -34,18 +39,9 @@ graph:
             func: !Func mrfmsim_marohn.formulas.slice_matrix
             inputs: [ext_B_tot, grid_shape]
             output: B_tot
-        sample ogrid:
-            func: !Func mrfmsim_marohn.formulas.ogrid_sub
-            inputs: [grid_array, h]
-            output: sample_ogrid
-        Bzx:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzx_method, sample_ogrid]
-            output: Bzx
-        Bzxx:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzxx_method, sample_ogrid]
-            output: Bzxx
+        trapz field gradient:
+            func: !Func mrfmsim_marohn.formulas.xtrapz_field_gradient
+            output: trapz_Bzxx
         equilibrium magnetization per spin:
             func: !Func mrfmsim_marohn.formulas.mz_eq
             output: mz_eq
@@ -53,18 +49,25 @@ graph:
             func: !Func mrfmsim_marohn.formulas.B_offset
             inputs: [ext_B_tot, f_rf, Gamma]
             output: ext_B_offset    
+        minimum absolute x offset:
+            func: !Func mrfmsim_marohn.formulas.min_abs_x
+            inputs: [ext_B_offset, ext_pts]
+            output: B_offset
         relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_sat_td
+            func: !Func mrfmsim_marohn.formulas.rel_dpol_sat_steadystate
             output: rel_dpol
         signal:
             func: !Func mrfmsim_marohn.formulas.hex_mul_sum
-            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
+            inputs: [trapz_Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
             output: dk_spin
 
 component_substitutes:
-    magnet: [Bz_method, Bzx_method, Bzxx_method]
-    sample: [J, Gamma, spin_density, temperature, T2]
-    grid: [grid_array, grid_shape, grid_voxel, extend_grid_method]
+    magnet: [Bz_method, Bzx_method]
+    sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
+    grid: [grid_step, grid_shape, grid_voxel, extend_grid_method]
 
 description: Simulates a Cornell-style frequency shift magnetic resonance force
-    microscope experiment considering the time dependent nature of the saturation
+    microscope experiment in which microwaves are applied for half a cantilever
+    cyclic to saturate electron spin resonance in a bowl-shaped region swept
+    out by the cantilever motion. The function is modified for small tip, where
+    the field calculation uses trapezoidal integral. 
