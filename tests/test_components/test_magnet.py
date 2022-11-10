@@ -175,11 +175,11 @@ class TestRectangularMagnet(MagnetTester):
     def test_rectmagnet_Bz(self):
         """Test the rectangular magnet based on the numeric simulation
 
-        If treat the magnet as a square loop wire, the magnetization at z
-        distance away from the center of the magnet can be calculated using
-        Biot–Savart law. We use this measurement against a a thin film
-        magnet with the size of 10, 10, 1 nm, and calculate the field that
-        is 2 nm away from the center of the magnet. (The unit of B is mT)
+        If we treat the magnet as a square loop wire, the magnetization
+        at z distance away from the magnet's center can be calculated using
+        Biot–Savart law. We use this measurement against a thin film magnet
+        with the size of 10, 10, and 1 nm, and calculate the field 2 nm away
+        from the center of the magnet. (The unit of B is mT)
         """
         magnet = RectangularMagnet(
             length=[10.0, 10.0, 1.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]

@@ -138,16 +138,3 @@ def ogrid_method(method, ogrid):
     """
 
     return method(*ogrid)
-
-
-def xtrapz_integral(integrand, grid_step, ext_pts, xdiv_pts):
-    """Trapezoidal summation in x direction
-
-    The function is used to approximate field value when calculating for small tip.
-    The trapz sum in space is to approximate the trapz in theta
-    """
-
-    dx = grid_step[0] / (xdiv_pts + 1)
-    strided = as_strided_x(integrand, ext_pts * 2 * (xdiv_pts + 1) + 1)[:: xdiv_pts + 1]
-
-    return np.trapz(strided, dx=dx, axis=1)

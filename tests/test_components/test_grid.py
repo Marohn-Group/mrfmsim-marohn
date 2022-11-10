@@ -95,26 +95,3 @@ class TestGrid:
         assert np.allclose(
             ext_grid_array[2], grid_z.reshape(1, 1, 11), rtol=1e-15, atol=1e-15
         )
-
-    def test_extend_fine_grid_method(self, grid):
-        """Test extend find grid method
-
-        Test if the correct grid is produced
-        """
-
-        ext_fine_grid_array = grid.extend_fine_grid_method([2, 0, 0], 1)
-
-        assert ext_fine_grid_array[0].shape == (29, 1, 1)
-        assert np.isclose(ext_fine_grid_array[0][0, 0, 0], -6.7)
-        assert np.isclose(ext_fine_grid_array[0][-1, 0, 0], 8.7)
-        assert np.isclose(ext_fine_grid_array[0][1, 0, 0], -6.15)
-
-        # check when n_pts is 0, the extended grid is the same as
-        # ext_grid_array
-
-        ext_fine_grid_array = grid.extend_fine_grid_method([2, 0, 0], 0)
-        ext_grid_array = grid.extend_grid_method([2, 0, 0])
-
-        assert np.array_equal(ext_fine_grid_array[0], ext_grid_array[0])
-        assert np.array_equal(ext_fine_grid_array[1], ext_grid_array[1])
-        assert np.array_equal(ext_fine_grid_array[2], ext_grid_array[2])

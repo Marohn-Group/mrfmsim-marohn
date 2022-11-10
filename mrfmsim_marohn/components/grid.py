@@ -89,20 +89,3 @@ class Grid(ComponentBase):
             extents[1][0] : extents[1][1] : ext_shape[1] * 1j,
             extents[2][0] : extents[2][1] : ext_shape[2] * 1j,
         ]
-
-    def extend_fine_grid_method(self, ext_pts, xdiv_pts):
-        """Extend grid by number of points in x, y, z direction with fine grid
-
-        :param list div_pts: points in between regular grid points
-        """
-        div_pts = [xdiv_pts + 1, 1, 1]
-
-        ext_shape = (self.grid_shape + np.array(ext_pts) * 2 - 1) * div_pts + 1
-        ext_range = (ext_shape - [1, 1, 1]) * self.grid_step / div_pts
-        extents = self.grid_extents(ext_range, self.grid_origin)
-
-        return np.ogrid[
-            extents[0][0] : extents[0][1] : ext_shape[0] * 1j,
-            extents[1][0] : extents[1][1] : ext_shape[1] * 1j,
-            extents[2][0] : extents[2][1] : ext_shape[2] * 1j,
-        ]

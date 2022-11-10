@@ -4,8 +4,7 @@ from mrfmsim_marohn.formulas.math import (
     as_strided_x,
     min_abs_x,
     ogrid_sub,
-    ogrid_method,
-    xtrapz_integral,
+    ogrid_method
 )
 import numpy as np
 
@@ -151,66 +150,3 @@ def test_ogrid_method():
 
     dis_mesh = distance3d(*np.mgrid[0:1:2j, 1:2:2j, 2:3:2j])
     assert np.array_equal(dis, dis_mesh)
-
-
-def test_xtrapz_integral_multi_dimension():
-    """Test trapz integral when there are multiple grid points and dimension"""
-
-    y = np.array([1, 2, 3, 4, 5, 6, 7]).reshape(7, 1, 1)
-    step = 2
-
-    xtrpaz = xtrapz_integral(y, [step, 0, 0], 1, 1)
-    assert xtrpaz.shape == (2, 1, 1)
-    assert np.array_equal(xtrpaz.flatten(), [12, 20])
-
-
-def test_xtrapz_integral_linear():
-    """Test trapz integral against 1D functions
-
-    We test against a linear function y = 2.5x. Let the original grid size be 1,
-    with ext_pts = 3, and xdiv_pts = 3. This gives the a fine grid
-    of 25 pts, and final grid of 1 pt. The result should be the value at the
-    mid point.
-    """
-
-    x = np.linspace(0, 24, 25)
-    y = 2.5 * x
-
-    assert xtrapz_integral(y, [4, 0, 0], 3, 3) == 2.5 * 24 * 24 / 2
-
-
-def test_xtrapz_integral_nonlinear():
-    """Test trapz integral against 1D functions
-
-    We test against a linear function y = cosx. Let the original grid size be 1,
-    with ext_pts = 3, and xdiv_pts = 3. This gives the a fine grid
-    of 25 pts, and final grid of 1 pt. The result should be the value at the
-    mid point.
-    """
-
-    x = np.linspace(-np.pi / 2, np.pi / 2, 25)
-    y = np.cos(x)
-    step = np.pi / (25 - 1) * 4
-
-    assert np.isclose(xtrapz_integral(y, [step, 0, 0], 3, 3), 2, atol=5e-3)
-
-
-def test_xtrapz_integral_against_theta():
-    """Test trapz integral against 1D functions
-
-    The original trapz integral is used to approximate function with equal
-    theta steps of a position. Here we test that on different functions.
-
-    y = 2.5x
-    """
-
-    theta = np.linspace(0, np.pi, 25)
-    x = np.cos(theta)
-    y = 2.5 * x
-    trapz_theta = np.trapz(y, x)
-
-    x = np.linspace(-1, 1, 25)
-    y = 2.5 * x
-    step = 2 / (25 - 1) * 4
-    trapz_x = xtrapz_integral(y, [step, 0, 0], 3, 3)
-    assert np.isclose(trapz_theta, trapz_x)
