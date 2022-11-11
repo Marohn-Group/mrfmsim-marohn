@@ -20,7 +20,7 @@ class SphereMagnet(ComponentBase):
         self.mu0_Ms = mu0_Ms
         self.magnet_radius = radius
 
-    def bz_method(self, x, y, z):
+    def Bz_method(self, x, y, z):
         r"""Calculate magnetic field :math:`B_z` [mT]
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
@@ -69,7 +69,7 @@ class SphereMagnet(ComponentBase):
             + 3.0 * dz**2 / np.sqrt(dx**2 + dy**2 + dz**2) ** 5
         )
 
-    def bzx_method(self, x, y, z):
+    def Bzx_method(self, x, y, z):
         r"""Calcualte magnetic field gradient :math:`B_{zx}`
         :math:`B_{zx} \equiv \partial B_z / \partial x`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-1}` ].
@@ -116,7 +116,7 @@ class SphereMagnet(ComponentBase):
             - 5.0 * dz**2 / np.sqrt(dx**2 + dy**2 + dz**2) ** 7
         )
 
-    def bzxx_method(self, x, y, z):
+    def Bzxx_method(self, x, y, z):
         r"""Calculate magnetic field second derivative :math:`B_{zxx}`
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-2}` ]. The inputs are
@@ -194,7 +194,7 @@ class RectangularMagnet(ComponentBase):
         ).ravel()
         self._pre_term = self.mu0_Ms / (4 * np.pi)
 
-    def bz_method(self, x, y, z):
+    def Bz_method(self, x, y, z):
         r"""Calculate magnetic field :math:`B_z` [mT]
         The magnetic field is calculated following Ravaud2009.
         Using the Coulombian model, assuming a uniform magnetization throughout
@@ -271,7 +271,7 @@ class RectangularMagnet(ComponentBase):
             + np.arctan2(dx2 * dy2, (np.sqrt(dx2**2 + dy2**2 + dz2**2) * dz2))
         )
 
-    def bzx_method(self, x, y, z):
+    def Bzx_method(self, x, y, z):
         r"""Calculate magnetic field gradient :math:`B_{zx}`
         :math:`B_{zx} \equiv \partial B_z / \partial x`
         [:math:`\mathrm{mT} \: \mathrm{nm}^{-1}`].
@@ -354,7 +354,7 @@ class RectangularMagnet(ComponentBase):
             / (np.sqrt(dx2**2 + dy2**2 + dz2**2) * (dx2**2 + dz2**2))
         )
 
-    def bzxx_method(self, x, y, z):
+    def Bzxx_method(self, x, y, z):
         r"""Calculate magnetic field second derivative :math:`B_{zxx}`
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \; \mathrm{nm}^{-2}`]

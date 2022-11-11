@@ -11,12 +11,12 @@ r = 50.0 nm
 mu0_Ms = 1800.0 mT
 o = [0, 0, 0] nm
 
-bz_method
+Bz_method
 ^^^^^^^^^^
 
-1. Test bz at poles (0.0, 0.0, 50.0) and (0.0, 0.0, -50.0) both result
+1. Test Bz at poles (0.0, 0.0, 50.0) and (0.0, 0.0, -50.0) both result
   in Bz value of 1200.0 mT
-2. Test bz at equator (50.0, 0.0, 0.0), (0.0, 5.0, 0.0), 
+2. Test Bz at equator (50.0, 0.0, 0.0), (0.0, 5.0, 0.0), 
   and (-1.0*50.0/sqrt(2),  -1.0*50.0/sqrt(2), 0.0), all result in Bz
   value of -600.0 mT
 
@@ -45,7 +45,7 @@ class MagnetTester:
 
     def check_bz(self, magnet, x, y, z, theory):
         """Test Bz calculation against theory"""
-        assert np.allclose(magnet.bz_method(x, y, z), theory, rtol=1e-12)
+        assert np.allclose(magnet.Bz_method(x, y, z), theory, rtol=1e-12)
 
     def check_bzx(self, magnet, x, y, z):
         """test Bzx at selected points against estimation from Bz calculation"""
@@ -53,9 +53,9 @@ class MagnetTester:
         dx = 0.001
 
         Bzx_est = (
-            magnet.bz_method(x + 0.5 * dx, y, z) - magnet.bz_method(x - 0.5 * dx, y, z)
+            magnet.Bz_method(x + 0.5 * dx, y, z) - magnet.Bz_method(x - 0.5 * dx, y, z)
         ) / dx
-        Bzx_sim = magnet.bzx_method(x, y, z)
+        Bzx_sim = magnet.Bzx_method(x, y, z)
 
         assert np.allclose(Bzx_est, Bzx_sim, rtol=1e-9)
 
@@ -65,10 +65,10 @@ class MagnetTester:
         dx = 0.001
 
         Bzxx_est = (
-            magnet.bzx_method(x + 0.5 * dx, y, z)
-            - magnet.bzx_method(x - 0.5 * dx, y, z)
+            magnet.Bzx_method(x + 0.5 * dx, y, z)
+            - magnet.Bzx_method(x - 0.5 * dx, y, z)
         ) / dx
-        Bzxx_sim = magnet.bzxx_method(x, y, z)
+        Bzxx_sim = magnet.Bzxx_method(x, y, z)
 
         assert np.allclose(Bzxx_est, Bzxx_sim, rtol=1e-9)
 
@@ -131,8 +131,7 @@ class TestSphereMagnet(MagnetTester):
 
 
 class TestRectangularMagnet(MagnetTester):
-    """Tests RectangularMagnet
-    """
+    """Tests RectangularMagnet"""
 
     magnet_str = """\
     RectangularMagnet(
@@ -158,19 +157,19 @@ class TestRectangularMagnet(MagnetTester):
         Bzxx - even function in x direction
         """
 
-        np.allclose(magnet.bz_method(x, y, z), magnet.bz_method(-x, y, z), rtol=1e-10)
+        np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(-x, y, z), rtol=1e-10)
         np.allclose(
-            magnet.bzx_method(x, y, z), -magnet.bzx_method(-x, y, z), rtol=1e-10
+            magnet.Bzx_method(x, y, z), -magnet.Bzx_method(-x, y, z), rtol=1e-10
         )
         np.allclose(
-            magnet.bzxx_method(x, y, z), magnet.bzxx_method(-x, y, z), rtol=1e-10
+            magnet.Bzxx_method(x, y, z), magnet.Bzxx_method(-x, y, z), rtol=1e-10
         )
 
     @pytest.mark.parametrize("x, y, z", [(0.0, 0.0, np.arange(50, 100, 5))])
     def test_rectmagnet_Bz_symmetry_z(self, magnet, x, y, z):
-        """Test bz_func of RectMagnet symmetry in z direction"""
+        """Test Bz_method of RectMagnet symmetry in z direction"""
 
-        np.allclose(magnet.bz_method(x, y, z), magnet.bz_method(x, y, -z), rtol=1e-10)
+        np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(x, y, -z), rtol=1e-10)
 
     def test_rectmagnet_Bz(self):
         """Test the rectangular magnet based on the numeric simulation
@@ -184,16 +183,16 @@ class TestRectangularMagnet(MagnetTester):
         magnet = RectangularMagnet(
             length=[10.0, 10.0, 1.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
         )
-        assert np.allclose(magnet.bz_method(0, 0, 2), 134.23, rtol=1e-2)
+        assert np.allclose(magnet.Bz_method(0, 0, 2), 134.23, rtol=1e-2)
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzx(self, magnet, x, y, z):
-        """Test bzx_func by using against gradient of bz"""
+        """Test Bzx_method by using against gradient of bz"""
 
         self.check_bzx(magnet, x, y, z)
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzxx(self, magnet, x, y, z):
-        """Test the bzxx_func of RectMagnet against the derivative bzx_func"""
+        """Test the Bzxx_method of RectMagnet against the derivative Bzx_method"""
 
         self.check_bzxx(magnet, x, y, z)
