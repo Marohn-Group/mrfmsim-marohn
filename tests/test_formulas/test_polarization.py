@@ -151,7 +151,7 @@ def test_rel_dpol_sat_td(sample_e):
     ext_B_offset = np.zeros([5])
 
     rpol = pol.rel_dpol_sat_td(
-        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000
+        Bzx, 1.0, ext_B_offset, 1, sample_e.Gamma, sample_e.T2, 2000
     )
 
     assert np.array_equal(rpol, [0, 0, 0])
@@ -167,10 +167,10 @@ def test_rel_dpol_sat_td_symmetry(sample_e):
     ext_B_offset_b = np.array([0, 2, 2, 2, 0])
 
     rpol_a = pol.rel_dpol_sat_td(
-        Bzx, 1.0, ext_B_offset_a, [1], sample_e.Gamma, sample_e.T2, 2000
+        Bzx, 1.0, ext_B_offset_a, 1, sample_e.Gamma, sample_e.T2, 2000
     )
     rpol_b = pol.rel_dpol_sat_td(
-        Bzx, 1.0, ext_B_offset_b, [1], sample_e.Gamma, sample_e.T2, 2000
+        Bzx, 1.0, ext_B_offset_b, 1, sample_e.Gamma, sample_e.T2, 2000
     )
     assert np.array_equal(rpol_a, rpol_b)
 
@@ -184,7 +184,7 @@ def test_rel_dpol_sat_td_without_td(sample_e):
     ext_B_offset = np.random.rand(5)
 
     rpol = pol.rel_dpol_sat_td(
-        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000
+        Bzx, 1.0, ext_B_offset, 1, sample_e.Gamma, sample_e.T2, 2000
     )
 
     assert np.array_equal(rpol, [-1, -1, -1])
@@ -202,11 +202,11 @@ def test_rel_dol_sat_td_smallsteps(sample_e):
     ext_B_offset = np.random.rand(1) * np.array([1, 2, 3, 4, 5])
 
     rpol_td = pol.rel_dpol_sat_td(
-        Bzx, 1.0, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000.0
+        Bzx, 1.0, ext_B_offset, 1, sample_e.Gamma, sample_e.T2, 2000.0
     )
 
     rpol_smallsteps = pol.rel_dpol_sat_td_smallsteps(
-        1.0, ext_Bzx, ext_B_offset, [1], sample_e.Gamma, sample_e.T2, 2000.0
+        1.0, ext_Bzx, ext_B_offset, 1, sample_e.Gamma, sample_e.T2, 2000.0
     )
 
     assert np.array_equal(rpol_td, rpol_smallsteps)

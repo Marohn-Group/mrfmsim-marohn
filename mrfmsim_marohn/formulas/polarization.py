@@ -201,8 +201,8 @@ def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
 
     omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
 
-    atan_omega_i = omega_offset_atan[: -ext_pts[0] * 2]
-    atan_omega_f = omega_offset_atan[ext_pts[0] * 2 :]
+    atan_omega_i = omega_offset_atan[: -ext_pts * 2]
+    atan_omega_f = omega_offset_atan[ext_pts * 2 :]
 
     rt = Gamma * B1**2 * np.abs((atan_omega_i - atan_omega_f) / Bzx / tip_v)
     dpol = np.exp(-np.nan_to_num(rt))
@@ -221,7 +221,7 @@ def rel_dpol_sat_td_smallsteps(B1, ext_Bzx, ext_B_offset, ext_pts, Gamma, T2, ti
     Bzx_rmean = as_strided_x(ext_Bzx, 2).mean(axis=1)
 
     f_array = np.nan_to_num(np.abs((offset_atan_diff) / Bzx_rmean))
-    f_array_sum = as_strided_x(f_array, ext_pts[0] * 2).sum(axis=1)
+    f_array_sum = as_strided_x(f_array, ext_pts * 2).sum(axis=1)
 
     rt = Gamma * B1**2 * f_array_sum / tip_v
 

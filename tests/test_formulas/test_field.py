@@ -165,8 +165,8 @@ class TestXTrapzFieldGradient:
 
         trapz_pts = 20
         grid_step = np.array([1, 50, 50])
-        ext_pts = [0.01, 0, 0]
-        x_0p = grid_step[0] * ext_pts[0]
+        ext_pts = 0.01
+        x_0p = grid_step[0] * ext_pts
 
         gradient = xtrapz_field_gradient(
             magnet.Bzx_method, ext_pts, grid_step, grid.grid_array, trapz_pts
@@ -192,8 +192,8 @@ class TestXTrapzFieldGradient:
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
         trapz_pts = 20
-        ext_pts = [1, 0, 0]
-        x_0p = grid.grid_step[0] * ext_pts[0]
+        ext_pts = 1
+        x_0p = grid.grid_step[0] * ext_pts
 
         gradient = xtrapz_field_gradient(
             magnet.Bzx_method, ext_pts, grid.grid_step, grid.grid_array, trapz_pts
