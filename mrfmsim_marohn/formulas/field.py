@@ -10,6 +10,42 @@ def B_offset(B_tot, f_rf, Gamma):
     return B_tot - 2 * np.pi * f_rf / Gamma
 
 
+def min_abs_offset(ext_B_offset, ext_pts):
+    """Minimum absolute value of a matrix in x direction based on the window
+
+    The function is used to calculate the minimum B_offset during a saturation
+    experiment.
+    For each x-data point in the sample, calculate the resonance offset over
+    the expanded grid. The points to the left and right of each grid point
+    give the resonance offset as the cantilever moves. Find the minimum
+    resonance offset over the range of array values corresponding to the
+    cantilever motion, and compute the saturation polarization using that
+    minimum offset and the given B1.
+
+    To calculate the spin polarization profile resulting from the cantilever
+    moving while spin-saturating irradiation is applied we use the following
+    algorithm:
+        If the resonance offset changed sign during the sweep, then the spin
+        must have experienced a zero resonance offset during the sweep, so set
+        the resonance offset to zero manually.
+    This procedure mitigates the problem of previous algorithms not finding
+    the true minimum resonance offset (and polarization) due to the finite grid
+    size. While this new procedure will still not capture the shape of the
+    polarization at the edge of the sensitive slice, it should produce a
+    polarization which is properly saturated inside the sensitive slice.
+    :param float b_offset: resonance offset of extended grid [mT]
+    :param int window: number of grid point use to determine the minimum offset
+    """
+    window = 2 * ext_pts + 1
+    b_offset_strided = as_strided_x(ext_B_offset, window)
+    b_offset_abs_strided = as_strided_x(abs(ext_B_offset), window)
+
+    return b_offset_abs_strided.min(axis=1) * np.logical_or(
+        np.all(b_offset_strided > 0, axis=1),
+        np.all(b_offset_strided < 0, axis=1),
+    )
+
+
 def xtrapz_fxdtheta(method, ogrid, trapz_pts, xrange, x0):
     r"""Trapz summation to calculate
 
@@ -46,7 +82,7 @@ def xtrapz_fxdtheta(method, ogrid, trapz_pts, xrange, x0):
     return np.trapz(integrand, x=theta, axis=0)
 
 
-def xtrapz_field_gradient(Bzx_method, ext_pts, grid_step, sample_ogrid, trapz_pts):
+def xtrapz_field_gradient(Bzx_method, sample_ogrid, trapz_pts, x_0p):
     """Calculate CERMIT integral using Trapezoidal summation
 
     The integrand is odd function, therefore we can approximate the
@@ -58,7 +94,6 @@ def xtrapz_field_gradient(Bzx_method, ext_pts, grid_step, sample_ogrid, trapz_pt
         For one dimensional grid, the ogrid should be encapsulated in a list
     """
 
-    x_0p = (grid_step * ext_pts)[0]
     integral = xtrapz_fxdtheta(
         Bzx_method, sample_ogrid, trapz_pts, [-np.pi / 2, 0], x_0p
     )

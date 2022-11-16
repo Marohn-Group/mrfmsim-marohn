@@ -1,5 +1,10 @@
 """Test un-categorized formulas under __init__.py"""
-from mrfmsim_marohn.formulas import B_offset, xtrapz_fxdtheta, xtrapz_field_gradient
+from mrfmsim_marohn.formulas import (
+    B_offset,
+    xtrapz_fxdtheta,
+    xtrapz_field_gradient,
+    min_abs_offset,
+)
 import numpy as np
 
 
@@ -13,6 +18,47 @@ def test_B_offset():
     f_rf = 200  # MHz
 
     assert np.isclose(B_offset(B_tot, f_rf, Gamma), 0)
+
+
+def test_min_abs_offset():
+    """Test min_abs_x"""
+    matrix_a = np.random.rand(30, 20, 10) - 0.3  # lower 0 crossing chance
+    grid_ext = 2  # follow the behavior of extend x_0p both sides
+    window = grid_ext * 2 + 1
+    offset_min_calc = min_abs_offset(matrix_a, grid_ext)
+
+    #  a python loop for the logic
+    new_shape = (matrix_a.shape[0] - window + 1,) + matrix_a.shape[1:]
+
+    offset_min_exp = np.zeros(new_shape)
+    for i in range(new_shape[0]):
+
+        matrix_offset_max = np.amax(matrix_a[i : i + window, :, :], axis=0)
+        matrix_offset_min = np.amin(matrix_a[i : i + window, :, :], axis=0)
+        minabs_pos = np.argmin(abs(matrix_a[i : i + window, :, :]), axis=0)
+
+        for j in range(new_shape[1]):
+            for k in range(new_shape[2]):
+                if not ((matrix_offset_max[j, k] > 0) & (matrix_offset_min[j, k] < 0)):
+                    offset_min_exp[i, j, k] = abs(matrix_a[i : i + window, :, :])[
+                        minabs_pos[j, k], j, k
+                    ]
+
+    assert np.array_equal(offset_min_calc, offset_min_exp)
+
+
+def test_min_abs_offset_symmetry():
+    """Test if min_abs_x result is symmetric
+    If a matrix is flipped, the result should also be flipped
+    """
+
+    matrix_a = np.random.rand(20, 10, 5) - 0.3
+    matrix_b = np.flip(matrix_a, axis=0)
+    ext_pts = 2
+    offset_min_a = min_abs_offset(matrix_a, ext_pts)
+    offset_min_b = min_abs_offset(matrix_b, ext_pts)
+
+    assert np.array_equal(offset_min_a, np.flip(offset_min_b, axis=0))
 
 
 class TestXTrapzFxDtheta:
@@ -164,12 +210,10 @@ class TestXTrapzFieldGradient:
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
         trapz_pts = 20
-        grid_step = np.array([1, 50, 50])
-        ext_pts = 0.01
-        x_0p = grid_step[0] * ext_pts
+        x_0p = 0.01
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, ext_pts, grid_step, grid.grid_array, trapz_pts
+            magnet.Bzx_method, grid.grid_array, trapz_pts, 0.01
         )
 
         real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p
@@ -192,11 +236,10 @@ class TestXTrapzFieldGradient:
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
         trapz_pts = 20
-        ext_pts = 1
-        x_0p = grid.grid_step[0] * ext_pts
+        x_0p = 50
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, ext_pts, grid.grid_step, grid.grid_array, trapz_pts
+            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p=50
         )
 
         real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p

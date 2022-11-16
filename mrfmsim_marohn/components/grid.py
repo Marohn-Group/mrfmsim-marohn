@@ -6,10 +6,10 @@ based on a cuboid shape, the RectGrid can be used directly or inherited for
 additional functions.
 """
 
-from re import U
 import numpy as np
 from mrfmsim.component import ComponentBase
 from mrfmsim_marohn import UNITS
+import math
 
 
 class Grid(ComponentBase):
@@ -76,6 +76,7 @@ class Grid(ComponentBase):
             extents[1][0] : extents[1][1] : self.grid_shape[1] * 1j,
             extents[2][0] : extents[2][1] : self.grid_shape[2] * 1j,
         ]
+
 
     def extend_grid_method(self, ext_pts):
         """Extend grid by number of points in x, y, z direction (one side)

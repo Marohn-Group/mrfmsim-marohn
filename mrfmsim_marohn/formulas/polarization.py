@@ -7,7 +7,6 @@
 
 import numba
 import numpy as np
-import signal
 from .math import as_strided_x
 
 HBAR = 1.054571628e-7  # aN nm s - reduced Planck constant
@@ -217,7 +216,7 @@ def rel_dpol_sat_td_smallsteps(B1, ext_Bzx, ext_B_offset, ext_pts, Gamma, T2, ti
     omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
 
     # using strides are faster than convolution on large datasets
-    offset_atan_diff = np.diff(omega_offset_atan)
+    offset_atan_diff = np.diff(omega_offset_atan, axis=0)
     Bzx_rmean = as_strided_x(ext_Bzx, 2).mean(axis=1)
 
     f_array = np.nan_to_num(np.abs((offset_atan_diff) / Bzx_rmean))

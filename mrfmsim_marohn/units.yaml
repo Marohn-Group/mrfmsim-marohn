@@ -155,6 +155,11 @@ x_0p:
   description: zero-to-peak amplitude of the cantilever oscillation
   latex_label: $x_{0-\mathrm{pk},}, [\mathrm{nm},]$
   format: ":.3f"
+mw_x_0p:
+  unit: "[nm]"
+  description: zero-to-peak amplitude of irradiation
+  latex_label: $x_{0-\mathrm{pk},}, [\mathrm{nm},]$
+  format: ":.3f"
 B0:
   unit: "[mT]"
   description: longitudinal magnetic field
