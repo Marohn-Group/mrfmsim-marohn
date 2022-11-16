@@ -209,7 +209,7 @@ class TestXTrapzFieldGradient:
         )
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
-        trapz_pts = 20
+        trapz_pts = 32
         x_0p = 0.01
 
         gradient = xtrapz_field_gradient(
@@ -235,7 +235,7 @@ class TestXTrapzFieldGradient:
         )
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
-        trapz_pts = 20
+        trapz_pts = 32
         x_0p = 50
 
         gradient = xtrapz_field_gradient(
