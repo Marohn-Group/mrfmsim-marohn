@@ -5,15 +5,15 @@ from operator import sub
 
 
 @nb.jit(nopython=True, parallel=True)
-def hex_mul_sum(a, b, c, d, e, sign=1):
-    """Summation of 5 matrices or scalar with a sign
+def sum_of_multiplication(a, b, c, d, e, f=1):
+    """Summation of 5 matrices or scalar with a factor default to 1
 
     To use numba jit, the compromise is to explicitly define the parameters,
     meaning we cannot define a function with arbitrary number of parameters.
     The method is faster than reduce or other numpy tricks.
 
     """
-    return sign * np.sum(a * b * c * d * e)
+    return np.sum(a * b * c * d * e * f)
 
 
 def slice_matrix(matrix, shape):

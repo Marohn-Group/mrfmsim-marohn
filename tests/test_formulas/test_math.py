@@ -1,5 +1,5 @@
 from mrfmsim_marohn.formulas.math import (
-    hex_mul_sum,
+    sum_of_multiplication,
     slice_matrix,
     as_strided_x,
     ogrid_sub,
@@ -8,12 +8,12 @@ from mrfmsim_marohn.formulas.math import (
 import numpy as np
 
 
-def test_hex_mul_sum():
+def test_sum_of_multiplication():
     """Test the chained multiplication sum works for both matrix and scalar"""
 
     matrices = {i: np.random.rand(2, 3, 4) for i in ["b", "c", "d"]}
-    matrices['sign'] = -1
-    sum_value = hex_mul_sum(a=2, e=3, **matrices)
+    matrices['f'] = -1
+    sum_value = sum_of_multiplication(a=2, e=3, **matrices)
 
     assert np.isclose(
         sum_value, - np.sum(2 * 3 * matrices["b"] * matrices["c"] * matrices["d"])
