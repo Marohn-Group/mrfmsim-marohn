@@ -13,5 +13,5 @@ For previous versions of mrfmsim, see `repository <https://github.com/peterhs73/
 Added
 ^^^^^^^
 - add components "Grid", "Sample", "Magnet" and "Cantilever".
-- add formulas with sub category: "math", "magnetization", "polarization"
-- add cornellesr and cornelltdesr experiments
+- add formulas with sub category: "math", "magnetization", "polarization" and "misc"
+- add cermitesr, cermittd, cermitarp, and ibmcyclic experiments
