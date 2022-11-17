@@ -100,4 +100,4 @@ def xtrapz_field_gradient(Bzx_method, sample_ogrid, trapz_pts, x_0p):
     integral = xtrapz_fxdtheta(
         Bzx_method, sample_ogrid, n_pts, [-np.pi / 2, 0], x_0p
     )
-    return (4 / x_0p**2) * integral
+    return (4 / x_0p**2 / np.pi) * integral

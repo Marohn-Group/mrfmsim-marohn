@@ -216,7 +216,7 @@ class TestXTrapzFieldGradient:
             magnet.Bzx_method, grid.grid_array, trapz_pts, 0.01
         )
 
-        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p
+        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p / np.pi
 
         assert gradient.shape == (3, 2, 1)
         assert np.allclose(gradient, real, rtol=1e-2)
@@ -242,6 +242,6 @@ class TestXTrapzFieldGradient:
             magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p=50
         )
 
-        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p
+        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p / np.pi
 
         assert np.allclose(gradient, real, rtol=1e-2)
