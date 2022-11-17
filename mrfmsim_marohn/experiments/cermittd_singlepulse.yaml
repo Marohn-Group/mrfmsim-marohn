@@ -1,21 +1,28 @@
 !Experiment
-name: CornellTDESRMultiPulses
-version: 2022.11.6
+name: CermitTimeDependentSinglePulse
+version: 2022.11.17
+description: Simulates a Cornell-style frequency shift magnetic resonance force
+    microscope experiment considering the time dependent nature of the saturation.
+    The signal calculated is the result of a single pulse (not a steady state solution).
 graph:
     !Graph
-    name: cornell_esr_graph
+    name: cornell_td_esr_single_pulse_graph
     grouped_edges:
+        - [convert microwave x_0p, [extended ogrid, relative polarization change]]
         - [extended ogrid, extended sample ogrid]
         - [extended sample ogrid, extended Bz]
-        - [sample ogrid, Bzxx]
-        - [sample ogrid, Bzx]
+        - [sample ogrid, [Bzxx, Bzx]]
         - [extended Bz, extended B total]
-        - [extended B total, [extended B offset, B total]]
+        - [extended B total, [B total, extended B offset]]
         - [B total, equilibrium magnetization per spin]
         - [[extended B offset, Bzx], relative polarization change]
-        - [relative polarization change, averaged relative polarization change]
-        - [[equilibrium magnetization per spin, Bzxx, averaged relative polarization change], signal]
+        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], spring constant shift]
+        - [spring constant shift, frequency shift]
     node_objects:
+        convert microwave x_0p:
+            func: !Func mrfmsim_marohn.formulas.convert_grid_pts
+            inputs: [mw_x_0p, grid_step]
+            output: ext_pts
         extended ogrid:
             func: !Func mrfmsim.ancillary.execute
             inputs: [extend_grid_method, ext_pts]
@@ -25,7 +32,7 @@ graph:
             inputs: [ext_ogrid, h]
             output: ext_sample_ogrid
         extended Bz:
-            func: !Func mrfmsim.ancillary.execute
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bz_method, ext_sample_ogrid]
             output: ext_Bz
         extended B total:
@@ -58,19 +65,16 @@ graph:
         relative polarization change:
             func: !Func mrfmsim_marohn.formulas.rel_dpol_sat_td
             output: rel_dpol
-        averaged relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_multipulse
-            output: rel_dpol_avg
-        signal:
-            func: !Func mrfmsim_marohn.formulas.hex_mul_sum
-            inputs: [Bzxx, rel_dpol_avg, mz_eq, spin_density, grid_voxel]
+        spring constant shift:
+            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
             output: dk_spin
-
+        frequency shift:
+            func: !Func mrfmsim.ancillary.execute
+            inputs: [dk_to_df_ac_cermit, dk_spin]
+            output: df_spin
 component_substitutes:
     magnet: [Bz_method, Bzx_method, Bzxx_method]
-    sample: [J, Gamma, spin_density, temperature, T1, T2]
-    grid: [grid_array, grid_shape, grid_voxel, extend_grid_method]
-
-description: Simulates a Cornell-style frequency shift magnetic resonance force
-    microscope experiment considering the time dependent nature of the saturation,
-    averaged over multiple pulses
+    sample: [J, Gamma, spin_density, temperature, T2]
+    grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
+    cantilever: [dk_to_df_ac_cermit]

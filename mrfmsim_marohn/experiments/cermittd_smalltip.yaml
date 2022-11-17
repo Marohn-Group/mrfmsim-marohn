@@ -1,21 +1,31 @@
 !Experiment
-name: CornellTDESRMultiPulsesStepped
-version: 2022.11.10
+name: CermitTimeDependentSmallTip
+version: 2022.11.17
+description: Simulates a Cornell-style frequency shift magnetic resonance force
+    microscope experiment considering the time dependent nature of the saturation,
+    averaged over multiple pulses and with small step approximation. The function
+    is modified for small tip, where the field calculation uses trapezoidal integral. 
 graph:
     !Graph
     name: cornell_esr_graph
     grouped_edges:
+        - [convert microwave x_0p, [extended ogrid, relative polarization change]]
         - [extended ogrid, extended sample ogrid]
         - [extended sample ogrid, extended Bz]
         - [sample ogrid, trapz field gradient]
         - [extended sample ogrid, extended Bzx]
         - [extended Bz, extended B total]
-        - [extended B total, [extended B offset, B total]]
+        - [extended B total, [B total, extended B offset]]
         - [B total, equilibrium magnetization per spin]
         - [[extended B offset, extended Bzx], relative polarization change]
         - [relative polarization change, averaged relative polarization change]
-        - [[equilibrium magnetization per spin, trapz field gradient, averaged relative polarization change], signal]
+        - [[equilibrium magnetization per spin, trapz field gradient, averaged relative polarization change], spring constant shift]
+        - [spring constant shift, frequency shift]
     node_objects:
+        convert microwave x_0p:
+            func: !Func mrfmsim_marohn.formulas.convert_grid_pts
+            inputs: [mw_x_0p, grid_step]
+            output: ext_pts
         extended ogrid:
             func: !Func mrfmsim.ancillary.execute
             inputs: [extend_grid_method, ext_pts]
@@ -25,17 +35,17 @@ graph:
             inputs: [ext_ogrid, h]
             output: ext_sample_ogrid
         extended Bz:
-            func: !Func mrfmsim.ancillary.execute
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bz_method, ext_sample_ogrid]
             output: ext_Bz
-        extended B total:
-            func: !Func operator.add
-            inputs: [ext_Bz, B0]
-            output: ext_B_tot
         B total:
             func: !Func mrfmsim_marohn.formulas.slice_matrix
             inputs: [ext_B_tot, grid_shape]
             output: B_tot
+        extended B total:
+            func: !Func operator.add
+            inputs: [ext_Bz, B0]
+            output: ext_B_tot
         sample ogrid:
             func: !Func mrfmsim_marohn.formulas.ogrid_sub
             inputs: [grid_array, h]
@@ -60,17 +70,16 @@ graph:
         averaged relative polarization change:
             func: !Func mrfmsim_marohn.formulas.rel_dpol_multipulse
             output: rel_dpol_avg
-        signal:
-            func: !Func mrfmsim_marohn.formulas.hex_mul_sum
+        spring constant shift:
+            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
             inputs: [trapz_Bzxx, rel_dpol_avg, mz_eq, spin_density, grid_voxel]
             output: dk_spin
-
+        frequency shift:
+            func: !Func mrfmsim.ancillary.execute
+            inputs: [dk_to_df_ac_cermit, dk_spin]
+            output: df_spin
 component_substitutes:
     magnet: [Bz_method, Bzx_method]
     sample: [J, Gamma, spin_density, temperature, T1, T2]
-    grid: [grid_array, grid_shape, grid_voxel, extend_grid_method]
-
-description: Simulates a Cornell-style frequency shift magnetic resonance force
-    microscope experiment considering the time dependent nature of the saturation,
-    averaged over multiple pulses and with small step approximation. The function
-    is modified for small tip, where the field calculation uses trapezoidal integral. 
+    grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
+    cantilever: [dk_to_df_ac_cermit]

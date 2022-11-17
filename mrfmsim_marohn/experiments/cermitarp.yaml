@@ -1,0 +1,50 @@
+!Experiment
+name: CermitARP
+version: 2022.11.17
+description: Simulates a Cornell-style frequency-shift magnetic resonance force
+    microscope experiment in which a single frequency-sweep adiabatic rapid
+    passage through resonance is used to invert the spins.
+graph:
+    !Graph
+    name: cermit_arp_graph
+    grouped_edges:
+        - [sample ogrid, [Bz, Bzxx]]
+        - [Bz, B total]
+        - [B total, [equilibrium magnetization per spin, B offset]]
+        - [B offset, relative polarization change]
+        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], signal]
+    node_objects:
+        Bz:
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            inputs: [Bz_method, sample_ogrid]
+            output: Bz
+        B total:
+            func: !Func operator.add
+            inputs: [Bz, B0]
+            output: B_tot
+        sample ogrid:
+            func: !Func mrfmsim_marohn.formulas.ogrid_sub
+            inputs: [grid_array, h]
+            output: sample_ogrid
+        Bzxx:
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            inputs: [Bzxx_method, sample_ogrid]
+            output: Bzxx
+        equilibrium magnetization per spin:
+            func: !Func mrfmsim_marohn.formulas.mz_eq
+            output: mz_eq
+        B offset:
+            func: !Func mrfmsim_marohn.formulas.B_offset
+            output: B_offset
+        relative polarization change:
+            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp
+            output: rel_dpol
+        signal:
+            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
+            output: dk_spin
+
+component_substitutes:
+    magnet: [Bz_method, Bzxx_method]
+    sample: [J, Gamma, spin_density, temperature]
+    grid: [grid_array, grid_voxel]
