@@ -12,6 +12,7 @@ SAMPLE_REPR = """Sample(
   Gamma=2.675e+05 [rad/s.mT] # gyromagnetic ratio
   J=0.5 # total spin angular momentum
   mu_z=0.014 [aN.nm/mT] # equilibrium per spin magnetization
+  mz2_eq=1.990e-04 [aN^2.nm^2/mT^2] # magnetization variance per spin
   spin_density=49.000 [nm^-3] # spin density
   spin_type=1H
   T1=1.000e+01 [s] # spin-lattice relaxation

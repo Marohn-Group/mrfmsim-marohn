@@ -116,7 +116,6 @@ f_c:
   latex_label: '$f \: [\mathrm{Hz}]$'
   format: ":.3e"
 
-
 # input parameters
 t_on:
   unit: "[s]"
@@ -134,7 +133,7 @@ t_p:
   latex_label: $T_\mathrm{p} [s]$
   format: ":.3f"
 
-# input parameters for parameter
+# input parameters for components
 B1:
   unit: "[mT]"
   description: transverse magnetic field
@@ -176,7 +175,12 @@ mz_eq:
   unit: "[aN.nm/mT]"
   description: magnetization per spin at the thermal equilibrium
   latex_label: '$M_z^{eq}, \: [\mathrm{mT}]$'
-  format: ":.3f"
+  format: ":.3e"
+mz2_eq:
+  unit: "[aN^2.nm^2/mT^2]"
+  description: magnetization variance per spin
+  latex_label: '{$M_z^{eq}}^2, \: [\mathrm{mT}]$'
+  format: ":.3e"
 Bz:
   unit: "[mT]"
   description: tip magnetic field
