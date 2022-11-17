@@ -8,6 +8,7 @@ import numpy as np
 from mrfmsim.component import ComponentBase
 from mrfmsim_marohn import UNITS
 
+
 class Cantilever(ComponentBase):
 
     """cantilever object"""
@@ -24,10 +25,21 @@ class Cantilever(ComponentBase):
         self.k_c = k_c
         self.f_c = f_c
 
-    def k_to_f(self, k):
+    def dk_to_df_ac_cermit(self, dk_spin):
         """Coefficient for converting spring constant to frequency
-    
-        :param float/np.array force gradient signal
-        :return float/np.array frequency signal
+
+        The ac cermit uses modulation and the resulting frequency shift
+        is the fourier component. The fourier component of a square
+        wave modulating between 1 and 0 is 2/pi, but we are modulating betw
+        
+        
+        the primary fourier component of a square wave is 4/pi. You lose a factor of two because you modulate between 1 and 0 and not 1 and -1. The final factor of 1/sqrt(2) is because we report rms instead of peak amplitude
         """
-        return k * self.f_c / (self.k_c * np.pi * np.sqrt(2))
+        return dk_spin * self.f_c / (self.k_c * np.pi * np.sqrt(2))
+
+    def dk_to_df_dc_cermit(self, dk_spin):
+        """Coefficient for converting spring constant to frequency
+
+        The dc cermit if the direct frequency shift.
+        """
+        return dk_spin * self.f_c / (2 * self.k_c)
