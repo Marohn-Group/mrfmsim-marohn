@@ -12,13 +12,13 @@ graph:
         - [convert microwave x_0p, [extended ogrid, minimum absolute x offset]]
         - [extended ogrid, extended sample ogrid]
         - [extended sample ogrid, extended Bz]
-        - [sample ogrid, field gradient]
+        - [sample ogrid, Bzxx]
         - [extended Bz, extended B total]
         - [extended B total, [extended B offset, B total]]
         - [B total, equilibrium magnetization per spin]
         - [extended B offset, minimum absolute x offset]
         - [minimum absolute x offset, relative polarization change]
-        - [[equilibrium magnetization per spin, field gradient, relative polarization change], spring constant shift]
+        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], spring constant shift]
         - [spring constant shift, frequency shift]
     node_objects:
         convert microwave x_0p:
@@ -49,7 +49,7 @@ graph:
             func: !Func mrfmsim_marohn.formulas.ogrid_sub
             inputs: [grid_array, h]
             output: sample_ogrid
-        field gradient:
+        Bzxx:
             func: !Func mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bzxx_method, sample_ogrid]
             output: Bzxx

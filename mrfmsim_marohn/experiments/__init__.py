@@ -8,7 +8,7 @@ from mrfmsim.configuration import MrfmSimLoader
 import yaml
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-exp_list = glob.glob(os.path.join(DIR, '**.yaml'))
+exp_list = glob.glob(os.path.join(DIR, '**/*.yaml'), recursive=True)
 
 for exp_path in exp_list:
 

@@ -1,18 +1,17 @@
 !Experiment
-name: CermitARP
+name: CermitESRPeriodicIrradiationStationaryTip
 version: 2022.11.17
-description: Simulates a Cornell-style frequency-shift magnetic resonance force
-    microscope experiment in which a single frequency-sweep adiabatic rapid
-    passage through resonance is used to invert the spins.
+description: Saturation ESR simulation with intermittent pulse and a stationary tip.
 graph:
     !Graph
-    name: cermit_arp_graph
+    name: cermit_periodic_irrad_stationary_tip_graph
     grouped_edges:
         - [sample ogrid, [Bz, Bzxx]]
         - [Bz, B total]
         - [B total, [equilibrium magnetization per spin, B offset]]
         - [B offset, relative polarization change]
-        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], signal]
+        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], spring constant shift]
+        - [spring constant shift, frequency shift]
     node_objects:
         Bz:
             func: !Func mrfmsim_marohn.formulas.ogrid_method
@@ -37,14 +36,19 @@ graph:
             func: !Func mrfmsim_marohn.formulas.B_offset
             output: B_offset
         relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp
+            func: !Func mrfmsim_marohn.formulas.rel_dpol_periodic_irrad
             output: rel_dpol
-        signal:
+        spring constant shift:
             func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
             inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
             output: dk_spin
+        frequency shift:
+            func: !Func mrfmsim.ancillary.execute
+            inputs: [dk_to_df_ac_cermit, dk_spin]
+            output: df_spin
 
 component_substitutes:
     magnet: [Bz_method, Bzxx_method]
-    sample: [J, Gamma, spin_density, temperature]
-    grid: [grid_array, grid_voxel]
+    sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
+    grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
+    cantilever: [dk_to_df_ac_cermit]
