@@ -8,7 +8,7 @@ description: Simulates a Cornell-style frequency shift magnetic resonance force
     the field calculation uses trapezoidal integral. 
 graph:
     !Graph
-    name: cornell_esr_smalltip_graph
+    name: cermit_esr_smalltip_graph
     grouped_edges:
         - [convert microwave x_0p, [extended ogrid, minimum absolute x offset]]
         - [extended ogrid, extended sample ogrid]

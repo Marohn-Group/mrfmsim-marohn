@@ -60,7 +60,7 @@ class Sample(ComponentBase):
             density :math:`\rho` [1/nm^3]; *note the units*
         :param float Gamma: spin gyromagnetic ratio [rad/s.mT]
             defaults to None if spin_type is one of the preset
-        :param float j: total spin angular momentum [unitless]
+        :param float J: total spin angular momentum [unitless]
             default to None if spin_type is one of the preset
         :ivar float Gamma: gyromagnetic ratio [rad/s.mT]
         :ivar float dB_hom: the homogeneous linewidth [mT]
