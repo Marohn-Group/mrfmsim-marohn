@@ -8,6 +8,7 @@
 import numba
 import numpy as np
 from .math import as_strided_x
+from .field import B_offset
 
 HBAR = 1.054571628e-7  # aN nm s - reduced Planck constant
 KB = 1.3806504e4  # aN nm K^{-1} - Boltzmann constant
@@ -158,22 +159,28 @@ def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
 
 
 @numba.jit(nopython=True, parallel=True)
-def rel_dpol_nut(B_offset, B1, Gamma, T_p):
+def rel_dpol_nut(B_offset, B1, Gamma, t_p):
     r"""Relative change in polarization under the evolution of irradiation
     Equations:
+
     .. math::
         \rho_{\mathrm{rel}} = \frac{\Delta M_{z}}{M_{z}(0)}
         = \frac{1}{\Omega^2+1}
         (1 + \cos{(\Omega_1 t_p \sqrt{\Omega^2+1})})
     with
+
     .. math::
         \Delta B_{\mathrm{offset}} = B_z(\vec{r}) - \omega/\gamma
     the resonance offset field and
+
     .. math::
         \Omega_1 = \gamma B_1
+
     .. math::
         \Omega = \frac{\Delta B_{\mathrm{offset}}}{B_1}
+
     the unitless resonance offset.
+
     :param float gamma: the gyromagnetic ratio. [rad/s.mT]
     :param float B_offset: resonance offset field
         :math:`\Delta B_{\text{offset}}` [mT]
@@ -184,10 +191,24 @@ def rel_dpol_nut(B_offset, B1, Gamma, T_p):
     :rtype: np.array, same shape as B_offset
     """
     omega_term = (B_offset / B1) ** 2 + 1
-    theta = B1 * Gamma * T_p
+    theta = B1 * Gamma * t_p
     rel_dpol = np.cos(theta * np.sqrt(omega_term)) / omega_term - 1
 
     return rel_dpol
+
+
+@numba.jit(nopython=True, parallel=True)
+def rel_dpol_nut_multi_freq_pulse(B_tot, B1, f_rf_array, Gamma, t_p):
+    """Nutation experiments where different frequencies are applied in steps
+
+    The polarization is aggregated as a product
+    """
+    pol = np.ones(B_tot.shape)
+    for f_rf in f_rf_array:
+        b_offset = B_offset(B_tot, f_rf, Gamma)
+        pol *= rel_dpol_nut(b_offset, B1, Gamma, t_p) + 1
+
+    return pol - 1
 
 
 def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):

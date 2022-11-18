@@ -1,0 +1,48 @@
+!Experiment
+name: CermitNutMultiPulse
+version: 2022.11.18
+description: Simulates a Cornell-style frequency-shift magnetic resonance force 
+    microscope experiment in a resonant pulse is used to flip the spins. In this 
+    experiment, multiple pulses at various frequencies are used to build up a 
+    frequency shift large enough to be detected when surface noise is present. 
+
+graph:
+    !Graph
+    name: cermit_nut_multipulse_graph
+    grouped_edges:
+        - [sample ogrid, [Bz, Bzxx]]
+        - [Bz, B total]
+        - [B total, [equilibrium magnetization per spin, relative polarization change]]
+        - [[equilibrium magnetization per spin, Bzxx, relative polarization change], spring constant shift]
+    node_objects:
+        Bz:
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            inputs: [Bz_method, sample_ogrid]
+            output: Bz
+        B total:
+            func: !Func operator.add
+            inputs: [Bz, B0]
+            output: B_tot
+        sample ogrid:
+            func: !Func mrfmsim_marohn.formulas.ogrid_sub
+            inputs: [grid_array, h]
+            output: sample_ogrid
+        Bzxx:
+            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            inputs: [Bzxx_method, sample_ogrid]
+            output: Bzxx
+        equilibrium magnetization per spin:
+            func: !Func mrfmsim_marohn.formulas.mz_eq
+            output: mz_eq
+        relative polarization change:
+            func: !Func mrfmsim_marohn.formulas.rel_dpol_nut_multi_freq_pulse
+            output: rel_dpol
+        spring constant shift:
+            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
+            output: dk_spin
+
+component_substitutes:
+    magnet: [Bz_method, Bzxx_method]
+    sample: [J, Gamma, spin_density, temperature]
+    grid: [grid_array, grid_voxel]
