@@ -1,12 +1,12 @@
 !Experiment
 name: CermitTimeDependent
-version: 2022.11.17
+version: 2022.11.18
 description: Simulates a Cornell-style frequency shift magnetic resonance force
     microscope experiment considering the time dependent nature of the saturation,
     averaged over multiple pulses.
 graph:
     !Graph
-    name: cornell_td_esr_graph
+    name: cornell_td_graph
     grouped_edges:
         - [convert microwave x_0p, [extended ogrid, relative polarization change]]
         - [extended ogrid, extended sample ogrid]
@@ -72,7 +72,7 @@ graph:
             output: rel_dpol_avg
         spring constant shift:
             func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
-            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
+            inputs: [Bzxx, rel_dpol_avg, mz_eq, spin_density, grid_voxel, [sign, -1]]
             output: dk_spin
         frequency shift:
             func: !Func mrfmsim.ancillary.execute
