@@ -42,7 +42,7 @@ graph:
             func: !Func mrfmsim_marohn.formulas.B_offset
             output: B_offset
         relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp
+            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp_ibm
             output: rel_dpol
         force signal:
             func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
