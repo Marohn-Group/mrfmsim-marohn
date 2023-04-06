@@ -1,10 +1,10 @@
-!Experiment
+!experiment
 name: IBMCyclic
 version: 2022.11.17
 description: Simulate an IBM-style cyclic-inversion magnetic resonance force
     microscope experiment.
 graph:
-    !Graph
+    !graph
     name: ibm_cyclic_graph
     grouped_edges:
         - [sample ogrid, [Bz, Bzx]]
@@ -16,40 +16,40 @@ graph:
         - [[Bzx squared, relative polarization change], force variance signal]
     node_objects:
         Bz:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            func: !import mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bz_method, sample_ogrid]
             output: Bz
         B total:
-            func: !Func operator.add
+            func: !import operator.add
             inputs: [Bz, B0]
             output: B_tot
         sample ogrid:
-            func: !Func mrfmsim_marohn.formulas.ogrid_sub
+            func: !import mrfmsim_marohn.formulas.ogrid_sub
             inputs: [grid_array, h]
             output: sample_ogrid
         Bzx:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            func: !import mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bzx_method, sample_ogrid]
             output: Bzx
         Bzx squared:
-            func: !Func operator.pow
+            func: !import operator.pow
             inputs: [Bzx, [power, 2]]
             output: Bzx2
         equilibrium magnetization per spin:
-            func: !Func mrfmsim_marohn.formulas.mz_eq
+            func: !import mrfmsim_marohn.formulas.mz_eq
             output: mz_eq
         B offset:
-            func: !Func mrfmsim_marohn.formulas.B_offset
+            func: !import mrfmsim_marohn.formulas.B_offset
             output: B_offset
         relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp_ibm
+            func: !import mrfmsim_marohn.formulas.rel_dpol_arp_ibm
             output: rel_dpol
         force signal:
-            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
             inputs: [Bzx, rel_dpol, mz_eq, spin_density, grid_voxel]
             output: dF_spin
         force variance signal:
-            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
             inputs: [Bzx2, rel_dpol, mz2_eq, spin_density, grid_voxel]
             output: dF2_spin
 

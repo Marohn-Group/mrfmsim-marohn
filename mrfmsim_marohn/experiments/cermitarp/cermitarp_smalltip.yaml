@@ -1,11 +1,11 @@
-!Experiment
+!experiment
 name: CermitARPSmallTip
 version: 2022.11.17
 description: Simulates a Cornell-style frequency-shift magnetic resonance force
     microscope experiment in which a single frequency-sweep adiabatic rapid
     passage through resonance is used to invert the spins.
 graph:
-    !Graph
+    !graph
     name: cermit_arp_smalltip_graph
     grouped_edges:
         - [sample ogrid, [Bz, trapezoid Bzxx]]
@@ -15,31 +15,31 @@ graph:
         - [[equilibrium magnetization per spin, trapezoid Bzxx, relative polarization change], spring constant shift]
     node_objects:
         Bz:
-            func: !Func mrfmsim_marohn.formulas.ogrid_method
+            func: !import mrfmsim_marohn.formulas.ogrid_method
             inputs: [Bz_method, sample_ogrid]
             output: Bz
         B total:
-            func: !Func operator.add
+            func: !import operator.add
             inputs: [Bz, B0]
             output: B_tot
         sample ogrid:
-            func: !Func mrfmsim_marohn.formulas.ogrid_sub
+            func: !import mrfmsim_marohn.formulas.ogrid_sub
             inputs: [grid_array, h]
             output: sample_ogrid
         trapezoid Bzxx:
-            func: !Func mrfmsim_marohn.formulas.xtrapz_field_gradient
+            func: !import mrfmsim_marohn.formulas.xtrapz_field_gradient
             output: trapz_Bzxx
         equilibrium magnetization per spin:
-            func: !Func mrfmsim_marohn.formulas.mz_eq
+            func: !import mrfmsim_marohn.formulas.mz_eq
             output: mz_eq
         B offset:
-            func: !Func mrfmsim_marohn.formulas.B_offset
+            func: !import mrfmsim_marohn.formulas.B_offset
             output: B_offset
         relative polarization change:
-            func: !Func mrfmsim_marohn.formulas.rel_dpol_arp
+            func: !import mrfmsim_marohn.formulas.rel_dpol_arp
             output: rel_dpol
         spring constant shift:
-            func: !Func mrfmsim_marohn.formulas.sum_of_multiplication
+            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
             inputs: [trapz_Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
             output: dk_spin
 
