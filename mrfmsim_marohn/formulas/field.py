@@ -105,7 +105,7 @@ def xtrapz_field_gradient(Bzx_method, sample_ogrid, trapz_pts, x_0p):
 def single_spin_field_gradient(
     magnet_origin, magnet_radius, mu0_Ms, mu_z, tip_sample_distance, geometry, x_0p
 ):
-    """The analytical calculation for a single spin.
+    r"""The analytical calculation for a single spin.
 
     The analytical solution to the exact equations for the delta k
     without any approximations as derived below:
