@@ -13,29 +13,30 @@ import math
 
 
 class Grid(ComponentBase):
-    """Instantiate a rectangular grid with length, step and origin
-    The result grid has equal spacing in each dimension.
+    """Instantiate a rectangular grid with length, step and origin.
+    The resulting grid has equal spacing in each dimension.
     """
 
     _units = UNITS
 
     def __init__(self, shape, step, origin=[0, 0, 0]):
-        """Construct the grid object
-        The grid's step sizes, lengths, and the number of points is fixed at
-        instantiation time.  The grid's step sizes and lengths number are thus
+        """Construct the grid object.
+    
+        The grid's step sizes, lengths, and the number of points are fixed at
+        instantiation time.  The grid's step sizes and lengths number is thus
         *not* updated if you manually reset the ``L`` or ``dL`` elements of
         the object manually later.
-        If the lengths (``L``, etc) are not an integer multiple of the step
+        If the lengths (``L``, etc) is not an integer multiple of the step
         sizes (``dL``, etc), then use for the lengths the closest multiple of
         the step sizes. This rounding is done silently and no error is flagged.
         .. Note::
-            The grid shape are forced to be odd in x and y direction, to avoid
+            The grid shape is forced to be odd in the x and y directions, to avoid
             artifact when convolve.
         :param np.array length: array of lengths along (x, y, z)
         :param np.array step: a list of step sizes
         :param np.array origin: the grid origin
         :ivar np.array grid_length: actual lengths of the grid. This is recalculated
-            based on rounded value of grid shape and step size.
+            based on the rounded value of grid shape and step size.
         :ivar np.array grid_origin: grid origin
         :ivar np.array grid_step: grid setup size in x, y, z direction
         :ivar float v_voxel: the volume of each grid voxel
@@ -54,7 +55,7 @@ class Grid(ComponentBase):
 
     @staticmethod
     def grid_extents(length, origin):
-        """Calculate grid extents based on the grid length and origin
+        """Calculate grid extents based on the grid length and origin.
 
         The result is column stacked into a dimension of (3, 2)
         """
@@ -63,7 +64,8 @@ class Grid(ComponentBase):
 
     @property
     def grid_array(self):
-        """Generate a open mesh-grid of the given grid dimensions
+        """Generate an open mesh-grid of the given grid dimensions.
+    
         The benefit of the property is that it cannot be modified,
         therefore, it is not included when using ``vars()`` to obtain
         the object dictionary. It also generates at runtime.
@@ -79,7 +81,7 @@ class Grid(ComponentBase):
 
 
     def extend_grid_method(self, ext_pts):
-        """Extend grid by number of points in x, y, z direction (one side)
+        """Extend the grid by the number of points in the x, y, z direction (one side).
 
         :param int ext_pts: points to extend along x direction
             (cantilever motion direction).

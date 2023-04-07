@@ -10,7 +10,8 @@ class SphereMagnet(ComponentBase):
     _units = UNITS
 
     def __init__(self, radius, mu0_Ms, origin):
-        """Construct a magnet instance
+        """Construct a magnet instance.
+
         :param float radius: sphere magnet radius [nm]
         :param float mu0_Ms: magnet magnetization [mT],
                         assumed oriented along z
@@ -21,7 +22,7 @@ class SphereMagnet(ComponentBase):
         self.magnet_radius = radius
 
     def Bz_method(self, x, y, z):
-        r"""Calculate magnetic field :math:`B_z` [mT]
+        r"""Calculate magnetic field :math:`B_z` [mT].
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -55,7 +56,8 @@ class SphereMagnet(ComponentBase):
         target="parallel",
     )
     def _bz(dx, dy, dz):
-        """Internal calculation for bz, optimized with numba
+        """Internal calculation for bz, optimized with numba.
+
         :param dx: normalized distances to the center of the magnet in x
         :param dx: normalized distances to the center of the magnet in y
         :param dx: normalized distances to the center of the magnet in z
@@ -70,7 +72,8 @@ class SphereMagnet(ComponentBase):
         )
 
     def Bzx_method(self, x, y, z):
-        r"""Calcualte magnetic field gradient :math:`B_{zx}`
+        r"""Calcualte magnetic field gradient :math:`B_{zx}`.
+
         :math:`B_{zx} \equiv \partial B_z / \partial x`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-1}` ].
         With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
@@ -102,7 +105,8 @@ class SphereMagnet(ComponentBase):
         target="parallel",
     )
     def _bzx(dx, dy, dz):
-        """Internal calculation for bzx, optimized with numba
+        """Internal calculation for bzx, optimized with numba.
+    
         :param dx: normalized distances to the center of the magnet in x
         :param dy: normalized distances to the center of the magnet in y
         :param dz: normalized distances to the center of the magnet in z
@@ -117,7 +121,8 @@ class SphereMagnet(ComponentBase):
         )
 
     def Bzxx_method(self, x, y, z):
-        r"""Calculate magnetic field second derivative :math:`B_{zxx}`
+        r"""Calculate magnetic field second derivative :math:`B_{zxx}`.
+
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \: \mathrm{nm}^{-2}` ]. The inputs are
         With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
@@ -150,7 +155,8 @@ class SphereMagnet(ComponentBase):
         target="parallel",
     )
     def _bzxx(dx, dy, dz):
-        """Internal calculation for bzxx, optimized with numba
+        """Internal calculation for bzxx, optimized with numba.
+
         :param dx: normalized distances to the center of the magnet in x
         :param dy: normalized distances to the center of the magnet in y
         :param dz: normalized distances to the center of the magnet in z
@@ -168,7 +174,7 @@ class SphereMagnet(ComponentBase):
 
 
 class RectangularMagnet(ComponentBase):
-    """Rectangular magnet object with bz, bzx, bzxx calculations"""
+    """Rectangular magnet object with the bz, bzx, bzxx calculations."""
 
     _units = UNITS
 
@@ -180,7 +186,7 @@ class RectangularMagnet(ComponentBase):
         :param list origin: the position of the magnet origin (x, y, z)
         :ivar np.array _range:
             [-xrange, +xrange, -yrange, +yrange, -zrange, zrange]
-            range in x, y, z direction after corrected with origin
+            range in the x, y and z direction after center point to the origin.
         """
         self.magnet_origin = np.array(origin)
         self.mu0_Ms = mu0_Ms
@@ -195,7 +201,8 @@ class RectangularMagnet(ComponentBase):
         self._pre_term = self.mu0_Ms / (4 * np.pi)
 
     def Bz_method(self, x, y, z):
-        r"""Calculate magnetic field :math:`B_z` [mT]
+        r"""Calculate magnetic field :math:`B_z` [mT].
+
         The magnetic field is calculated following Ravaud2009.
         Using the Coulombian model, assuming a uniform magnetization throughout
         the volume of the magnet and modeling each face of the magnet as a
@@ -250,8 +257,9 @@ class RectangularMagnet(ComponentBase):
         target="parallel",
     )
     def _bz(dx1, dx2, dy1, dy2, dz1, dz2):
-        """Calculate the summation term for magnetic field optimized by numba
-        see method bz for explanation
+        """Calculate the summation term for magnetic field optimized by numba.
+
+        See method bz for the explanation.
         :param float dx1, dx2: distance between grid and the one end of magnet
                         in x direction [nm]
         :param float dy1, dy2: distance between grid and the one end of magnet
@@ -272,7 +280,8 @@ class RectangularMagnet(ComponentBase):
         )
 
     def Bzx_method(self, x, y, z):
-        r"""Calculate magnetic field gradient :math:`B_{zx}`
+        r"""Calculate magnetic field gradient :math:`B_{zx}`.
+
         :math:`B_{zx} \equiv \partial B_z / \partial x`
         [:math:`\mathrm{mT} \: \mathrm{nm}^{-1}`].
         The magnetic field gradient
@@ -318,7 +327,8 @@ class RectangularMagnet(ComponentBase):
     )
     def _bzx(dx1, dx2, dy1, dy2, dz1, dz2):
         """Calculate the summation term for magnetic field gradient.
-        optimized with numba. See method bzx for explanation.
+
+        Optimized with numba. See method bzx for the explanation.
         :param np.array dx1, dx2: distance between grid and the 2 ends of
                                 magnet in x direction [nm]
         :param np.array dy1, dy2: distance between grid and the 2 ends of
@@ -355,10 +365,11 @@ class RectangularMagnet(ComponentBase):
         )
 
     def Bzxx_method(self, x, y, z):
-        r"""Calculate magnetic field second derivative :math:`B_{zxx}`
+        r"""Calculate magnetic field second derivative :math:`B_{zxx}`/
+
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \; \mathrm{nm}^{-2}`]
-        The magnetic field second derivative is given by the following:
+        The magnetic field's second derivative is given by the following:
         .. math::
            B_{zxx} = \dfrac{\partial B_z}{\partial z}
                = \dfrac{\mu_0 M_s}{4 \pi} \sum_{i=1}^2
@@ -395,8 +406,9 @@ class RectangularMagnet(ComponentBase):
         target="parallel",
     )
     def _bzxx(dx1, dx2, dy1, dy2, dz1, dz2):
-        """The summation term for second derivative of magnetic field
-        optimized by numba. See bzxx method for explanation.
+        """The summation term for the second derivative of magnetic field.
+    
+        Optimized by numba. See bzxx method for the explanation.
         :param float dx1, dx2: distance between grid and the one end of magnet
                         in x direction [nm]
         :param float dy1, dy2: distance between grid and the one end of magnet

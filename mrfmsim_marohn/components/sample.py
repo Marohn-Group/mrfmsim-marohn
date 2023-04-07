@@ -9,7 +9,8 @@ from mrfmsim_marohn.components import ComponentBase
 
 
 class Sample(ComponentBase):
-    r"""Sample object for MRFM simulation
+    r"""Sample object for MRFM simulation.
+
     The **Sample** carries the properties of the nuclear or electron
     spins in the sample.
     The default spin type includes the properties of
@@ -35,7 +36,8 @@ class Sample(ComponentBase):
     def __init__(
         self, spin_type, T1, T2, temperature, spin_density, Gamma=None, J=None
     ):
-        r"""Initialize sample object
+        r"""Initialize sample object.
+
         The values for the gyromagnetic ratio and total spin angular momentum
         are populated automatically based on the nucleus.
         The homogeneous linewidth ``dB_hom`` is defined as

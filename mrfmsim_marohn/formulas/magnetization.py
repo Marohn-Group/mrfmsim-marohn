@@ -6,8 +6,8 @@ KB = 1.3806504e4  # aN nm K^{-1} - Boltzmann constant
 
 @nb.jit(nopython=True, parallel=True)
 def mz_eq(B_tot, Gamma, J, temperature):
-    r"""Compute the magnetization per spin at the thermal
-    equilibrium using the Brillouin function.
+    r"""Magnetization per spin at the thermal equilibrium using the Brillouin function.
+
     :param float gamma: the gyromagnetic ratio. [rad/s.mT]
     :param float j: total spin angular momentum
     :param float temperature: the spin temperature [K]

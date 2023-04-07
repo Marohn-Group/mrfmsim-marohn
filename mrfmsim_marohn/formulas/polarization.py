@@ -16,9 +16,10 @@ KB = 1.3806504e4  # aN nm K^{-1} - Boltzmann constant
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
-    r"""Relative change in polarization for steady-state
+    r"""Relative change in polarization for steady-state.
+
     Compute and return the sample's *relative* steady-state spin
-    polarization
+    polarization.
     As given by the Bloch equations,
     .. math::
         \Delta\rho_{\text{rel}} = \dfrac{\Delta {\cal M}_z}
@@ -41,7 +42,7 @@ def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
     :param float B_1: the amplitude of the applied transverse field
         :math:`B_1` [mT]
     :return: relative polarization
-    :rtype: np.array, same shape as B_offset
+    :rtype: np.array, the same shape as B_offset
     """
 
     s2_term = (B1**2) / (dB_sat**2)  # S-squared term
@@ -51,7 +52,7 @@ def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
-    r"""Relative change in polarization for IBM adiabatic rapid passage
+    r"""Relative change in polarization for IBM adiabatic rapid passage.
     .. math::
         \eta \, (\Delta B_{\text{offset}}) = \begin{cases}
          \cos^2 \left(\dfrac{\gamma \Delta B_{\text{offset}}}
@@ -72,7 +73,7 @@ def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
         :math:`\Delta f_{\text{FM}}` of the applied transverse
         radio frequency magnetic field [Hz]
     :return: relative change in polarization
-    :rtype: np.array, same shape as B_offset
+    :rtype: np.array, the same shape as B_offset
     """
 
     b_crit = np.pi * df_fm / Gamma
@@ -85,7 +86,8 @@ def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_arp(B_offset, B1, df_fm, Gamma):
-    r"""Relative change in polarization for adiabatic rapid passage
+    r"""Relative change in polarization for adiabatic rapid passage.
+
     Compute the resonance offset at each point in the sample and compute
     the change in the polarization at each point in the sample following the
     adiabatic rapid passage.
@@ -108,7 +110,7 @@ def rel_dpol_arp(B_offset, B1, df_fm, Gamma):
         :math:`\Delta f_\text{FM}` of the applied transverse
         radio frequency magnetic field [Hz]
     :return: relative change in polarization
-    :rtype: np.array, same shape as B_offset
+    :rtype: np.array, the same shape as B_offset
     """
 
     om_i = (B_offset + 2 * np.pi * df_fm / (2.0 * Gamma)) / B1
@@ -119,7 +121,8 @@ def rel_dpol_arp(B_offset, B1, df_fm, Gamma):
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
-    r"""Relative change in polarization for intermittent irradiation
+    r"""Relative change in polarization for intermittent irradiation.
+
     .. math::
         \langle \Delta M_z \rangle = - \frac{S^2 \, M_0}{1 + S^2 + \Omega^2}
         \left(\frac{1}{r_1} \frac{1}{\tau_\text{on}+\tau_\text{off}}
@@ -137,7 +140,7 @@ def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
     :param float t_on: time with the microwaves on [s]
     :param float t_off: time with the microwaves off [s]
     :return: relative change in polarization
-    :rtype: np.array, same shape as B_offset
+    :rtype: np.array, the same shape as B_offset
     """
 
     r1 = 1 / T1
@@ -160,7 +163,8 @@ def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_nut(B_offset, B1, Gamma, t_p):
-    r"""Relative change in polarization under the evolution of irradiation
+    r"""Relative change in polarization under the evolution of irradiation.
+
     Equations:
 
     .. math::
@@ -188,7 +192,7 @@ def rel_dpol_nut(B_offset, B1, Gamma, t_p):
         :math:`B_{\text{1}}` [mT]
     :param float t_p: pulse time :math:`t_{\mathrm{p}}` [s]
     :return: relative polarization
-    :rtype: np.array, same shape as B_offset
+    :rtype: np.array, the same shape as B_offset
     """
     omega_term = (B_offset / B1) ** 2 + 1
     theta = B1 * Gamma * t_p
@@ -199,9 +203,9 @@ def rel_dpol_nut(B_offset, B1, Gamma, t_p):
 
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_nut_multi_freq_pulse(B_tot, B1, f_rf_array, Gamma, t_p):
-    """Nutation experiments where different frequencies are applied in steps
+    """Nutation experiments where different frequencies are applied in steps.
 
-    The polarization is aggregated as a product
+    The polarization is aggregated as a product.
     """
     pol = np.ones(B_tot.shape)
     for f_rf in f_rf_array:
@@ -212,9 +216,9 @@ def rel_dpol_nut_multi_freq_pulse(B_tot, B1, f_rf_array, Gamma, t_p):
 
 
 def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
-    """Relative change in polarization for time dependent saturation
+    """Relative change in polarization for time-dependent saturation.
 
-    The result is not a steady state solution because it ignores T1 relaxation
+    The result is not a steady-state solution because it ignores T1 relaxation.
     """
     # ignore division error the Exp takes care of the inf
     np.seterr(divide="ignore", invalid="ignore")
@@ -231,12 +235,12 @@ def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
 
 
 def rel_dpol_sat_td_smallsteps(B1, ext_Bzx, ext_B_offset, ext_pts, Gamma, T2, tip_v):
-    """Small step approximation of the time dependent relative change in polarization"""
+    """Small step approximation of the time-dependent relative change in polarization."""
     # ignore division error
     np.seterr(divide="ignore", invalid="ignore")
     omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
 
-    # using strides are faster than convolution on large datasets
+    # Using strides is faster than convolution on large datasets
     offset_atan_diff = np.diff(omega_offset_atan, axis=0)
     Bzx_rmean = as_strided_x(ext_Bzx, 2).mean(axis=1)
 
@@ -251,7 +255,7 @@ def rel_dpol_sat_td_smallsteps(B1, ext_Bzx, ext_B_offset, ext_pts, Gamma, T2, ti
 
 
 def rel_dpol_multipulse(rel_dpol, T1, dt_pulse):
-    """Calculate average relative change in polarization after multiple pulses
+    """Calculate the average relative change in polarization after multiple pulses.
 
     The formula ignores relaxation during pulses.
     :param float dt_pulse: time between pulses

@@ -1,22 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Defines cantilever objects"""
+"""Defines cantilever objects."""
 
-from re import U
 import numpy as np
 from mrfmsim.component import ComponentBase
 from mrfmsim_marohn import UNITS
 
 
 class Cantilever(ComponentBase):
-
-    """cantilever object"""
+    """cantilever object."""
 
     _units = UNITS
 
     def __init__(self, k_c, f_c):
-        """Initialize cantilever
+        """Initialize cantilever.
+    
         :param float k: spring constant [nN/m]
         :param float f: mechanical resonance freq [mHz]
         :ivar float k: spring constant [nN/m]
@@ -26,20 +25,23 @@ class Cantilever(ComponentBase):
         self.f_c = f_c
 
     def dk_to_df_ac_cermit(self, dk_spin):
-        """Coefficient for converting spring constant to frequency
+        """Converting spring constant to the frequency.
 
         The ac cermit uses modulation and the resulting frequency shift
         is the fourier component. The fourier component of a square
         wave modulating between 1 and 0 is 2/pi, but we are modulating betw
         
         
-        the primary fourier component of a square wave is 4/pi. You lose a factor of two because you modulate between 1 and 0 and not 1 and -1. The final factor of 1/sqrt(2) is because we report rms instead of peak amplitude
+        The primary Fourier component of a square wave is 4/pi.
+        You lose a factor of two because you modulate between 1 and 0 and
+        not 1 and -1. The final factor of 1/sqrt(2) is because we report
+        rms instead of peak amplitude.
         """
         return dk_spin * self.f_c / (self.k_c * np.pi * np.sqrt(2))
 
     def dk_to_df_dc_cermit(self, dk_spin):
-        """Coefficient for converting spring constant to frequency
+        """Converting spring constant to the frequency.
 
-        The dc cermit if the direct frequency shift.
+        The dc cermit for the direct frequency shift.
         """
         return dk_spin * self.f_c / (2 * self.k_c)
