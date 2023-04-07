@@ -26,7 +26,7 @@ graph:
             inputs: [mw_x_0p, grid_step]
             output: ext_pts
         extended ogrid:
-            func: !import mrfmsim.ancillary.execute
+            func: !func "lambda extend_grid_method, ext_pts: extend_grid_method(ext_pts)"
             inputs: [extend_grid_method, ext_pts]
             output: ext_ogrid
         extended sample ogrid:

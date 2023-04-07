@@ -24,7 +24,7 @@ graph:
             inputs: [mw_x_0p, grid_step]
             output: ext_pts
         extended ogrid:
-            func: !import mrfmsim.ancillary.execute
+            func: !func "lambda extend_grid_method, ext_pts: extend_grid_method(ext_pts)"
             inputs: [extend_grid_method, ext_pts]
             output: ext_ogrid
         extended sample ogrid:
@@ -70,7 +70,7 @@ graph:
             inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
             output: dk_spin
         frequency shift:
-            func: !import mrfmsim.ancillary.execute
+            func: !func "lambda dk_to_df_ac_cermit, dk_spin: dk_to_df_ac_cermit(dk_spin)"
             inputs: [dk_to_df_ac_cermit, dk_spin]
             output: df_spin
 component_substitutes:
