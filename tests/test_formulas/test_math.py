@@ -1,27 +1,18 @@
 from mrfmsim_marohn.formulas.math import (
+    create_func,
+    numba_sum,
+    numba_sum_of_multiplication,
     sum_of_multiplication,
     slice_matrix,
     as_strided_x,
     ogrid_sub,
-    ogrid_method
+    ogrid_method,
 )
 import numpy as np
 
 
-def test_sum_of_multiplication():
-    """Test the chained multiplication sum works for both matrix and scalar"""
-
-    matrices = {i: np.random.rand(2, 3, 4) for i in ["b", "c", "d"]}
-    matrices['f'] = -1
-    sum_value = sum_of_multiplication(a=2, e=3, **matrices)
-
-    assert np.isclose(
-        sum_value, - np.sum(2 * 3 * matrices["b"] * matrices["c"] * matrices["d"])
-    )
-
-
 def test_slice_matrix():
-    """Test slice matrix cuts the matrix in the center"""
+    """Test slice matrix cuts the matrix in the center."""
 
     matrix = np.array(
         [[1, 2, 3, 4, 5], [11, 22, 33, 44, 55], [111, 222, 333, 444, 555]]
@@ -38,7 +29,7 @@ def test_slice_matrix():
 
 
 def test_as_strided_x():
-    """Testing if as_strided_x maximum matches running max"""
+    """Testing if as_strided_x maximum matches running max."""
 
     matrix_a = np.random.rand(30, 20, 10)
     window = 10
@@ -60,7 +51,7 @@ def test_as_strided_x():
 
 
 def test_ogrid_sub():
-    """Test ogrid_sub
+    """Test ogrid_sub.
 
     The sub results in a iterable mapping. Here tests if the
     dimension and values are correct.
@@ -84,7 +75,7 @@ def test_ogrid_sub():
 
 
 def test_ogrid_method():
-    """Test ogrid_method
+    """Test ogrid_method.
 
     Test if the value accepts ogrid, and mapping. The result should be the same
     as the mesh grid result. For a 2-D array [array([[0], [2]]), array([[1, 2]])]
@@ -109,3 +100,43 @@ def test_ogrid_method():
 
     dis_mesh = distance3d(*np.mgrid[0:1:2j, 1:2:2j, 2:3:2j])
     assert np.array_equal(dis, dis_mesh)
+
+
+def test_create_func():
+    """Test create_func."""
+
+    func = create_func("add", 'def add(a, b): """Add a and b."""; return a + b')
+    assert func(1, 2) == 3
+    assert func.__name__ == "add"
+    assert func.__doc__ == "Add a and b."
+
+
+def test_nb_summation():
+    """Test numba summation function creation."""
+
+    func = numba_sum(["a", "b"])
+
+    assert func.__name__ == "numba_sum"
+    assert func.__doc__ == "Sum of a, b."
+    assert func(1, 2) == 3
+
+def test_numba_sum_of_multiplication():
+    """Test numba sum of multiplication function creation."""
+
+    func = numba_sum_of_multiplication(["a", "b", "c"])
+
+    assert func.__name__ == "numba_sum_of_multiplication"
+    assert func.__doc__ == "Sum of the product of a, b, c."
+    assert func(1, 2, np.array([1, 2, 3])) == 12
+
+
+def test_sum_of_multiplication():
+    """Test the chained multiplication sum works for both matrix and scalar."""
+
+    matrices = {i: np.random.rand(2, 3, 4) for i in ["b", "c", "d"]}
+    matrices["f"] = -1
+    sum_value = sum_of_multiplication(a=2, e=3, **matrices)
+
+    assert np.isclose(
+        sum_value, -np.sum(2 * 3 * matrices["b"] * matrices["c"] * matrices["d"])
+    )
