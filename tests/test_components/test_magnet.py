@@ -85,7 +85,7 @@ class TestSphereMagnet(MagnetTester):
 
     @pytest.fixture
     def magnet(self):
-        """Instantiate a SphereManget instance"""
+        """Instantiate a SphereManget instance."""
         return SphereMagnet(radius=50.0, mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0])
 
     @pytest.mark.parametrize(
@@ -131,7 +131,7 @@ class TestSphereMagnet(MagnetTester):
 
 
 class TestRectangularMagnet(MagnetTester):
-    """Tests RectangularMagnet"""
+    """Tests RectangularMagnet."""
 
     magnet_str = """\
     RectangularMagnet(
@@ -172,7 +172,7 @@ class TestRectangularMagnet(MagnetTester):
         np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(x, y, -z), rtol=1e-10)
 
     def test_rectmagnet_Bz(self):
-        """Test the rectangular magnet based on the numeric simulation
+        """Test the rectangular magnet based on the numeric simulation.
 
         If we treat the magnet as a square loop wire, the magnetization
         at z distance away from the magnet's center can be calculated using
@@ -187,7 +187,7 @@ class TestRectangularMagnet(MagnetTester):
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzx(self, magnet, x, y, z):
-        """Test Bzx_method by using against gradient of bz."""
+        """Test Bzx_method by using against the gradient of bz."""
 
         self.check_bzx(magnet, x, y, z)
 
