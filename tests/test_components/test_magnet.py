@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Test magnet module in mrfmsim.components
+"""Test magnet module in mrfmsim.components.
 
 SphereMagnet
 ------------
@@ -39,16 +39,16 @@ class MagnetTester:
     magnet_str = ""
 
     def test_str(self, magnet):
-        """Test magnet repr"""
+        """Test magnet str."""
 
         assert str(magnet) == dedent(self.magnet_str)
 
     def check_bz(self, magnet, x, y, z, theory):
-        """Test Bz calculation against theory"""
+        """Test Bz calculation against theory."""
         assert np.allclose(magnet.Bz_method(x, y, z), theory, rtol=1e-12)
 
     def check_bzx(self, magnet, x, y, z):
-        """test Bzx at selected points against estimation from Bz calculation"""
+        """test Bzx at selected points against estimation from Bz calculation."""
 
         dx = 0.001
 
@@ -60,7 +60,7 @@ class MagnetTester:
         assert np.allclose(Bzx_est, Bzx_sim, rtol=1e-9)
 
     def check_bzxx(self, magnet, x, y, z):
-        """test Bzxx at selected points against estimation from Bzx calculation"""
+        """test Bzxx at selected points against estimation from Bzx calculation."""
 
         dx = 0.001
 
@@ -74,7 +74,7 @@ class MagnetTester:
 
 
 class TestSphereMagnet(MagnetTester):
-    """Test SphereManget class"""
+    """Test SphereManget class."""
 
     magnet_str = """\
     SphereMagnet(
@@ -101,7 +101,7 @@ class TestSphereMagnet(MagnetTester):
         ],
     )
     def test_bz(self, magnet, x, y, z, theory):
-        """Test Bz calculation at poles and equators"""
+        """Test Bz calculation at poles and equators."""
 
         self.check_bz(magnet, x, y, z, theory)
 
@@ -113,7 +113,7 @@ class TestSphereMagnet(MagnetTester):
         ],
     )
     def test_bzx(self, magnet, x, y, z):
-        """test Bzx at selected points against estimation from Bz calculation"""
+        """test Bzx at selected points against estimation from Bz calculation."""
 
         self.check_bzx(magnet, x, y, z)
 
@@ -125,7 +125,7 @@ class TestSphereMagnet(MagnetTester):
         ],
     )
     def test_bzxx(self, magnet, x, y, z):
-        """test Bzxx at selected points against estimation from Bzx calculation"""
+        """test Bzxx at selected points against estimation from Bzx calculation."""
 
         self.check_bzxx(magnet, x, y, z)
 
@@ -142,7 +142,7 @@ class TestRectangularMagnet(MagnetTester):
 
     @pytest.fixture
     def magnet(self):
-        """Instantiate a RectangularManget instance"""
+        """Instantiate a RectangularManget instance."""
 
         return RectangularMagnet(
             length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 0.0]
@@ -167,7 +167,7 @@ class TestRectangularMagnet(MagnetTester):
 
     @pytest.mark.parametrize("x, y, z", [(0.0, 0.0, np.arange(50, 100, 5))])
     def test_rectmagnet_Bz_symmetry_z(self, magnet, x, y, z):
-        """Test Bz_method of RectMagnet symmetry in z direction"""
+        """Test Bz_method of RectMagnet symmetry in z direction."""
 
         np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(x, y, -z), rtol=1e-10)
 
@@ -187,12 +187,12 @@ class TestRectangularMagnet(MagnetTester):
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzx(self, magnet, x, y, z):
-        """Test Bzx_method by using against gradient of bz"""
+        """Test Bzx_method by using against gradient of bz."""
 
         self.check_bzx(magnet, x, y, z)
 
     @pytest.mark.parametrize("x, y, z", [(np.arange(100, 150, 5), -100, 100)])
     def test_rectmagnet_Bzxx(self, magnet, x, y, z):
-        """Test the Bzxx_method of RectMagnet against the derivative Bzx_method"""
+        """Test the Bzxx_method of RectMagnet against the derivative Bzx_method."""
 
         self.check_bzxx(magnet, x, y, z)

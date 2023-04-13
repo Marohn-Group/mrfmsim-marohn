@@ -25,7 +25,7 @@ def mz_eq(B_tot, Gamma, J, temperature):
         B_0 &= \text{applied magnetic field} \: [\mathrm{mT}] \\
         T &= \text{temperature} \: [\mathrm{K}] \\
         \rho &= \text{spin density} \: [\mathrm{nm}^{-1}]
-    as follows.  From the sample properties we compute the magnetic moment
+    as follows. From the sample properties, we compute the magnetic moment
     :math:`\mu` of the state with the largest :math:`m_J` quantum number,
     .. math::
         \mu = \hbar\gamma J \: [\mathrm{aN} \: \mathrm{nm} \:

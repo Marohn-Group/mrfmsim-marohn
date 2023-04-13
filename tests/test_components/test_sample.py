@@ -31,7 +31,7 @@ class TestSample:
         )
 
     def test_str(self, sample):
-        """Tests sample representation, __repr__ and all the calculations"""
+        """Tests sample str representation."""
         assert str(sample) == SAMPLE_REPR
 
     def test_proton_magnetic_moment(self, sample):

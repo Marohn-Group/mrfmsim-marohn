@@ -5,7 +5,7 @@ from mrfmsim_marohn import UNITS
 
 
 class SphereMagnet(ComponentBase):
-    """Spherical magnet object with its Bz, Bzx, Bzxx calculations"""
+    """Spherical magnet object with its Bz, Bzx, Bzxx calculations."""
 
     _units = UNITS
 

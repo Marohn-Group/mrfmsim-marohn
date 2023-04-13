@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Test mrfmsim.components.grid module"""
+"""Test mrfmsim.components.grid module."""
 
 import numpy as np
 import pytest
@@ -20,31 +20,31 @@ GRID_REPR = """Grid(
 class TestGrid:
     @pytest.fixture
     def grid(self):
-        """Standard grid"""
+        """Standard grid."""
         return Grid(shape=[11, 5, 9], step=[1.10, 0.40, 1.10], origin=[1.0, 1.0, 1.0])
 
     def test_str(self, grid):
-        """Test grid repr"""
+        """Test grid str."""
 
         assert str(grid) == GRID_REPR
 
     def test_grid_voxel(self, grid):
-        """Test attribute grid voxel"""
+        """Test attribute grid voxel."""
 
         assert grid.grid_voxel == 1.1 * 0.40 * 1.1
 
     def test_grid_range(self, grid):
-        """Test grid range"""
+        """Test grid range."""
 
         assert np.array_equal(grid.grid_range, np.array([11.0, 1.6, 8.8]))
 
     def test_grid_length(self, grid):
-        """Test grid length"""
+        """Test grid length."""
 
         assert np.allclose(grid.grid_length, np.array([12.1, 2.0, 9.9]), rtol=1e-15)
 
     def test_grid_array(self, grid):
-        """Test grid values
+        """Test grid values.
 
         The grid array should match the shape and value
         """
@@ -67,7 +67,7 @@ class TestGrid:
         )
 
     def test_grid_extents(self):
-        """Test grid extents calculation as a staticmethod"""
+        """Test grid extents calculation as a staticmethod."""
 
         length = np.array([2, 4, 6])
         origin = np.array([3, 4, 5])
@@ -76,7 +76,7 @@ class TestGrid:
         )
 
     def test_extend_grid_method(self, grid):
-        """Test extend grid method"""
+        """Test extend grid method."""
 
         grid_x = np.array(
             [-5.6, -4.5, -3.4, -2.3, -1.2, -0.1, 1.0, 2.1, 3.2, 4.3, 5.4, 6.5, 7.6]

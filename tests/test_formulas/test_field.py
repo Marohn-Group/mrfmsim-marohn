@@ -1,4 +1,3 @@
-"""Test un-categorized formulas under __init__.py"""
 from mrfmsim_marohn.formulas import (
     B_offset,
     xtrapz_fxdtheta,
@@ -9,7 +8,7 @@ import numpy as np
 
 
 def test_B_offset():
-    """Test B_offset
+    """Test B_offset.
     Test the hydrogen atom
     """
 
@@ -21,7 +20,7 @@ def test_B_offset():
 
 
 def test_min_abs_offset():
-    """Test min_abs_x"""
+    """Test min_abs_x."""
     matrix_a = np.random.rand(30, 20, 10) - 0.3  # lower 0 crossing chance
     grid_ext = 2  # follow the behavior of extend x_0p both sides
     window = grid_ext * 2 + 1
@@ -48,7 +47,7 @@ def test_min_abs_offset():
 
 
 def test_min_abs_offset_symmetry():
-    """Test if min_abs_x result is symmetric
+    """Test if min_abs_x result is symmetric.
     If a matrix is flipped, the result should also be flipped
     """
 
@@ -62,7 +61,7 @@ def test_min_abs_offset_symmetry():
 
 
 class TestXTrapzFxDtheta:
-    """Test xtrapz_fxdtheta"""
+    """Test xtrapz_fxdtheta."""
 
     def test_xtrapz_fxdtheta_cos(self):
         r"""Test xtrapz_fxdtheta against cosxdx
@@ -80,7 +79,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x"""
+            """A function that is independent from x."""
             return np.ones(x.size)
 
         ogrid = [np.linspace(0, 3, 3)]
@@ -97,7 +96,7 @@ class TestXTrapzFxDtheta:
         assert np.allclose(integral, (3, 3, 3), rtol=1e-3)
 
     def test_xtrapz_xtrapz_fxdtheta_xcos(self):
-        r"""Test xtrapz_fxdtheta against xcos
+        r"""Test xtrapz_fxdtheta against xcos.
 
         Let's consider a case where the field f(x) = x
 
@@ -111,7 +110,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x"""
+            """A function that is independent from x."""
             return x
 
         ogrid = [np.linspace(0, 2, 3)]
@@ -133,7 +132,7 @@ class TestXTrapzFxDtheta:
         )
 
     def test_xtrapz_xtrapz_fxdtheta_x2cos(self):
-        r"""Test xtrapz_fxdtheta against x2cos
+        r"""Test xtrapz_fxdtheta against x2cos.
 
         Let's consider a case where the field f(x) = x
 
@@ -146,7 +145,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x"""
+            """A function that is independent from x."""
             return x**2
 
         ogrid = [np.linspace(0, 2, 3)]
@@ -166,10 +165,10 @@ class TestXTrapzFxDtheta:
         assert np.allclose(integral, (0, -9 * np.pi, -18 * np.pi), rtol=5e-3)
 
     def test_xtrapz_fxdtheta_multidim(self):
-        """Test xtrapz_fxdtheta against xcos for multi-dimensions"""
+        """Test xtrapz_fxdtheta against xcos for multi-dimensions."""
 
         def method(x, y):
-            """A function that is independent from x"""
+            """A function that is independent from x."""
             return x + 0.5 * y
 
         ogrid = np.ogrid[0:2:3j, 0:1:2j]
@@ -191,10 +190,10 @@ class TestXTrapzFxDtheta:
 
 
 class TestXTrapzFieldGradient:
-    """Test trapz field gradient"""
+    """Test trapz field gradient."""
 
     def test_xtrapz_field_gradient_smallamp(self):
-        """Test gradient against a small x0p
+        """Test gradient against a small x0p.
 
         When the 0 to peak is very small, the integrand is independent of
         costheta. Here we "fake" a small grid step for x direction, because
@@ -222,7 +221,7 @@ class TestXTrapzFieldGradient:
         assert np.allclose(gradient, real, rtol=1e-2)
 
     def test_xtrapz_field_gradient_large_distance(self):
-        """Test gradient against a large tip sample separation
+        """Test gradient against a large tip sample separation.
 
         When the distance is very large, the change of Bzx in between grid points
         are small.

@@ -6,7 +6,6 @@ from mrfmsim_marohn.formulas.math import (
     slice_matrix,
     as_strided_x,
     ogrid_sub,
-    ogrid_method,
 )
 import numpy as np
 
@@ -91,6 +90,7 @@ def test_nb_summation():
     assert func.__name__ == "numba_sum"
     assert func.__doc__ == "Sum of a, b."
     assert func(1, 2) == 3
+
 
 def test_numba_sum_of_multiplication():
     """Test numba sum of multiplication function creation."""

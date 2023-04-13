@@ -1,4 +1,4 @@
-"""Test teh relative change in polarization"""
+"""Test the relative change in polarization."""
 
 import mrfmsim_marohn.formulas.polarization as pol
 import numpy as np
@@ -8,7 +8,7 @@ import pytest
 
 @pytest.fixture
 def sample_e():
-    """Electron sample"""
+    """Electron sample."""
     return Sample(
         spin_type="electron", temperature=0.001, T1=1.0, T2=1.0, spin_density=10.0
     )
@@ -16,12 +16,12 @@ def sample_e():
 
 @pytest.fixture
 def sample_h():
-    """Nucleus sample"""
+    """Nucleus sample."""
     return Sample(spin_type="1H", temperature=4.2, T1=10, T2=5e-6, spin_density=49.0)
 
 
 def test_rel_dpol_sat_steadystate(sample_e):
-    """Test the *absolute* tolerance
+    """Test the rel_dpol_sat *absolute* tolerance.
 
     Sample -> e -> electron spin, J = 1/2, high field limit
     """
@@ -36,7 +36,7 @@ def test_rel_dpol_sat_steadystate(sample_e):
 
 
 def test_rel_dpol_arp_ibm(sample_h):
-    """Test rpol_arp_ibm
+    """Test rpol_arp_ibm.
 
     Sample -> proton spin -> rpol_arp_ibm() limiting cases
     Sample -> h -> proton spin
@@ -53,7 +53,8 @@ def test_rel_dpol_arp_ibm(sample_h):
 
 
 def test_rel_dpol_nut(sample_h):
-    """Test rel_dpol_nut
+    """Test rel_dpol_nut.
+
     Sample -> proton spin -> rpol_nut(), on resonance pulses
     Sample -> h -> proton spin
     """
@@ -71,7 +72,8 @@ def test_rel_dpol_nut(sample_h):
 
 
 def test_rel_dpol_arp(sample_h):
-    """Test rel_dpol_arp
+    """Test rel_dpol_arp.
+
     if f_fm is close to infinity, the relative change in polarization
     is -2.0
     if b1 and the modulation frequency is small and b_offset is large
@@ -88,7 +90,8 @@ def test_rel_dpol_arp(sample_h):
 
 
 def test_rel_dpol_periodic_irrad_cont(sample_e):
-    """Test rel_dpol_periodic_irrad in the continuous case
+    """Test rel_dpol_periodic_irrad in the continuous case.
+
     When the if t_off is 0, the intermittent irradiation becomes continuous
     irradiation. This should be the same as rel_dpol_sat
     When t_on is 0, the signal should vanish
@@ -109,7 +112,8 @@ def test_rel_dpol_periodic_irrad_cont(sample_e):
 
 
 def test_rel_dpol_periodic_irrad_no_irrad(sample_e):
-    """Test rel_dpol_periodic_irrad in no irradiation case
+    """Test rel_dpol_periodic_irrad in no irradiation case.
+
     When t_on is 0, the signal should vanish
     """
 
@@ -121,7 +125,8 @@ def test_rel_dpol_periodic_irrad_no_irrad(sample_e):
 
 
 def test_rel_dpol_periodic_irrad_off_res(sample_e):
-    """Test rel_dpol_periodic_irrad off resonance case
+    """Test rel_dpol_periodic_irrad off resonance case.
+
     When is it off resonance (b_offset is large), the signal is 0
     """
 
@@ -140,7 +145,7 @@ def test_rel_dpol_periodic_irrad_off_res(sample_e):
 
 
 def test_rel_dpol_sat_td(sample_e):
-    """Test rel_dpol_sat_td when offset is 0
+    """Test rel_dpol_sat_td when offset is 0.
 
     When the offset is 0, the result should be 0
 
@@ -158,7 +163,7 @@ def test_rel_dpol_sat_td(sample_e):
 
 
 def test_rel_dpol_sat_td_symmetry(sample_e):
-    """Test rel_dpol_sat_td is symmetric around the initial and final offset
+    """Test rel_dpol_sat_td is symmetric around the initial and final offset.
 
     Here we construct a 1D grid size of 3, and the extended grid size of 5
     """
@@ -176,7 +181,7 @@ def test_rel_dpol_sat_td_symmetry(sample_e):
 
 
 def test_rel_dpol_sat_td_without_td(sample_e):
-    """Test rel_dpol_sat_td completely saturate spins if no td component
+    """Test rel_dpol_sat_td completely saturate spins if no td component.
 
     Here we construct a 1D grid size of 3, and the extended grid size of 5
     """
@@ -191,7 +196,8 @@ def test_rel_dpol_sat_td_without_td(sample_e):
 
 
 def test_rel_dol_sat_td_smallsteps(sample_e):
-    """Test rel_dol_sat_td_smallsteps
+    """Test rel_dol_sat_td_smallsteps.
+
     Small steps approximation should have the same result as regular
     when Bzx stays the same, given that delta_B_offset has the same
     sign as Bzx.
@@ -213,14 +219,14 @@ def test_rel_dol_sat_td_smallsteps(sample_e):
 
 
 def test_rel_dpol_multipulse_no_pol(sample_e):
-    """Test rel_dpol_multipulse when relative polarization is 0"""
+    """Test rel_dpol_multipulse when relative polarization is 0."""
 
     rpol = pol.rel_dpol_multipulse(0, sample_e.T1, 1.0)
     assert rpol == 0
 
 
 def test_rel_dpol_multipulse_short(sample_e):
-    """Test rel_dpol_multipulse when pulse time difference is short
+    """Test rel_dpol_multipulse when pulse time difference is short.
 
     Because time between pulses are short and the equation ignores
     relaxation during pulses,
@@ -231,7 +237,8 @@ def test_rel_dpol_multipulse_short(sample_e):
 
 
 def test_rel_dpol_multipulse_long(sample_e):
-    """Test rel_dpol_multipulse when time between pulses are long
+    """Test rel_dpol_multipulse when the time between pulses is long.
+
     In this case, the final polarization should be
     relaxed to 1 and change in polarization 0
     """

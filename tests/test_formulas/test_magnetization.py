@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from mrfmsim_marohn.formulas import mz_eq, HBAR, KB
 
+
 @pytest.mark.parametrize(
     "Gamma, J,  temperature, mz_eq_true",
     [
@@ -10,7 +11,7 @@ from mrfmsim_marohn.formulas import mz_eq, HBAR, KB
     ],
 )
 def test_mz_eq_high_susceptibility(Gamma, J, temperature, mz_eq_true):
-    """Test mz_eq function on different types of samples at low temperature
+    """Test mz_eq function on different types of samples at low temperature.
     The total field is set to 100 T
     """
 
@@ -20,7 +21,7 @@ def test_mz_eq_high_susceptibility(Gamma, J, temperature, mz_eq_true):
 
 @pytest.mark.parametrize("B_tot", np.linspace(100, 1000, 5))
 def test_mz_eq_low_susceptibility(B_tot):
-    """Test mz_eq on 71Ga at high temperature"""
+    """Test mz_eq on 71Ga at high temperature."""
 
     Gamma, J, temperature = 2.0 * np.pi * 12.98e3, 1.5, 300
 
