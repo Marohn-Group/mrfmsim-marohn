@@ -42,12 +42,12 @@ graph:
             func: !import mrfmsim_marohn.formulas.rel_dpol_arp_ibm
             output: rel_dpol
         force signal:
-            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
-            inputs: [Bzx, rel_dpol, mz_eq, spin_density, grid_voxel]
+            func: !func "lambda Bzx, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (Bzx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dF_spin
         force variance signal:
-            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
-            inputs: [Bzx2, rel_dpol, mz2_eq, spin_density, grid_voxel]
+            func: !func "lambda Bzx2, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (Bzx2 * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dF2_spin
 
 replace_inputs:

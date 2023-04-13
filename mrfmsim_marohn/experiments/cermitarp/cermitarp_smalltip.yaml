@@ -38,8 +38,8 @@ graph:
             func: !import mrfmsim_marohn.formulas.rel_dpol_arp
             output: rel_dpol
         spring constant shift:
-            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
-            inputs: [trapz_Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
+            func: !func "lambda trapz_Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (trapz_Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dk_spin
 
 replace_inputs:

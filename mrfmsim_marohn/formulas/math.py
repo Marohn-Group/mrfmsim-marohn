@@ -1,52 +1,7 @@
 """Mathematical operations"""
 import numpy as np
-import numba as nb
+
 from operator import sub
-
-
-def create_func(name, expression):
-    """Create a function from a string."""
-    exec(expression, globals(), locals())
-    func = locals()[name]
-    return func
-
-
-def numba_sum(args):
-    """Create a summation function with numba jit decorator."""
-
-    args_str = ", ".join(args)
-    body = f"return {' + '.join(args)}"
-    doc = f'"""Sum of {args_str}."""'
-    expression = (
-        f"def numba_sum({args_str}):"
-        f"\n\t{doc}\n\t{body}"
-    )
-    func = create_func("numba_sum", expression)
-    return nb.jit(nopython=True, parallel=True)(func)
-
-def numba_sum_of_multiplication(args):
-    """Create a summation of product function with numba jit decorator."""
-
-    args_str = ", ".join(args)
-    body = f"return np.sum({' * '.join(args)})"
-    doc = f'"""Sum of the product of {args_str}."""'
-    expression = (
-        f"def numba_sum_of_multiplication({args_str}):"
-        f"\n\t{doc}\n\t{body}"
-    )
-    func = create_func("numba_sum_of_multiplication", expression)
-    return nb.jit(nopython=True, parallel=True)(func)
-
-@nb.jit(nopython=True, parallel=True)
-def sum_of_multiplication(a, b, c, d, e, f=1):
-    """Summation of 5 matrices or scalar with a factor default to 1.
-
-    To use numba jit, the compromise is to explicitly define the parameters,
-    meaning we cannot define a function with an arbitrary number of parameters.
-    The method is faster than reduce or other numpy tricks.
-
-    """
-    return np.sum(a * b * c * d * e * f)
 
 
 def slice_matrix(matrix, shape):

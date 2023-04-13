@@ -37,8 +37,8 @@ graph:
             func: !import mrfmsim_marohn.formulas.rel_dpol_periodic_irrad
             output: rel_dpol
         spring constant shift:
-            func: !import mrfmsim_marohn.formulas.sum_of_multiplication
-            inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
+            func: !func "lambda Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel:
+                - (Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dk_spin
         frequency shift:
             func: !execute dk_to_df_ac_cermit(dk_spin)
