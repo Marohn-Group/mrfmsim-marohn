@@ -1,20 +1,47 @@
 import sys
 import glob
 import os
+from mrfmsim import Experiment
+from textwrap import dedent
+
+import pytest
 
 
-def test_import():
-    """Test the experiments have been imported"""
-    # __init__.py is not executed if experiments are not imported
-    import mrfmsim_marohn.experiments
+def test_show(capsys):
+    """Test the show function to list all experiments."""
+    from mrfmsim_marohn import experiments
 
-    filelist = glob.glob("./mrfmsim_marohn/experiments/**.yaml")
+    experiments.show()
+    captured = capsys.readouterr()
+    assert captured.out == dedent(
+        """\
+    The list of available experiments:
+    ibmcyclic
+    cermitarp
+    cermitarp_smalltip
+    cermitesr
+    cermitesr_periodirrad_stationarytip
+    cermitesr_singlespin
+    cermitesr_smalltip
+    cermitesr_stationarytip
+    cermitnut
+    cermitnut_multipulse
+    cermittd
+    cermittd_singlepulse
+    cermittd_smalltip
+    """
+    )
 
-    exp_name = []
-    for fname in filelist:
-        exp_name.append(
-            f"mrfmsim_marohn.experiments.{os.path.basename(os.path.splitext(fname)[0])}"
-        )
 
-    for exp in exp_name:
-        assert exp in sys.modules
+def test_import_syntax1():
+    """Test the experiments are imported when called."""
+    from mrfmsim_marohn.experiments import ibmcyclic
+
+    assert isinstance(ibmcyclic, Experiment)
+
+
+def test_import_syntax2():
+    """Test the experiments are imported when called."""
+    from mrfmsim_marohn import experiments
+
+    assert isinstance(experiments.ibmcyclic, Experiment)
