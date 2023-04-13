@@ -35,7 +35,7 @@ def min_abs_offset(ext_B_offset, ext_pts):
     polarization at the edge of the sensitive slice, it should produce a
     polarization which is properly saturated inside the sensitive slice.
     :param float b_offset: resonance offset of extended grid [mT]
-    :param int window: number of grid point used to determine the minimum offset
+    :param int window: number of grid points used to determine the minimum offset
     """
     window = 2 * ext_pts + 1
     b_offset_strided = as_strided_x(ext_B_offset, window)
