@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: CermitESRSingleSpin
-version: 2022.11.18
+# version: 2022.11.18
 description: Simulates an MRFM experiment in the hangdown or SPAM geometry where a
     single electron spin is located directly below the tip. With a small
     tip, the motion of the cantilever is not negligible on the scale of the
@@ -26,6 +26,6 @@ graph:
             inputs: [dF_spin, x_0p]
             output: dk_spin
 
-component_substitutes:
+replace_inputs:
     magnet: [magnet_radius, mu0_Ms, magnet_origin]
     sample: [mu_z]

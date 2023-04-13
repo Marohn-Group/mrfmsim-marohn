@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: CermitNutMultiPulse
-version: 2022.11.18
+# version: 2022.11.18
 description: Simulates a Cornell-style frequency-shift magnetic resonance force 
     microscope experiment in a resonant pulse is used to flip the spins. In this 
     experiment, multiple pulses at various frequencies are used to build up a 
@@ -16,8 +16,7 @@ graph:
         - [[equilibrium magnetization per spin, Bzxx, relative polarization change], spring constant shift]
     node_objects:
         Bz:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bz_method, sample_ogrid]
+            func: !execute Bz_method(*sample_ogrid)
             output: Bz
         B total:
             func: !import operator.add
@@ -28,8 +27,7 @@ graph:
             inputs: [grid_array, h]
             output: sample_ogrid
         Bzxx:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzxx_method, sample_ogrid]
+            func: !execute Bzxx_method(*sample_ogrid)
             output: Bzxx
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formulas.mz_eq
@@ -42,7 +40,7 @@ graph:
             inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel, [sign, -1]]
             output: dk_spin
 
-component_substitutes:
+replace_inputs:
     magnet: [Bz_method, Bzxx_method]
     sample: [J, Gamma, spin_density, temperature]
     grid: [grid_array, grid_voxel]

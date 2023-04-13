@@ -74,34 +74,6 @@ def test_ogrid_sub():
     assert np.array_equal(array3d[2], result2)
 
 
-def test_ogrid_method():
-    """Test ogrid_method.
-
-    Test if the value accepts ogrid, and mapping. The result should be the same
-    as the mesh grid result. For a 2-D array [array([[0], [2]]), array([[1, 2]])]
-    is equivalent to a 2x2 grid of (x, y): (0, 1), (0, 2), (2, 1), (2, 2)
-    """
-
-    def distance2d(x, y):
-        return x**2 + y**2
-
-    dis = ogrid_method(distance2d, np.ogrid[0:2:2j, 1:2:2j])
-    assert np.array_equal(dis, [[1, 4], [5, 8]])
-
-    def distance3d(x, y, z):
-        return x**2 + y**2 + z**2
-
-    dis = ogrid_method(distance3d, np.ogrid[0:1:2j, 1:2:2j, 2:3:2j])
-
-    # in the order of x, y, z. The most inner is the z
-    assert np.array_equal(dis, [[[5, 10], [8, 13]], [[6, 11], [9, 14]]])
-
-    # test against full mesh
-
-    dis_mesh = distance3d(*np.mgrid[0:1:2j, 1:2:2j, 2:3:2j])
-    assert np.array_equal(dis, dis_mesh)
-
-
 def test_create_func():
     """Test create_func."""
 

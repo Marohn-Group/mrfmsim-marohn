@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: CermitESRPeriodicIrradiationStationaryTip
-version: 2022.11.17
+# version: 2022.11.17
 description: Saturation ESR simulation with intermittent pulse and a stationary tip.
 graph:
     !graph
@@ -14,8 +14,7 @@ graph:
         - [spring constant shift, frequency shift]
     node_objects:
         Bz:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bz_method, sample_ogrid]
+            func: !execute Bz_method(*sample_ogrid)
             output: Bz
         B total:
             func: !import operator.add
@@ -26,8 +25,7 @@ graph:
             inputs: [grid_array, h]
             output: sample_ogrid
         Bzxx:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzxx_method, sample_ogrid]
+            func: !execute Bzxx_method(*sample_ogrid)
             output: Bzxx
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formulas.mz_eq
@@ -44,10 +42,9 @@ graph:
             output: dk_spin
         frequency shift:
             func: !execute dk_to_df_ac_cermit(dk_spin)
-            inputs: [dk_to_df_ac_cermit, dk_spin]
             output: df_spin
 
-component_substitutes:
+replace_inputs:
     magnet: [Bz_method, Bzxx_method]
     sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
     grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]

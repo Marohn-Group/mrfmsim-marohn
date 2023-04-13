@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: CermitESRSmallTip
-version: 2022.11.17
+# version: 2022.11.17
 description: Simulates a Cornell-style frequency shift magnetic resonance force
     microscope experiment in which microwaves are applied for half a cantilever
     cyclic to saturate electron spin resonance in a bowl-shaped region swept
@@ -28,7 +28,6 @@ graph:
             output: ext_pts
         extended ogrid:
             func: !execute extend_grid_method(ext_pts)
-            inputs: [extend_grid_method, ext_pts]
             output: ext_ogrid
         extended sample ogrid:
             func: !import mrfmsim_marohn.formulas.ogrid_sub
@@ -39,8 +38,7 @@ graph:
             inputs: [grid_array, h]
             output: sample_ogrid
         extended Bz:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bz_method, ext_sample_ogrid]
+            func: !execute Bz_method(*ext_sample_ogrid)
             output: ext_Bz
         extended B total:
             func: !import operator.add
@@ -72,9 +70,8 @@ graph:
             output: dk_spin
         frequency shift:
             func: !execute dk_to_df_ac_cermit(dk_spin)
-            inputs: [dk_to_df_ac_cermit, dk_spin]
             output: df_spin
-component_substitutes:
+replace_inputs:
     magnet: [Bz_method, Bzx_method]
     sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
     grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]

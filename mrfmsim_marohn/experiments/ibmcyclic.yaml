@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: IBMCyclic
-version: 2022.11.17
+# version: 2022.11.17
 description: Simulate an IBM-style cyclic-inversion magnetic resonance force
     microscope experiment.
 graph:
@@ -16,8 +16,7 @@ graph:
         - [[Bzx squared, relative polarization change], force variance signal]
     node_objects:
         Bz:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bz_method, sample_ogrid]
+            func: !execute Bz_method(*sample_ogrid)
             output: Bz
         B total:
             func: !import operator.add
@@ -28,12 +27,10 @@ graph:
             inputs: [grid_array, h]
             output: sample_ogrid
         Bzx:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzx_method, sample_ogrid]
+            func: !execute Bzx_method(*sample_ogrid)
             output: Bzx
         Bzx squared:
-            func: !import operator.pow
-            inputs: [Bzx, [power, 2]]
+            func: !func "lambda Bzx: Bzx**2"
             output: Bzx2
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formulas.mz_eq
@@ -53,7 +50,7 @@ graph:
             inputs: [Bzx2, rel_dpol, mz2_eq, spin_density, grid_voxel]
             output: dF2_spin
 
-component_substitutes:
+replace_inputs:
     magnet: [Bz_method, Bzx_method]
     sample: [J, Gamma, spin_density, temperature, mz2_eq]
     grid: [grid_array, grid_voxel]

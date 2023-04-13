@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Peter Sun
 
-"""Collection of calculations of relative changes in polarization
+"""Collection of calculations of relative changes in polarization.
 """
 
 import numba

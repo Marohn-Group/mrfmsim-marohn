@@ -1,6 +1,6 @@
-!experiment
+!import:mrfmsim.Experiment
 name: CermitTimeDependentSmallTip
-version: 2022.11.17
+# version: 2022.11.17
 description: Simulates a Cornell-style frequency shift magnetic resonance force
     microscope experiment considering the time dependent nature of the saturation,
     averaged over multiple pulses and with small step approximation. The function
@@ -28,15 +28,13 @@ graph:
             output: ext_pts
         extended ogrid:
             func: !execute extend_grid_method(ext_pts)
-            inputs: [extend_grid_method, ext_pts]
             output: ext_ogrid
         extended sample ogrid:
             func: !import mrfmsim_marohn.formulas.ogrid_sub
             inputs: [ext_ogrid, h]
             output: ext_sample_ogrid
         extended Bz:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bz_method, ext_sample_ogrid]
+            func: !execute Bz_method(*ext_sample_ogrid)
             output: ext_Bz
         B total:
             func: !import mrfmsim_marohn.formulas.slice_matrix
@@ -51,8 +49,7 @@ graph:
             inputs: [grid_array, h]
             output: sample_ogrid
         extended Bzx:
-            func: !import mrfmsim_marohn.formulas.ogrid_method
-            inputs: [Bzx_method, ext_sample_ogrid]
+            func: !execute Bzx_method(*ext_sample_ogrid)
             output: ext_Bzx
         trapezoid Bzxx:
             func: !import mrfmsim_marohn.formulas.xtrapz_field_gradient
@@ -76,9 +73,8 @@ graph:
             output: dk_spin
         frequency shift:
             func: !execute dk_to_df_ac_cermit(dk_spin)
-            inputs: [dk_to_df_ac_cermit, dk_spin]
             output: df_spin
-component_substitutes:
+replace_inputs:
     magnet: [Bz_method, Bzx_method]
     sample: [J, Gamma, spin_density, temperature, T1, T2]
     grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
