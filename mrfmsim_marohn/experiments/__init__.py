@@ -12,7 +12,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 exp_list = glob.glob(os.path.join(DIR, "**/*.yaml"), recursive=True)
 
 experiment_dict = {}
-for exp_path in exp_list:
+for exp_path in sorted(exp_list):
     exp_name = os.path.splitext(os.path.basename(exp_path))[0]
 
     with open(exp_path) as f:

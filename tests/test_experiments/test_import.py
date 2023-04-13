@@ -16,7 +16,6 @@ def test_show(capsys):
     assert captured.out == dedent(
         """\
     The list of available experiments:
-    ibmcyclic
     cermitarp
     cermitarp_smalltip
     cermitesr
@@ -29,6 +28,7 @@ def test_show(capsys):
     cermittd
     cermittd_singlepulse
     cermittd_smalltip
+    ibmcyclic
     """
     )
 
