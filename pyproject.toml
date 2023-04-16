@@ -57,9 +57,9 @@ filterwarnings = [
 # pytest coverage
 source_pkgs = [
     'mrfmsim_marohn',
-    'mrfmsim_marohn.components',
-    'mrfmsim_marohn.formulas',
-    'mrfmsim_marohn.experiments',
+    'mrfmsim_marohn.component',
+    'mrfmsim_marohn.formula',
+    'mrfmsim_marohn.experiment',
 ]
 omit = ['tests/*']
 

@@ -1,0 +1,78 @@
+!import:mrfmsim.Experiment
+name: CermitESRSmallTip
+# version: 2022.11.17
+description: Simulates a Cornell-style frequency shift magnetic resonance force
+    microscope experiment in which microwaves are applied for half a cantilever
+    cyclic to saturate electron spin resonance in a bowl-shaped region swept
+    out by the cantilever motion. The function is modified for small tip, where
+    the field calculation uses trapezoidal integral. 
+graph:
+    !graph
+    name: cermit_esr_smalltip_graph
+    grouped_edges:
+        - [convert microwave x_0p, [extended ogrid, minimum absolute x offset]]
+        - [extended ogrid, extended sample ogrid]
+        - [extended sample ogrid, extended Bz]
+        - [sample ogrid, trapezoid Bzxx]
+        - [extended Bz, extended B total]
+        - [extended B total, [extended B offset, B total]]
+        - [B total, equilibrium magnetization per spin]
+        - [extended B offset, minimum absolute x offset]
+        - [minimum absolute x offset, relative polarization change]
+        - [[equilibrium magnetization per spin, trapezoid Bzxx, relative polarization change], spring constant shift]
+        - [spring constant shift, frequency shift]
+    node_objects:
+        convert microwave x_0p:
+            func: !import mrfmsim_marohn.formula.convert_grid_pts
+            inputs: [mw_x_0p, grid_step]
+            output: ext_pts
+        extended ogrid:
+            func: !execute extend_grid_method(ext_pts)
+            output: ext_ogrid
+        extended sample ogrid:
+            func: !import mrfmsim_marohn.formula.ogrid_sub
+            inputs: [ext_ogrid, h]
+            output: ext_sample_ogrid
+        sample ogrid:
+            func: !import mrfmsim_marohn.formula.ogrid_sub
+            inputs: [grid_array, h]
+            output: sample_ogrid
+        extended Bz:
+            func: !execute Bz_method(*ext_sample_ogrid)
+            output: ext_Bz
+        extended B total:
+            func: !import operator.add
+            inputs: [ext_Bz, B0]
+            output: ext_B_tot
+        B total:
+            func: !import mrfmsim_marohn.formula.slice_matrix
+            inputs: [ext_B_tot, grid_shape]
+            output: B_tot
+        trapezoid Bzxx:
+            func: !import mrfmsim_marohn.formula.xtrapz_field_gradient
+            output: trapz_Bzxx
+        equilibrium magnetization per spin:
+            func: !import mrfmsim_marohn.formula.mz_eq
+            output: mz_eq
+        extended B offset:
+            func: !import mrfmsim_marohn.formula.B_offset
+            inputs: [ext_B_tot, f_rf, Gamma]
+            output: ext_B_offset    
+        minimum absolute x offset:
+            func: !import mrfmsim_marohn.formula.min_abs_offset
+            output: B_offset
+        relative polarization change:
+            func: !import mrfmsim_marohn.formula.rel_dpol_sat_steadystate
+            output: rel_dpol
+        spring constant shift:
+            func: !func "lambda trapz_Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (trapz_Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
+            output: dk_spin
+        frequency shift:
+            func: !execute dk_to_df_ac_cermit(dk_spin)
+            output: df_spin
+replace_inputs:
+    magnet: [Bz_method, Bzx_method]
+    sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
+    grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
+    cantilever: [dk_to_df_ac_cermit]

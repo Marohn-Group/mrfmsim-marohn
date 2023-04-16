@@ -1,0 +1,31 @@
+!import:mrfmsim.Experiment
+name: CermitESRSingleSpin
+# version: 2022.11.18
+description: Simulates an MRFM experiment in the hangdown or SPAM geometry where a
+    single electron spin is located directly below the tip. With a small
+    tip, the motion of the cantilever is not negligible on the scale of the
+    magnet tip and the tip sample separation. We evaluate the full
+    expression for the change in cantilever frequency including the effect
+    of the oscillating cantilever tip.
+graph:
+    !graph
+    name: cermit_esr_single_spin_graph
+    grouped_edges:
+        - [Bzx, effective force shift]
+        - [effective force shift, spring constant shift]
+    node_objects:
+        Bzx:
+            func: !import mrfmsim_marohn.formula.single_spin_field_gradient
+            output: Bzx
+        effective force shift:
+            func: !import operator.mul
+            inputs: [Bzx, [mu, -1]]
+            output: dF_spin
+        spring constant shift:
+            func: !import operator.truediv
+            inputs: [dF_spin, x_0p]
+            output: dk_spin
+
+replace_inputs:
+    magnet: [magnet_radius, mu0_Ms, magnet_origin]
+    sample: [mu_z]

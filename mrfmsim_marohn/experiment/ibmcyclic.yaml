@@ -1,0 +1,56 @@
+!import:mrfmsim.Experiment
+name: IBMCyclic
+# version: 2022.11.17
+description: Simulate an IBM-style cyclic-inversion magnetic resonance force
+    microscope experiment.
+graph:
+    !graph
+    name: ibm_cyclic_graph
+    grouped_edges:
+        - [sample ogrid, [Bz, Bzx]]
+        - [Bz, B total]
+        - [B total, [equilibrium magnetization per spin, B offset]]
+        - [B offset, relative polarization change]
+        - [[equilibrium magnetization per spin, Bzx, relative polarization change], force signal]
+        - [Bzx, Bzx squared]
+        - [[Bzx squared, relative polarization change], force variance signal]
+    node_objects:
+        Bz:
+            func: !execute Bz_method(*sample_ogrid)
+            output: Bz
+        B total:
+            func: !import operator.add
+            inputs: [Bz, B0]
+            output: B_tot
+        sample ogrid:
+            func: !import mrfmsim_marohn.formula.ogrid_sub
+            inputs: [grid_array, h]
+            output: sample_ogrid
+        Bzx:
+            func: !execute Bzx_method(*sample_ogrid)
+            output: Bzx
+        Bzx squared:
+            func: !func "lambda Bzx: Bzx**2"
+            output: Bzx2
+        equilibrium magnetization per spin:
+            func: !import mrfmsim_marohn.formula.mz_eq
+            output: mz_eq
+        B offset:
+            func: !import mrfmsim_marohn.formula.B_offset
+            output: B_offset
+        relative polarization change:
+            func: !import mrfmsim_marohn.formula.rel_dpol_arp_ibm
+            output: rel_dpol
+        force signal:
+            func: !func "lambda Bzx, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (Bzx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
+            output: dF_spin
+        force variance signal:
+            func: !func "lambda Bzx2, rel_dpol, mz_eq, spin_density, grid_voxel:
+                (Bzx2 * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
+            output: dF2_spin
+
+replace_inputs:
+    magnet: [Bz_method, Bzx_method]
+    sample: [J, Gamma, spin_density, temperature, mz2_eq]
+    grid: [grid_array, grid_voxel]
