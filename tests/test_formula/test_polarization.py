@@ -78,7 +78,7 @@ def test_rel_dpol_arp(sample_h):
     is -2.0
     if b1 and the modulation frequency is small and b_offset is large
     the spin does not flip therefore the relative change in polarization
-    is close to 0.0 (off resonance case)
+    is close to 0.0 (off-resonance case)
     """
 
     rpol_180 = pol.rel_dpol_arp(0.0, 1.0, 1e10, sample_h.Gamma)
@@ -125,9 +125,9 @@ def test_rel_dpol_periodic_irrad_no_irrad(sample_e):
 
 
 def test_rel_dpol_periodic_irrad_off_res(sample_e):
-    """Test rel_dpol_periodic_irrad off resonance case.
+    """Test rel_dpol_periodic_irrad off-resonance case.
 
-    When is it off resonance (b_offset is large), the signal is 0
+    When is it off-resonance (B_offset is large), the signal is 0
     """
 
     # off-resonance case
@@ -165,7 +165,7 @@ def test_rel_dpol_sat_td(sample_e):
 def test_rel_dpol_sat_td_symmetry(sample_e):
     """Test rel_dpol_sat_td is symmetric around the initial and final offset.
 
-    Here we construct a 1D grid size of 3, and the extended grid size of 5
+    Here we construct a 1D grid size of 3, and an extended grid size of 5
     """
     Bzx = np.random.rand(3)
     ext_B_offset_a = np.array([2, 0, 0, 0, 2])
@@ -183,7 +183,7 @@ def test_rel_dpol_sat_td_symmetry(sample_e):
 def test_rel_dpol_sat_td_without_td(sample_e):
     """Test rel_dpol_sat_td completely saturate spins if no td component.
 
-    Here we construct a 1D grid size of 3, and the extended grid size of 5
+    Here we construct a 1D grid size of 3 and an extended grid size of 5
     """
     Bzx = np.zeros(3)
     ext_B_offset = np.random.rand(5)
@@ -226,9 +226,9 @@ def test_rel_dpol_multipulse_no_pol(sample_e):
 
 
 def test_rel_dpol_multipulse_short(sample_e):
-    """Test rel_dpol_multipulse when pulse time difference is short.
+    """Test rel_dpol_multipulse when the pulse time difference is short.
 
-    Because time between pulses are short and the equation ignores
+    Because the time between pulses is short and the equation ignores
     relaxation during pulses,
     """
 

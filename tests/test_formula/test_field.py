@@ -9,12 +9,13 @@ import numpy as np
 
 def test_B_offset():
     """Test B_offset.
-    Test the hydrogen atom
+
+    Test the nucleus.
     """
 
     Gamma = 267.5222005  # rad MHz/T
     B_tot = 4.6973188  # T
-    f_rf = 200  # MHz
+    f_rf = 200  # rad MHz
 
     assert np.isclose(B_offset(B_tot, f_rf, Gamma), 0)
 
@@ -64,7 +65,7 @@ class TestXTrapzFxDtheta:
     """Test xtrapz_fxdtheta."""
 
     def test_xtrapz_fxdtheta_cos(self):
-        r"""Test xtrapz_fxdtheta against cosxdx
+        r"""Test xtrapz_fxdtheta against :math: `\cos{x}dx`
 
         Let's consider the field method returns 1, the trapz integral
         should return the value of
@@ -79,7 +80,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x."""
+            """A function that is independent of x."""
             return np.ones(x.size)
 
         ogrid = [np.linspace(0, 3, 3)]
@@ -96,7 +97,7 @@ class TestXTrapzFxDtheta:
         assert np.allclose(integral, (3, 3, 3), rtol=1e-3)
 
     def test_xtrapz_xtrapz_fxdtheta_xcos(self):
-        r"""Test xtrapz_fxdtheta against xcos.
+        r"""Test xtrapz_fxdtheta against :math: `x \cos{x}`.
 
         Let's consider a case where the field f(x) = x
 
@@ -110,7 +111,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x."""
+            """Function that returns x."""
             return x
 
         ogrid = [np.linspace(0, 2, 3)]
@@ -132,7 +133,7 @@ class TestXTrapzFxDtheta:
         )
 
     def test_xtrapz_xtrapz_fxdtheta_x2cos(self):
-        r"""Test xtrapz_fxdtheta against x2cos.
+        r"""Test xtrapz_fxdtheta against :math: `x2\cos{x}`.
 
         Let's consider a case where the field f(x) = x
 
@@ -145,7 +146,7 @@ class TestXTrapzFxDtheta:
         """
 
         def method(x):
-            """A function that is independent from x."""
+            """Function that returns :math: `x^2`."""
             return x**2
 
         ogrid = [np.linspace(0, 2, 3)]
@@ -165,10 +166,10 @@ class TestXTrapzFxDtheta:
         assert np.allclose(integral, (0, -9 * np.pi, -18 * np.pi), rtol=5e-3)
 
     def test_xtrapz_fxdtheta_multidim(self):
-        """Test xtrapz_fxdtheta against xcos for multi-dimensions."""
+        r"""Test xtrapz_fxdtheta against :math: `x \cos{x}` for multi-dimensions."""
 
         def method(x, y):
-            """A function that is independent from x."""
+            """Function that depends on x and y."""
             return x + 0.5 * y
 
         ogrid = np.ogrid[0:2:3j, 0:1:2j]
@@ -193,12 +194,12 @@ class TestXTrapzFieldGradient:
     """Test trapz field gradient."""
 
     def test_xtrapz_field_gradient_smallamp(self):
-        """Test gradient against a small x0p.
+        r"""Test gradient against a small x0p.
 
-        When the 0 to peak is very small, the integrand is independent of
-        costheta. Here we "fake" a small grid step for x direction, because
-        grid step here is only used to calculate x_0p. The cantilever is 150 nm
-        away from the sample and 10 nm off center (avoid 0 in rtol)
+        When the 0 to the peak is very small compared to the magnet, the field is
+        equivalent to Bzxx. Here we "fake" a small grid step for the x direction,
+        because the grid step here is only used to calculate x_0p. The cantilever is
+        150 nm away from the sample.
         """
 
         from mrfmsim_marohn.component import RectangularMagnet, Grid
@@ -206,22 +207,23 @@ class TestXTrapzFieldGradient:
         magnet = RectangularMagnet(
             length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[10.0, 0.0, 200.0]
         )
+
         grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
 
         trapz_pts = 32
         x_0p = 0.01
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, grid.grid_array, trapz_pts, 0.01
+            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p
         )
 
-        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p / np.pi
+        real = - magnet.Bzxx_method(*grid.grid_array)
 
         assert gradient.shape == (3, 2, 1)
-        assert np.allclose(gradient, real, rtol=1e-2)
+        assert np.allclose(gradient, real, atol=1e-6)
 
     def test_xtrapz_field_gradient_large_distance(self):
-        """Test gradient against a large tip sample separation.
+        """Test gradient against a large tip-sample separation.
 
         When the distance is very large, the change of Bzx in between grid points
         are small.
@@ -238,9 +240,8 @@ class TestXTrapzFieldGradient:
         x_0p = 50
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p=50
+            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p=x_0p
         )
 
-        real = magnet.Bzx_method(*grid.grid_array) * 4 / x_0p / np.pi
-
-        assert np.allclose(gradient, real, rtol=1e-2)
+        real = - magnet.Bzxx_method(*grid.grid_array)
+        assert np.allclose(gradient, real, atol=1e-6)
