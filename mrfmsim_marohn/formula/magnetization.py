@@ -62,3 +62,14 @@ def mz_eq(B_tot, Gamma, J, temperature):
     b = 1.0 / (2.0 * J)  # unitless
     pol_eq = a / np.tanh(a * x) - b / np.tanh(b * x)
     return mu_z * pol_eq   # [aN.nm/mT]
+
+def mz2_eq(Gamma, J):
+    r"""Compute the magnetization variance per spin.
+
+    :param float gamma: the gyromagnetic ratio. [rad/s.mT]
+    :param float J: total spin angular momentum
+    :return: Mz2_eq, rhoMz_eq
+    """
+
+    mu = HBAR * Gamma * np.sqrt(J * (J + 1) / 3.0)  # aN.nm/mT
+    return mu ** 2  # aN^2

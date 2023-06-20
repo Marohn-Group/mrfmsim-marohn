@@ -44,7 +44,7 @@ class TestIBMCyclic:
         based on John's calculation.
         """
 
-        grid = Grid(shape=[201, 201, 21], step=[2.0, 2.0, 2.0], origin=[0, 0, -20])
+        grid = Grid(shape=[201, 201, 201], step=[2.0, 2.0, 0.2], origin=[0, 0, -20])
 
         magnet = SphereMagnet(radius=100.0, mu0_Ms=1800, origin=[0.0, 0.0, 100.0])
 
