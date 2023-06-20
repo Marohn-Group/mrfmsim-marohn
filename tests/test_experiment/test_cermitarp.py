@@ -1,5 +1,5 @@
 from mrfmsim_marohn.experiment import cermitarp, cermitarp_smalltip
-from mrfmsim_marohn.component import Sample, SphereMagnet, Grid
+from mrfmsim_marohn.component import Sample, SphereMagnet, Grid, RectangularMagnet
 import numpy as np
 import pytest
 
@@ -87,3 +87,102 @@ class TestCERMITARP:
         )
 
         assert np.allclose(result, -2.0 * 4.95203, rtol=2e-2)
+
+    # @pytest.mark.skip(reason="incorrect experimental setup")
+    # def test_cermitarp_smalltip(self, grid, magnet, sample):
+    #     """Test smallamp_arp experiments."""
+    #     sample = Sample(
+    #         spin_type="electron",
+    #         temperature=11,
+    #         T1=1.0e-3,
+    #         T2=450.0e-9,
+    #         spin_density=0.0241,
+    #     )
+    #     magnet = RectangularMagnet(
+    #         length=[100.0, 1475.0, 111.0], mu0_Ms=600.0, origin=[0, 1475.0 / 2, 0]
+    #     )
+
+    #     grid = Grid(shape=[51, 11, 5], step=[30, 23, 250], origin=[0, -115, 0])
+
+    #     B1 = 3.0e-4
+    #     B0 = 624.0
+    #     trapz_pts = 20
+    #     f_rf = 17.6e9
+    #     h = [0, 80, 0]
+    #     x_0p = 40.0
+    #     df_fm = 10.0 * B1 * 1.760859708e8 / (2 * np.pi)
+    #     result = cermitarp_smalltip(
+    #         B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p
+    #     )
+
+    #     assert np.isclose(result, -0.455, rtol=5e-1)
+
+
+class TestCERMITESRSmallTip:
+    """Compare different limits between experiment settings."""
+
+    @pytest.fixture
+    def sample(self):
+        """Setup sample."""
+        return Sample(
+            spin_type="1H",
+            temperature=4.2,
+            T1=20.0,
+            T2=5.0e-6,
+            spin_density=49.0,
+        )  # polystyrene
+
+    def test_smallamp_arp_vs_exact_solution_small_amp(self, sample):
+        """Test smalltip_arp vs cornellcermit_arp
+
+        Test that in small amplitude conditions, the approximation is the
+        same as the small tip, which does not ignore the amplitude."""
+
+
+
+        grid = Grid(shape=[41, 41, 11], step=[75, 75, 30], origin=[0, 0, -150])
+        magnet = RectangularMagnet(length=[135.0, 80.0, 1500.0], mu0_Ms=1800.0, origin=[0, 0, 750])
+
+        B1 = 2.5
+        B0 = 4850.0
+        df_fm = 1e6
+        f_rf = 210.0e6
+        h = [0, 0, 112]
+        x_0p = 0.1
+        trapz_pts = 21
+
+        result_no_amp = cermitarp(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
+        result_large_amp = cermitarp_smalltip(B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p)
+
+        assert np.isclose(result_no_amp, result_large_amp, rtol=1e-5)
+
+    def test_smallamp_arp_vs_exact_solution_large_sep(self, sample):
+        """Test cermitarp_smalltip vs cermitarp
+
+        Test that when tip-sample separation is large the amplitude can also
+        be ignored
+        """
+
+        sample = Sample(
+            spin_type="1H",
+            temperature=4.2,
+            T1=20.0,
+            T2=5.0e-6,
+            spin_density=49.0,
+        )  # polystyrene
+
+        grid = Grid(shape=[41, 41, 11], step=[75, 75, 30], origin=[0, 0, -150])
+        magnet = RectangularMagnet(length=[135.0, 80.0, 1500.0], mu0_Ms=1800.0, origin=[0, 0, 750])
+        
+        B1 = 2.5
+        B0 = 4850.0
+        df_fm = 1e6
+        f_rf = 210.0e6
+        h = [0, 0, 112]
+        x_0p = 0.1
+        trapz_pts = 21
+
+        result_no_amp = cermitarp(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
+        result_large_amp = cermitarp_smalltip(B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p)
+
+        assert np.isclose(result_no_amp, result_large_amp, rtol=1e-5)
