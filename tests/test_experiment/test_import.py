@@ -16,11 +16,12 @@ def test_show(capsys):
     cermitarp_smalltip
     cermitesr
     cermitesr_periodirrad_stationarytip
-    cermitesr_singlespin
     cermitesr_smalltip
     cermitesr_stationarytip
     cermitnut
     cermitnut_multipulse
+    cermitesr_singlespin
+    cermitesr_singlespin_approx
     cermittd
     cermittd_singlepulse
     cermittd_smalltip

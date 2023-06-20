@@ -1,6 +1,5 @@
 !import:mrfmsim.Experiment
 name: IBMCyclic
-# version: 2022.11.17
 description: Simulate an IBM-style cyclic-inversion magnetic resonance force
     microscope experiment.
 graph:

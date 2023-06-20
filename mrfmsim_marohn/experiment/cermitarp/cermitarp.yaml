@@ -1,12 +1,11 @@
 !import:mrfmsim.Experiment
 name: CermitARP
-# version: 2022.11.17
 description: Simulates a Cornell-style frequency-shift magnetic resonance force
     microscope experiment in which a single frequency-sweep adiabatic rapid
     passage through resonance is used to invert the spins.
 graph:
     !graph
-    name: cermit_arp_graph
+    name: cermitarp_graph
     grouped_edges:
         - [sample ogrid, [Bz, Bzxx]]
         - [Bz, B total]
@@ -17,6 +16,7 @@ graph:
         Bz:
             func: !execute Bz_method(*sample_ogrid)
             output: Bz
+            doc: Bz_method(*sample_ogrid)
         B total:
             func: !import operator.add
             inputs: [Bz, B0]
@@ -28,6 +28,7 @@ graph:
         Bzxx:
             func: !execute Bzxx_method(*sample_ogrid)
             output: Bzxx
+            doc: Bzxx_method(*sample_ogrid)
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formula.mz_eq
             output: mz_eq
