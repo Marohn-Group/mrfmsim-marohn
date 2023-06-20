@@ -1,4 +1,4 @@
-import pytest
+
 from mrfmsim_marohn.experiment import ibmcyclic
 from mrfmsim_marohn.component import Grid, Sample, SphereMagnet
 import numpy as np
