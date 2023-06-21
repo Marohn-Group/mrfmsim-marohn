@@ -19,20 +19,26 @@ def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
     r"""Relative change in polarization for steady-state.
 
     Compute and return the sample's *relative* steady-state spin
-    polarization.
-    As given by the Bloch equations,
+    polarization. As given by the Bloch equations,
+
     .. math::
         \Delta\rho_{\text{rel}} = \dfrac{\Delta {\cal M}_z}
         {{\cal M}_{z}^{\text{eq}}} = - \dfrac{(B_1 / \Delta B_{\text{sat}})^2}
         {1 + (\Delta B_{\text{offset}} / \Delta B_{\text{homog}})^2 +
             (B_1 / \Delta B_{\text{sat}})^2}
+
     At resonance,
+
     .. math::
         \rho_{\text{rel}} = \dfrac{S}{1+S}
+
     and the change in polarization is governed by the *saturation factor*
+
     .. math::
         S = (B_1 / \Delta B_{\text{sat}})^2
+
     :math:`\rho_{\text{rel}}` under irradiation.
+
     :param float dB_hom: the homogeneous linewidth
         :math:`\Delta B_{\text{homog}}` [mT]
     :param float dB_sat: the saturation linewidth
@@ -53,6 +59,7 @@ def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
 @numba.jit(nopython=True, parallel=True)
 def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
     r"""Relative change in polarization for IBM adiabatic rapid passage.
+
     .. math::
         \eta \, (\Delta B_{\text{offset}}) = \begin{cases}
          \cos^2 \left(\dfrac{\gamma \Delta B_{\text{offset}}}
@@ -60,17 +67,21 @@ def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
          \Delta B_{\text{offset}}
          \leq \pi \Delta f_{\text{FM}} / \gamma, \\
          0 & \text{otherwise.} \end{cases}
+
     with
+
     .. math::
         \Delta B_{\text{offset}} = B_0 - 2 \pi f_{\text{rf}} / \, \gamma
         [\mathrm{mT}]
+
     The result added in pol_arp
-    negative sign for it is the signal of final - initial
-    :param float gamma: the gyromagnetic ratio. [rad/s.mT]
+    the negative sign for it is the signal of final - initial.
+
+    :param float Gamma: the gyromagnetic ratio [rad/s.mT]
     :param float B_offset: resonant offset
-                        :math:`\Delta B_{\text{offset}}` [mT]
-    :param float f_fm: the peak-to-peak frequency modulation
-        :math:`\Delta f_{\text{FM}}` of the applied transverse
+        :math:`\Delta B_{\text{offset}}` [mT]
+    :param float df_fm: the peak-to-peak frequency modulation
+        :math:`\Delta df_{\text{FM}}` of the applied transverse
         radio frequency magnetic field [Hz]
     :return: relative change in polarization
     :rtype: np.array, the same shape as B_offset
@@ -90,25 +101,25 @@ def rel_dpol_arp(B_offset, B1, df_fm, Gamma):
 
     Compute the resonance offset at each point in the sample and compute
     the change in the polarization at each point in the sample following the
-    adiabatic rapid passage.
-    The experiment here is a swept-field experiment or a swept-tip experiment,
-    where
+    adiabatic rapid passage. The experiment here is a swept-field experiment
+    or a swept-tip experiment, where
+
     .. math::
         \Delta B_\text{offset} =
         B_0 + B_\text{tip} - 2 \pi f_\text{rf}/\gamma
+
     and
+
     .. math::
         \Omega_\text{initial} = B_0 + B_\text{tip} -
         (2 \pi f_\text{rf}/\gamma - 2 \pi \Delta f_\text{FM}/\gamma)
         = \Delta B_\text{offset} + 2 \pi \Delta f_\text{FM} / \gamma
-    :param float gamma: the gyromagnetic ratio. [rad/s.mT]
-    :param float B_offset: resonance offset field
-                :math:`\Delta B_\text{offset}` [mT]
-    :param float B_1: amplitude :math:`B_1` of the applied transverse field
-                    [mT]
-    :param float df_fm: the peak-to-peak frequency modulation
-        :math:`\Delta f_\text{FM}` of the applied transverse
-        radio frequency magnetic field [Hz]
+
+    :param float Gamma: the gyromagnetic ratio [rad/s.mT]
+    :param float B_offset: resonance offset field :math:`\Delta B_{\text{offset}}` [mT]
+    :param float B_1: amplitude :math:`B_1` of the applied transverse field [mT]
+    :param float df_fm: the peak-to-peak frequency modulation :math:`\Delta f_{\text{FM}}`
+        of the applied transverse radio frequency magnetic field [Hz]
     :return: relative change in polarization
     :rtype: np.array, the same shape as B_offset
     """
@@ -130,12 +141,13 @@ def rel_dpol_periodic_irrad(B_offset, B1, dB_sat, dB_hom, T1, t_on, t_off):
         {1 - E_\text{on} \, E_\text{off}}
         \frac{S^2}{1 + S^2 + \Omega^2} + \frac{\tau_\text{on}}
          {\tau_\text{on}+\tau_\text{off}}\right)
+
     :param float dB_hom: the homogeneous linewidth [mT]
     :param float dB_sat: the saturation linewidth [mT]
     :param float B_offset: resonant offset
-                            :math:`\Delta B_{\text{offset}}` [mT]
+        :math:`\Delta B_{\text{offset}}` [mT]
     :param float B_1: the amplitude
-                    :math:`B_1` of the applied transverse field [mT]
+        :math:`B_1` of the applied transverse field [mT]
     :param float t_1: spin-lattice relaxation [s]
     :param float t_on: time with the microwaves on [s]
     :param float t_off: time with the microwaves off [s]
@@ -171,10 +183,12 @@ def rel_dpol_nut(B_offset, B1, Gamma, t_p):
         \rho_{\mathrm{rel}} = \frac{\Delta M_{z}}{M_{z}(0)}
         = \frac{1}{\Omega^2+1}
         (1 + \cos{(\Omega_1 t_p \sqrt{\Omega^2+1})})
+
     with
 
     .. math::
         \Delta B_{\mathrm{offset}} = B_z(\vec{r}) - \omega/\gamma
+
     the resonance offset field and
 
     .. math::
@@ -185,7 +199,7 @@ def rel_dpol_nut(B_offset, B1, Gamma, t_p):
 
     the unitless resonance offset.
 
-    :param float gamma: the gyromagnetic ratio. [rad/s.mT]
+    :param float Gamma: the gyromagnetic ratio. [rad/s.mT]
     :param float B_offset: resonance offset field
         :math:`\Delta B_{\text{offset}}` [mT]
     :param float B_1: amplitude of the applied transverse field

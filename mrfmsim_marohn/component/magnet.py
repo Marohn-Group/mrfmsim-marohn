@@ -14,7 +14,7 @@ class SphereMagnet(ComponentBase):
 
         :param float radius: sphere magnet radius [nm]
         :param float mu0_Ms: magnet magnetization [mT],
-                        assumed oriented along z
+            assumed oriented along z.
         :param list origin: the position of the magnet origin (x, y, z)
         """
         self.magnet_origin = np.array(origin)
@@ -27,10 +27,12 @@ class SphereMagnet(ComponentBase):
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
         The magnetic field is calculated as
+    
         .. math::
             B_z = \dfrac{\mu_0 M_s}{3}
             \left( 3 \dfrac{Z^2}{R^5} - \dfrac{1}{R^3} \right)
             R = \sqrt{X^2+Y^2+Z^2}
+    
         Here :math:`(x,y,z)` is the location at which we want to know the
         field;
         :math:`(x_0, y_0, z_0)` is the location of the center of the magnet;
@@ -79,11 +81,13 @@ class SphereMagnet(ComponentBase):
         With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
         :math:`\mu_0 M_s` defined in Bz(x, y, z), the magnetic field
         gradient is calculated as
+    
         .. math::
             B_{zx} = \dfrac{\partial B_z}{\partial z}
             = \dfrac{\mu_0 M_s}{r} X \:
             \left( \dfrac{1}{R^5} - 5 \dfrac{Z^2}{R^7} \right)
             R = \sqrt{X^2+Y^2+Z^2}
+    
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -124,16 +128,18 @@ class SphereMagnet(ComponentBase):
         r"""Calculate magnetic field second derivative :math:`B_{zxx}`.
 
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
-        [ :math:`\mathrm{mT} \: \mathrm{nm}^{-2}` ]. The inputs are
+        [:math:`\mathrm{mT} \: \mathrm{nm}^{-2}`]. The inputs are
         With :math:`X`, :math:`Y`, :math:`Z`, :math:`R`, :math:`r`, and
         :math:`\mu_0 M_s` defined as above, the magnetic field
         second derivative is calculated as
+    
         .. math::
             B_{zxx} = \dfrac{\partial B_z}{\partial z}
             = \dfrac{\mu_0 M_s}{r^2} \:
             \left( \dfrac{1}{R^5} - 5 \dfrac{X^2}{R^7}
             - 5 \dfrac{Z^2}{R^7} + 35 \dfrac{X^2 Z^2}{R^9} \right)
             R = \sqrt{X^2+Y^2+Z^2}
+
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -182,11 +188,11 @@ class RectangularMagnet(ComponentBase):
         """Initiate a rectangular magnet object
         :param list length: length of rectangular magnet in (x, y, z) direction [nm]
         :param float mu0_Ms: the rectangle's magnetization [mT],
-                    assumed to be oriented along ``z``
+            assumed to be oriented along ``z``
         :param list origin: the position of the magnet origin (x, y, z)
         :ivar np.array _range:
             [-xrange, +xrange, -yrange, +yrange, -zrange, zrange]
-            range in the x, y and z direction after center point to the origin.
+            range in the x, y and z direction after the center point to the origin.
         """
         self.magnet_origin = np.array(origin)
         self.mu0_Ms = mu0_Ms
@@ -209,27 +215,34 @@ class RectangularMagnet(ComponentBase):
         layer of continuous current density. The total field is found by
         summing over the faces.
         The magnetic field is given by:
+
         .. math::
             B_z = \dfrac{\mu_0 M_s}{4\pi} \sum_{i=1}^{2}
                 \sum_{j=1}^2 \sum_{k=1}^2(-1)^{i+j+k}
                 arctan \left( \dfrac{(x - x_i)(y - y_i))}{(z - z_k)R} \right)
+
         Here :math:`(x,y,z)` are the coordinates for the location at which we
         want to know the field;
         The magnet spans from x1 to x2 in the ``x``-direction,
         y1 to y2 in the ``y``-direction, and z1 to z2 in
         the ``z``-direction;
+
         .. math::
             R = \sqrt{(x - x_i)^2 + (y - y_j)^2 + (z - z_k)^2}
+
         where :math:`\mu_0 M_s` is the magnet's saturation magnetization in mT.
+
         **Reference**:
         Ravaud, R. and Lemarquand, G. "Magnetic field produced by a
         parallelepipedic magnet of various and uniform polarization" ,
         *PIER*, **2009**, *98*, 207-219
         [`10.2528/PIER09091704 <http://dx.doi.org/10.2528/PIER09091704>`__].
+
         - set the magnet up so that the x and y dimensions are centered about
           the zero point.
         - The translation in z should shift the tip of the magnet in the
           z-direction to be the given distance from the surface.
+
         :param float x: x coordinate of sample grid [nm]
         :param float y: y coordinate of sample grid [nm]
         :param float z: z coordinate of sample grid [nm]
@@ -287,18 +300,23 @@ class RectangularMagnet(ComponentBase):
         The magnetic field gradient
         :math:`B_{zx} = \dfrac{\partial{B_z}}{\partial x}` is
         given by the following:
+
         .. math::
            B_{zx} = \dfrac{\mu_0 M_s}{4 \pi} \sum_{i=1}^2 \sum_{j=1}^2
                \sum_{k=1}^2(-1)^{i+j+k}
                \left( \dfrac{(y-y_j)(z-z_k)}{ R((x-x_i)^2 + (z-z_k)^2))}
                \right)
+
         As described above, :math:`(x,y,z)` are coordinates for the location
         at which we want to know the field gradient; the magnet spans from
         x1 to x2 in the ``x``-direction, y1 to y2 in the ``y``-direction, and
         from z1 to z2 in the ``z``-direction;
+
         .. math::
             R = \sqrt{(x - x_i) + (y - y_j) + (z - z_k)}
+
         :math:`\mu_0 M_s` is the magnet's saturation magnetization in mT.
+
         :param float x: ``x`` coordinate [nm]
         :param float y: ``y`` coordinate [nm]
         :param float z: ``z`` coordinate [nm]
@@ -329,12 +347,13 @@ class RectangularMagnet(ComponentBase):
         """Calculate the summation term for magnetic field gradient.
 
         Optimized with numba. See method bzx for the explanation.
+
         :param np.array dx1, dx2: distance between grid and the 2 ends of
-                                magnet in x direction [nm]
+            magnet in x direction [nm]
         :param np.array dy1, dy2: distance between grid and the 2 ends of
-                                magnet in y direction [nm]
+            magnet in y direction [nm]
         :param np.array dz1, dz2: distance between grid and the 2 ends of
-                                magnet in z direction [nm]
+            magnet in z direction [nm]
         """
 
         return (
@@ -370,6 +389,7 @@ class RectangularMagnet(ComponentBase):
         :math:`B_{zxx} \equiv \partial^2 B_z / \partial x^2`
         [ :math:`\mathrm{mT} \; \mathrm{nm}^{-2}`]
         The magnetic field's second derivative is given by the following:
+
         .. math::
            B_{zxx} = \dfrac{\partial B_z}{\partial z}
                = \dfrac{\mu_0 M_s}{4 \pi} \sum_{i=1}^2
@@ -378,6 +398,7 @@ class RectangularMagnet(ComponentBase):
                    (3(x-x_i)^2 +2(y-y_j)^2 + 3(z-z_k)^2)}
                    {((x-x_i)^2 + (y-y_j)^2 + (z-z_k)^2)^{3/2}
                    ((x-x_i)^2 + (z-z_k)^2)^2} \right)
+
         with the variables defined above.
         :param float x: ``x`` coordinate [nm]
         :param float y: ``y`` coordinate [nm]

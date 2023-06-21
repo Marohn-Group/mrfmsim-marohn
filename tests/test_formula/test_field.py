@@ -72,7 +72,8 @@ class TestXTrapzFxDtheta:
 
         .. math::
 
-            \int{x_0 cos\theta d\theta}
+            \int_{-\pi}^{\pi}{x_0 \cos\theta d\theta}
+
 
         The results:
         (-pi/2 -> 0): x0
@@ -103,7 +104,7 @@ class TestXTrapzFxDtheta:
 
         .. math::
 
-            \int{(x-x_0 cos\theta)x_0 cos\theta d\theta}}
+            \int_{-\pi}^{\pi}{(x-x_0 \cos\theta)x_0 \cos\theta d\theta}
 
         The results:
         (-pi/2 -> 0): x*x0 - x0^2*pi/4
@@ -139,8 +140,9 @@ class TestXTrapzFxDtheta:
 
         .. math::
 
-            \int{(x-x_0 cos\theta)x_0 cos\theta d\theta}}
-         The results:
+            \int_{-\pi}^{\pi}{(x-x_0 \cos\theta)x_0 \cos\theta d\theta}
+        
+        The results:
         (-pi/2 -> 0): x^2*x0 - pi/2*x*x0^2 + 2/3 * x0^3
         (-pi -> 0): - pi*x*x0^2
         """

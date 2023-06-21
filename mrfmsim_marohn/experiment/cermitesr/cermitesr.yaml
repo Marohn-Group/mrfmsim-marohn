@@ -28,6 +28,7 @@ graph:
         extended ogrid:
             func: !execute extend_grid_method(ext_pts)
             output: ext_ogrid
+            doc: "Lambda expression: extend_grid_method(ext_pts)"
         extended sample ogrid:
             func: !import mrfmsim_marohn.formula.ogrid_sub
             inputs: [ext_ogrid, h]
@@ -35,6 +36,7 @@ graph:
         extended Bz:
             func: !execute Bz_method(*ext_sample_ogrid)
             output: ext_Bz
+            doc: "Lambda expression: Bz_method(*ext_sample_ogrid)"
         extended B total:
             func: !import operator.add
             inputs: [ext_Bz, B0]
@@ -50,6 +52,7 @@ graph:
         Bzxx:
             func: !execute Bzxx_method(*sample_ogrid)
             output: Bzxx
+            doc: "Lambda expression: Bzxx_method(*sample_ogrid)"
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formula.mz_eq
             output: mz_eq
@@ -67,9 +70,11 @@ graph:
             func: !func "lambda Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel: 
                 - (Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dk_spin
+            doc: "Lambda expression:  - (Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
         frequency shift:
             func: !execute dk_to_df_ac_cermit(dk_spin)
             output: df_spin
+            doc: "Lambda expression: dk_to_df_ac_cermit(dk_spin)"
 replace_inputs:
     magnet: [Bz_method, Bzxx_method]
     sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]

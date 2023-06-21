@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Test magnet module in mrfmsim.components.
+"""Test magnet module in mrfmsim_marohn.component.
 
 SphereMagnet
 ------------
 
-All sphere magnet are tested using parameter:
+All sphere magnets are tested using the parameters:
 r = 50.0 nm
 mu0_Ms = 1800.0 mT
 o = [0, 0, 0] nm
@@ -15,11 +15,10 @@ Bz_method
 ^^^^^^^^^^
 
 1. Test Bz at poles (0.0, 0.0, 50.0) and (0.0, 0.0, -50.0) both result
-  in Bz value of 1200.0 mT
-2. Test Bz at equator (50.0, 0.0, 0.0), (0.0, 5.0, 0.0), 
-  and (-1.0*50.0/sqrt(2),  -1.0*50.0/sqrt(2), 0.0), all result in Bz
-  value of -600.0 mT
-
+   in Bz value of 1200.0 mT
+2. Test Bz at the equator (50.0, 0.0, 0.0), (0.0, 5.0, 0.0), 
+   and (-1.0*50.0/sqrt(2),  -1.0*50.0/sqrt(2), 0.0), all result in Bz
+   value of -600.0 mT
 """
 
 import pytest
@@ -27,15 +26,8 @@ import numpy as np
 from mrfmsim_marohn.component import SphereMagnet, RectangularMagnet
 from textwrap import dedent
 
-SPHERE_STR = """SphereMagnet(
-  magnet_origin=[0.0 0.0 0.0] [nm] # magnet origin
-  magnet_radius=50.0 [nm] # magnet radius
-  mu0_Ms=1800.0 [mT] # tip magnetization, oriented along z
-)"""
-
-
 class MagnetTester:
-
+    """Base class for testing magnet classes."""
     magnet_str = ""
 
     def test_str(self, magnet):
@@ -44,7 +36,7 @@ class MagnetTester:
         assert str(magnet) == dedent(self.magnet_str)
 
     def check_bz(self, magnet, x, y, z, theory):
-        """Test Bz calculation against theory."""
+        """Test Bz calculation against the theory."""
         assert np.allclose(magnet.Bz_method(x, y, z), theory, rtol=1e-12)
 
     def check_bzx(self, magnet, x, y, z):
@@ -113,7 +105,7 @@ class TestSphereMagnet(MagnetTester):
         ],
     )
     def test_bzx(self, magnet, x, y, z):
-        """test Bzx at selected points against estimation from Bz calculation."""
+        """Test Bzx at selected points against estimation from Bz calculation."""
 
         self.check_bzx(magnet, x, y, z)
 
@@ -125,7 +117,7 @@ class TestSphereMagnet(MagnetTester):
         ],
     )
     def test_bzxx(self, magnet, x, y, z):
-        """test Bzxx at selected points against estimation from Bzx calculation."""
+        """Test Bzxx at selected points against estimation from Bzx calculation."""
 
         self.check_bzxx(magnet, x, y, z)
 
@@ -152,22 +144,22 @@ class TestRectangularMagnet(MagnetTester):
     def test_rectmagnet_x_symmetry(self, magnet, x, y, z):
         """Test x direction symmetry
 
-        Bz - even function in x direction
-        Bzx - odd function in x direction
-        Bzxx - even function in x direction
+        Bz - even function in the x direction
+        Bzx - odd function in the x direction
+        Bzxx - even function in the x direction
         """
 
-        np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(-x, y, z), rtol=1e-10)
-        np.allclose(
+        assert np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(-x, y, z), rtol=1e-10)
+        assert np.allclose(
             magnet.Bzx_method(x, y, z), -magnet.Bzx_method(-x, y, z), rtol=1e-10
         )
-        np.allclose(
+        assert np.allclose(
             magnet.Bzxx_method(x, y, z), magnet.Bzxx_method(-x, y, z), rtol=1e-10
         )
 
     @pytest.mark.parametrize("x, y, z", [(0.0, 0.0, np.arange(50, 100, 5))])
     def test_rectmagnet_Bz_symmetry_z(self, magnet, x, y, z):
-        """Test Bz_method of RectMagnet symmetry in z direction."""
+        """Test Bz_method of RectMagnet symmetry in the z direction."""
 
         np.allclose(magnet.Bz_method(x, y, z), magnet.Bz_method(x, y, -z), rtol=1e-10)
 
@@ -176,7 +168,7 @@ class TestRectangularMagnet(MagnetTester):
 
         If we treat the magnet as a square loop wire, the magnetization
         at z distance away from the magnet's center can be calculated using
-        Biot–Savart law. We use this measurement against a thin film magnet
+        Biot-Savart law. We use this measurement against a thin film magnet
         with the size of 10, 10, and 1 nm, and calculate the field 2 nm away
         from the center of the magnet. (The unit of B is mT)
         """

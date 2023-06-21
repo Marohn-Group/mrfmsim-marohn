@@ -6,8 +6,6 @@ import numpy as np
 
 class TestIBMCyclic:
     """Test IBMCyclic Experimental method.
-
-    See CornellCermitAPRTest for detailed implementations
     """
 
     def test_IBMCyclic_dF_spin(self):
@@ -40,7 +38,7 @@ class TestIBMCyclic:
     def test_IBMCyclic_dF2_spin(self):
         """Test IBM cyclic force variance signal for nucleus.
 
-        Values are taken from test-ibmexpt-1.ipynb simulation 1 #4- #9
+        Values are taken from "test-ibmexpt-1.ipynb" simulation 1 #4- #9
         based on John's calculation.
         """
 
@@ -58,7 +56,5 @@ class TestIBMCyclic:
         B1 = 2.0
 
         dF2_spin, dF_spin = ibmcyclic(B0, df_fm, f_rf, grid, h, magnet, sample)
-
-        print(dF2_spin, dF_spin)
 
         assert np.isclose(dF2_spin, -477.032, rtol=5e-4)

@@ -16,7 +16,9 @@ def mz_eq(B_tot, Gamma, J, temperature):
     :param float b0: the external magnetic field [mT]
     :param float bz: tip magnetic field in z [mT]
     :return: equilibrium per-spin magnetization [aN.nm/mT]
+
     The outputs are calculated from the sample properties
+
     .. math::
         J &= \text{spin angular momentum quantum number}\:
             [\mathrm{unitless}]\\
@@ -25,32 +27,44 @@ def mz_eq(B_tot, Gamma, J, temperature):
         B_0 &= \text{applied magnetic field} \: [\mathrm{mT}] \\
         T &= \text{temperature} \: [\mathrm{K}] \\
         \rho &= \text{spin density} \: [\mathrm{nm}^{-1}]
+
     as follows. From the sample properties, we compute the magnetic moment
     :math:`\mu` of the state with the largest :math:`m_J` quantum number,
+
     .. math::
         \mu = \hbar\gamma J \: [\mathrm{aN} \: \mathrm{nm} \:
         \mathrm{mT}^{-1}]
+
     We calculate the ratio of the energy level splitting of spin states to
     the thermal energy,
+
     .. math::
         x = \dfrac{\mu B_0}{k_b T} \: [\mathrm{unitless}],
+
     and define the following two unitless numbers:
+
     .. math::
         a &= \dfrac{2 \: J + 1}{2 \: J} \\
         b &= \dfrac{1}{2 \: J}
+
     In terms of these intermediate quantities, the thermal-equilibrium
     polarization is given by
+
     .. math::
         p_{\text{eq}} = a \coth{(a x)} - b \coth{(b x)}
             \: [\mathrm{unitless}].
+
     The equilibrium magnetization is given by
+
     .. math::
         {\cal M}_{z}^{\text{eq}} =
             p_{\text{eq}} \: \mu \:
             [\mathrm{aN} \: \mathrm{nm} \: \mathrm{mT}^{-1}].
+
     In the limit of low field or high temperature,
     the equilibrium magnetization
     tends towards the Curie-Weiss law,
+
     .. math::
         {\cal M}_{z}^{\text{eq}}
         \approx \dfrac{\hbar^2 \gamma^2 \: J (J + 1)}{3 \: k_b T} B_0

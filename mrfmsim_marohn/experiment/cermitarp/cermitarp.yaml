@@ -16,7 +16,6 @@ graph:
         Bz:
             func: !execute Bz_method(*sample_ogrid)
             output: Bz
-            doc: Bz_method(*sample_ogrid)
         B total:
             func: !import operator.add
             inputs: [Bz, B0]
@@ -28,7 +27,6 @@ graph:
         Bzxx:
             func: !execute Bzxx_method(*sample_ogrid)
             output: Bzxx
-            doc: Bzxx_method(*sample_ogrid)
         equilibrium magnetization per spin:
             func: !import mrfmsim_marohn.formula.mz_eq
             output: mz_eq
