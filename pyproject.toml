@@ -66,10 +66,9 @@ omit = ['tests/*']
 
 [tool.tox]
 # for testing different python environments
-# somehow poetry, tox and python3.10 don't work
 legacy_tox_ini = """
 [tox]
-envlist = py38, py39, coverage, docs
+envlist = py38, py39, py310, py311, coverage, docs
 isolated_build = True
  
 [testenv:py38]
@@ -78,6 +77,16 @@ commands =
     pytest
 
 [testenv:py39]
+deps = pytest >= 7.1.1
+commands = 
+    pytest
+
+[testenv:py310]
+deps = pytest >= 7.1.1
+commands = 
+    pytest
+
+[testenv:py311]
 deps = pytest >= 7.1.1
 commands = 
     pytest
@@ -100,4 +109,11 @@ deps =
 commands =
     # sphinx-build -W -b html ./docs ./docs/_build/html
     sphinx-build -W -b html -d "{toxworkdir}/docs" docs "{toxinidir}/docs/_build/html"
+
+[gh-actions]
+python =
+    3.8: py38, coverage, docs
+    3.9: py39, coverage, docs
+    3.10: py310, coverage, docs
+    3.11: py311, coverage, docs
 """
