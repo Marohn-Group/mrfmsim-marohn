@@ -1,7 +1,7 @@
 MrfmSim-Marohn
 ==============
 
-|GitHub version| |Unit tests|
+|GitHub version| |Unit tests| |DOI|
 
 The MrfmSim-Marohn package can be used as a standalone or used as a plugin for
 the `MrfmSim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
@@ -93,3 +93,6 @@ References
 
 .. |Unit tests| image:: https://github.com/Marohn-Group/mrfmsim/actions/workflows/tox.yml/badge.svg
     :target: https://github.com/Marohn-Group/mrfmsim-marohn/actions
+
+.. |DOI| image:: https://zenodo.org/badge/553750575.svg
+   :target: https://zenodo.org/badge/latestdoi/553750575
