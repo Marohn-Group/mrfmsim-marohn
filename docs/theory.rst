@@ -562,7 +562,7 @@ Reference
     [`10.1103/PhysRevB.84.205328 
     <http://dx.doi.org/10.1103/PhysRevB.84.205328>`__].
 
-:py:mod:`mrfmsim_marohn.formula.polarization` module
+:py:mod:`formula.polarization` module
 ----------------------------------------------------
 
 .. automodule:: mrfmsim_marohn.formula.polarization
