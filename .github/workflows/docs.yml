@@ -15,5 +15,5 @@ jobs:
         with:
           docs-source: docs/
           pyproject-path: .[docs]
-          external-repo: Marohn-Group/mrfmsim-docs
+          external-repo: Marohn-Group/mrfmsim-marohn-docs
           deploy-token: ${{ secrets.PRIVATE_TOKEN}}
