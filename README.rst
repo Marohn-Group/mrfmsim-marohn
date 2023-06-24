@@ -1,8 +1,11 @@
 MrfmSim-Marohn
 ==============
 
+|GitHub version| |Unit tests|
+
 The MrfmSim-Marohn package can be used as a standalone or used as a plugin for
-the `MrfmSim package <https://github.com/Marohn-Group/mrfmsim>`__.
+the `MrfmSim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
+`documentation <https://github.com/Marohn-Group/mrfmsim-docs>`__.
 
 This package contains tools to simulate signals in a Magnetic Resonance Force 
 Microscope [#Sidles1995jan]_ [#Kuehn2008feb]_ [#Poggio2010aug]_ experiment.
@@ -84,3 +87,9 @@ References
     & Marohn, J. A. "Force-Gradient Detected Nuclear Magnetic Resonance", 
     *Appl. Phys. Lett.*, **2004**, *84*, 5091 - 5093 
     [`10.1063/1.1762700 <http://dx.doi.org/10.1063/1.1762700>`__]. 
+
+.. |GitHub version| image:: https://badge.fury.io/gh/Marohn-Group%2Fmrfmsim-marohn.svg
+   :target: https://github.com/Marohn-Group/mrfmsim-marohn
+
+.. |Unit tests| image:: https://github.com/Marohn-Group/mrfmsim/actions/workflows/tox.yml/badge.svg
+    :target: https://github.com/Marohn-Group/mrfmsim-marohn/actions
