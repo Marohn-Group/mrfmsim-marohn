@@ -49,7 +49,7 @@ class Grid(ComponentBase):
         self.grid_origin = np.array(origin, dtype=np.float64)
         self.grid_step = np.array(step, dtype=np.float64)
         self.grid_voxel = self.grid_step.prod()
-        self.grid_shape = np.array(shape)
+        self.grid_shape = np.array(shape).astype(int)
         self.grid_range = (self.grid_shape - [1, 1, 1]) * self.grid_step
         self.grid_length = self.grid_shape * self.grid_step
 
