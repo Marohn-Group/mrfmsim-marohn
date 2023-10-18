@@ -2,7 +2,7 @@
 
 import mrfmsim_marohn.formula.polarization as pol
 import numpy as np
-from mrfmsim_marohn.component import Sample
+from mrfmsim.component import Sample
 import pytest
 
 

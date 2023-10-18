@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath(".."))
 project = 'MrfmSim-Marohn'
 copyright = '2023, Peter Sun, John A. Marohn'
 author = 'Peter Sun, John A. Marohn, Corinne Isaac'
-release = '0.1.0'
+release = '0.2.0'
 
 
 # -- General configuration ---------------------------------------------------

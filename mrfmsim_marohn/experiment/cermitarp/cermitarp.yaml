@@ -1,4 +1,4 @@
-!import:mrfmsim.Experiment
+!import:mrfmsim.model.Experiment
 name: CermitARP
 description: Simulates a Cornell-style frequency-shift magnetic resonance force
     microscope experiment in which a single frequency-sweep adiabatic rapid

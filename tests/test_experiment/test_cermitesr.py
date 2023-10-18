@@ -1,4 +1,4 @@
-from mrfmsim_marohn.component import (
+from mrfmsim.component import (
     SphereMagnet,
     Grid,
     Sample,
@@ -53,7 +53,7 @@ class TestCERMITESR:
 
         df_spin = cermitesr(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
 
-        assert np.isclose(df_spin, cantilever.dk_to_df_ac_cermit(-0.940), rtol=5e-1)
+        assert np.isclose(df_spin, cantilever.dk_to_df_modulated(-0.940), rtol=5e-1)
 
     def test_cermitesr_hangdown(self, sample, cantilever):
         """Test the result in SPAM geometry, Issac parameters."""
@@ -69,7 +69,7 @@ class TestCERMITESR:
 
         df_spin = cermitesr(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
 
-        assert np.isclose(df_spin, cantilever.dk_to_df_ac_cermit(-25.086), rtol=5e-1)
+        assert np.isclose(df_spin, cantilever.dk_to_df_modulated(-25.086), rtol=5e-1)
 
 
 class TestCERMITESR_smalltip:
@@ -103,7 +103,7 @@ class TestCERMITESR_smalltip:
         trapz_pts = 20
         mw_x_0p = 5
 
-        analytical = cantilever.dk_to_df_ac_cermit(
+        analytical = cantilever.dk_to_df_modulated(
             cermitesr_singlespin_approx(
                 magnet, sample, sample_ogrid, trapz_pts, mw_x_0p
             )

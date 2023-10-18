@@ -1,4 +1,4 @@
-!import:mrfmsim.Experiment
+!import:mrfmsim.model.Experiment
 name: IBMCyclic
 description: Simulate an IBM-style cyclic-inversion magnetic resonance force
     microscope experiment.

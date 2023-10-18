@@ -1,5 +1,5 @@
 from mrfmsim_marohn.experiment import cermitarp, cermitarp_smalltip
-from mrfmsim_marohn.component import Sample, SphereMagnet, Grid, RectangularMagnet
+from mrfmsim.component import Sample, SphereMagnet, Grid, RectangularMagnet
 import numpy as np
 import pytest
 

@@ -1,7 +1,7 @@
 """Test the collection of CERMIT ESR experiments."""
 
 from mrfmsim_marohn.experiment import cermitesr_singlespin, cermitesr_singlespin_approx
-from mrfmsim_marohn.component import Sample, SphereMagnet
+from mrfmsim.component import Sample, SphereMagnet
 import numpy as np
 import pytest
 

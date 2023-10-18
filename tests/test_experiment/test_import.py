@@ -1,4 +1,4 @@
-from mrfmsim import Experiment
+from mrfmsim.model import Experiment
 from textwrap import dedent
 import importlib
 

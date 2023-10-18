@@ -1,4 +1,4 @@
-!import:mrfmsim.Experiment
+!import:mrfmsim.model.Experiment
 name: CermitESRPeriodicIrradiationStationaryTip
 # version: 2022.11.17
 description: Saturation ESR simulation with intermittent pulse and a stationary tip.
@@ -41,11 +41,11 @@ graph:
                 - (Bzxx * rel_dpol * mz_eq * spin_density * grid_voxel).sum()"
             output: dk_spin
         frequency shift:
-            func: !execute dk_to_df_ac_cermit(dk_spin)
+            func: !execute dk_to_df_modulated(dk_spin)
             output: df_spin
 
 replace_inputs:
     magnet: [Bz_method, Bzxx_method]
     sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
     grid: [grid_array, grid_shape, grid_step, grid_voxel, extend_grid_method]
-    cantilever: [dk_to_df_ac_cermit]
+    cantilever: [dk_to_df_modulated]

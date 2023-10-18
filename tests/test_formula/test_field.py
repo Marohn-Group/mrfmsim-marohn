@@ -204,7 +204,7 @@ class TestXTrapzFieldGradient:
         150 nm away from the sample.
         """
 
-        from mrfmsim_marohn.component import RectangularMagnet, Grid
+        from mrfmsim.component import RectangularMagnet, Grid
 
         magnet = RectangularMagnet(
             length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[10.0, 0.0, 200.0]
@@ -231,7 +231,7 @@ class TestXTrapzFieldGradient:
         are small.
         """
 
-        from mrfmsim_marohn.component import RectangularMagnet, Grid
+        from mrfmsim.component import RectangularMagnet, Grid
 
         magnet = RectangularMagnet(
             length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[10.0, 0.0, 3000.0]

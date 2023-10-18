@@ -1,4 +1,4 @@
-!import:mrfmsim.Experiment
+!import:mrfmsim.model.Experiment
 name: CermitESRSingleSpinApprox
 description: Simulates an MRFM experiment in the hangdown or SPAM geometry where a
     single electron spin is located directly below the tip. With a small

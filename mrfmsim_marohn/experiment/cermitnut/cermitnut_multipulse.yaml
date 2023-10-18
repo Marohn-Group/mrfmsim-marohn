@@ -1,4 +1,4 @@
-!import:mrfmsim.Experiment
+!import:mrfmsim.model.Experiment
 name: CermitNutMultiPulse
 # version: 2022.11.18
 description: Simulates a Cornell-style frequency-shift magnetic resonance force 

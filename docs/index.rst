@@ -7,14 +7,6 @@ MrfmSim-Marohn documentation
 
    readme.rst
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Experimental Setup
-
-   component/sample.rst
-   component/grid.rst
-   component/magnet.rst
-   component/cantilever.rst
 
 .. toctree::
    :maxdepth: 2
@@ -24,12 +16,6 @@ MrfmSim-Marohn documentation
    theory.rst
    experiment.rst
    simulation.rst
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Units
-
-   units.rst
 
 .. toctree::
    :maxdepth: 2
