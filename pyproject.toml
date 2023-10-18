@@ -1,30 +1,29 @@
 [tool.poetry]
 name = "mrfmsim-marohn"
-version = "0.1.0"
+version = "0.2.0"
 description = "Marohn group magnetic resonance force microscopy experiments"
 authors = ["Peter Sun <hs859@cornell.edu>", "John Marohn <jam99@cornell.edu>"]
 maintainers = ["Peter Sun <hs859@cornell.edu>"]
 repository = "https://www.github.edu/Marohn-Group/mrfmsim-marohn"
-# adds all subpackages and the units.yaml file
 packages = [{ include = "mrfmsim_marohn/*.py" }, { include = "mrfmsim_marohn/**/*.py" }]
-include = ["mrfmsim_marohn/units.yaml", "mrfmsim_marohn/experiment/**/*.yaml"]
+include = ["mrfmsim_marohn/experiment/**/*.yaml"]
 readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = ">=3.8"
 numpy = ">=1.22" # conflict with numba 0.57 requirement
-numba = ">=0.57"
+numba = ">=0.58"
 pyyaml = "^6.0"
 mmodel = ">=0.6.2"
-mrfmsim = { git = "https://github.com/marohn-group/mrfmsim@v0.1.1" }
+mrfmsim = { git = "https://github.com/marohn-group/mrfmsim.git", branch="develop" }
 click = ">=8.1.0"
 scipy = "^1.10.1"
 tox = { version = ">=4.6.3", optional = true }
 pytest = { version = ">=7.1.1", optional = true }
 pytest-cov = { version = ">=3.0.0", optional = true }
-sphinx = { version = "^4.4.0", optional = true }
-sphinx-book-theme = { version = "^0.3.2", optional = true }
-nbsphinx = { version = "^0.8.8", optional = true }
+sphinx = { version = "^6.2.1", optional = true }
+sphinx-book-theme = { version = "^1.0.1", optional = true }
+nbsphinx = { version = "^0.9.3", optional = true }
 
 
 [build-system]
@@ -36,12 +35,17 @@ tox = ">=3.24.5"
 pytest = ">=7.1.1"
 pytest-cov = ">=3.0.0"
 sphinx = "^4.4.0"
-sphinx-book-theme = "^0.3.2"
-nbsphinx = "^0.8.8"
+sphinx-book-theme = "^1.0.1"
+nbsphinx = "^0.9.3"
 
 [tool.poetry.extras]
 test = ["tox", "pytest", "pytest-cov"]
 docs = ["nbsphinx", "sphinx", "sphinx_book_theme"]
+
+
+[tool.poetry.plugins."mrfmsim_plugin"]
+experiment = "mrfmsim_marohn.experiment"
+
 
 [tool.pytest.ini_options]
 filterwarnings = [

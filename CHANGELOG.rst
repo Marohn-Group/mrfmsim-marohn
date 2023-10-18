@@ -7,6 +7,19 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 For previous versions of Marohn group mrfmsim, see `repository <https://github.com/peterhs73/MrfmSim-archived>`_.
 
+[Unreleased]
+------------
+
+Changed
+^^^^^^^
+
+- Change the plugin system based on ``mrfmsim`` version 0.2.0.
+    - Add the ``mrfmsim_plugin`` entry point in the pyproject.toml file.
+- Moved the ``components`` submodule to ``mrfmsim`` main platform.
+- Moved the units system to ``mrfmsim-unit`` library.
+
+
+
 [0.1.0] - 2023-06-23
 --------------------
 
