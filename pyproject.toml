@@ -55,7 +55,8 @@ filterwarnings = [
     'ignore:invalid escape sequence \\l:DeprecationWarning',
     # The parallel method of numba might not be used in test
     # ignore the warning
-    'ignore::numba.NumbaPerformanceWarning' 
+    'ignore::numba.NumbaPerformanceWarning',
+    'ignore::DeprecationWarning'
 ]
 
 [tool.coverage.run]

@@ -5,13 +5,13 @@ from mrfmsim.component import (
     Cantilever,
     RectangularMagnet,
 )
-from mrfmsim_marohn.experiment import (
-    cermitesr,
-    cermitesr_smalltip,
-    cermitesr_singlespin_approx,
-)
+from mrfmsim_marohn.experiment import CermitESRCollection, CermitESRSingleSpinCollection
 import numpy as np
 import pytest
+
+CermitESR = CermitESRCollection["CermitESR"]
+CermitESRSmallTip = CermitESRCollection["CermitESRSmallTip"]
+CermitESRSingleSpinApprox = CermitESRSingleSpinCollection["CermitESRSingleSpinApprox"]
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def sample():
     """Return the sample object."""
 
     return Sample(
-        spin_type="electron",
+        spin="e",
         temperature=11.0,
         T1=1.3e-3,
         T2=0.45e-6,
@@ -51,9 +51,9 @@ class TestCERMITESR:
         f_rf = 17.7e9
         h = [0, 50, 0]  # tip sample separation [nm]
 
-        df_spin = cermitesr(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
+        df_spin = CermitESR(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
 
-        assert np.isclose(df_spin, cantilever.dk_to_df_modulated(-0.940), rtol=5e-1)
+        assert np.isclose(df_spin, cantilever.k2f_modulated * -0.940, rtol=5e-1)
 
     def test_cermitesr_hangdown(self, sample, cantilever):
         """Test the result in SPAM geometry, Issac parameters."""
@@ -67,9 +67,9 @@ class TestCERMITESR:
         f_rf = 18.5e9
         h = [0, 0, 1450]  # tip sample separation [nm]
 
-        df_spin = cermitesr(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
+        df_spin = CermitESR(B0, B1, cantilever, f_rf, grid, h, magnet, mw_x_0p, sample)
 
-        assert np.isclose(df_spin, cantilever.dk_to_df_modulated(-25.086), rtol=5e-1)
+        assert np.isclose(df_spin, cantilever.k2f_modulated * -25.086, rtol=5e-1)
 
 
 class TestCERMITESR_smalltip:
@@ -82,34 +82,43 @@ class TestCERMITESR_smalltip:
         """
 
         magnet = RectangularMagnet(
-            length=[100.0, 70.0, 1500.0], mu0_Ms=1800.0, origin=[0.0, 0.0, 1500.0 / 2.0]
+            length=[100.0, 70.0, 1500.0],
+            mu0_Ms=1800.0,
+            origin=[0.0, 0.0, 1500.0 / 2.0],
         )
 
-        grid = Grid(shape=[1, 1, 1], step=[0.01, 0.01, 0.01], origin=[0.0, 0.0, 0.0])
+        grid = Grid(
+            shape=[1, 1, 1],
+            step=[0.01, 0.01, 0.01],
+            origin=[0.0, 0.0, 0.0],
+        )
 
         sample = Sample(
-            spin_type="electron",
+            spin="e",
             temperature=4.2,
             T1=1.0e-3,
             T2=450e-9,
-            spin_density=1 / grid.grid_voxel,  # only 1 spin in the grid
+            spin_density=1 / grid.voxel,  # only 1 spin in the grid
         )
 
         B0 = 100000
         f_rf = 2813.8039e9
         B1 = 2.2e-0
         h = [0, 0, 30.0]
-        sample_ogrid = np.ogrid[0:0:1j, 0:0:1j, -30:-30:1j]
+        grid_array = grid.grid_array
         trapz_pts = 20
         mw_x_0p = 5
 
-        analytical = cantilever.dk_to_df_modulated(
-            cermitesr_singlespin_approx(
-                magnet, sample, sample_ogrid, trapz_pts, mw_x_0p
-            )
+        analytical = cantilever.k2f_modulated * CermitESRSingleSpinApprox(
+            magnet=magnet,
+            sample=sample,
+            grid_array=grid_array,
+            trapz_pts=trapz_pts,
+            x_0p=mw_x_0p,
+            h=h,
         )
 
-        result = cermitesr_smalltip(
+        result = CermitESRSmallTip(
             B0,
             B1,
             cantilever,

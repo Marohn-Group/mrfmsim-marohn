@@ -1,7 +1,11 @@
-from mrfmsim_marohn.experiment import cermitarp, cermitarp_smalltip
+from mrfmsim_marohn.experiment import CermitARPCollection
 from mrfmsim.component import Sample, SphereMagnet, Grid, RectangularMagnet
 import numpy as np
 import pytest
+
+
+CermitARP = CermitARPCollection["CermitARP"]
+CermitARPSmallTip = CermitARPCollection["CermitARPSmallTip"]
 
 
 class TestCERMITARP:
@@ -43,14 +47,16 @@ class TestCERMITARP:
         """Setup grid."""
 
         return Grid(
-            shape=[2, 2, 2], step=[0.5e-3, 0.5e-3, 0.5e-3], origin=[0.0, 0.0, 0.0]
+            shape=[2, 2, 2],
+            step=[0.5e-3, 0.5e-3, 0.5e-3],
+            origin=[0.0, 0.0, 0.0],
         )
 
     @pytest.fixture
     def sample(self):
         """Setup sample."""
         return Sample(
-            spin_type="electron",  # an imaginary electron-spin sample
+            spin="e",  # an imaginary electron-spin sample
             temperature=10.0e-3,  # 10 mK so the spin is fully polarized
             T1=1,
             T2=0.45e-6,
@@ -75,7 +81,7 @@ class TestCERMITARP:
         df_fm = 10.0 * B1 * 1.760859708e8 / (2 * np.pi)
         f_rf = B_tot * 1.760859708e8 / (2 * np.pi)
 
-        result = cermitarp(
+        result = CermitARP(
             B0=B0,
             B1=B1,
             df_fm=df_fm,
@@ -92,7 +98,7 @@ class TestCERMITARP:
     # def test_cermitarp_smalltip(self, grid, magnet, sample):
     #     """Test smallamp_arp experiments."""
     #     sample = Sample(
-    #         spin_type="electron",
+    #        spin="e",
     #         temperature=11,
     #         T1=1.0e-3,
     #         T2=450.0e-9,
@@ -125,7 +131,7 @@ class TestCERMITESRSmallTip:
     def sample(self):
         """Setup sample."""
         return Sample(
-            spin_type="1H",
+            spin="1H",
             temperature=4.2,
             T1=20.0,
             T2=5.0e-6,
@@ -138,10 +144,12 @@ class TestCERMITESRSmallTip:
         Test that in small amplitude conditions, the approximation is the
         same as the small tip, which does not ignore the amplitude."""
 
-
-
         grid = Grid(shape=[41, 41, 11], step=[75, 75, 30], origin=[0, 0, -150])
-        magnet = RectangularMagnet(length=[135.0, 80.0, 1500.0], mu0_Ms=1800.0, origin=[0, 0, 750])
+        magnet = RectangularMagnet(
+            length=[135.0, 80.0, 1500.0],
+            mu0_Ms=1800.0,
+            origin=[0, 0, 750],
+        )
 
         B1 = 2.5
         B0 = 4850.0
@@ -151,8 +159,10 @@ class TestCERMITESRSmallTip:
         x_0p = 0.1
         trapz_pts = 21
 
-        result_no_amp = cermitarp(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
-        result_large_amp = cermitarp_smalltip(B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p)
+        result_no_amp = CermitARP(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
+        result_large_amp = CermitARPSmallTip(
+            B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p
+        )
 
         assert np.isclose(result_no_amp, result_large_amp, rtol=1e-5)
 
@@ -164,7 +174,7 @@ class TestCERMITESRSmallTip:
         """
 
         sample = Sample(
-            spin_type="1H",
+            spin="1H",
             temperature=4.2,
             T1=20.0,
             T2=5.0e-6,
@@ -172,8 +182,12 @@ class TestCERMITESRSmallTip:
         )  # polystyrene
 
         grid = Grid(shape=[41, 41, 11], step=[75, 75, 30], origin=[0, 0, -150])
-        magnet = RectangularMagnet(length=[135.0, 80.0, 1500.0], mu0_Ms=1800.0, origin=[0, 0, 750])
-        
+        magnet = RectangularMagnet(
+            length=[135.0, 80.0, 1500.0],
+            mu0_Ms=1800.0,
+            origin=[0, 0, 750],
+        )
+
         B1 = 2.5
         B0 = 4850.0
         df_fm = 1e6
@@ -182,7 +196,9 @@ class TestCERMITESRSmallTip:
         x_0p = 0.1
         trapz_pts = 21
 
-        result_no_amp = cermitarp(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
-        result_large_amp = cermitarp_smalltip(B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p)
+        result_no_amp = CermitARP(B0, B1, df_fm, f_rf, grid, h, magnet, sample)
+        result_large_amp = CermitARPSmallTip(
+            B0, B1, df_fm, f_rf, grid, h, magnet, sample, trapz_pts, x_0p
+        )
 
         assert np.isclose(result_no_amp, result_large_amp, rtol=1e-5)

@@ -9,15 +9,13 @@ import pytest
 @pytest.fixture
 def sample_e():
     """Electron sample."""
-    return Sample(
-        spin_type="electron", temperature=0.001, T1=1.0, T2=1.0, spin_density=10.0
-    )
+    return Sample(spin="e", temperature=0.001, T1=1.0, T2=1.0, spin_density=10.0)
 
 
 @pytest.fixture
 def sample_h():
     """Nucleus sample."""
-    return Sample(spin_type="1H", temperature=4.2, T1=10, T2=5e-6, spin_density=49.0)
+    return Sample(spin="1H", temperature=4.2, T1=10, T2=5e-6, spin_density=49.0)
 
 
 def test_rel_dpol_sat_steadystate(sample_e):

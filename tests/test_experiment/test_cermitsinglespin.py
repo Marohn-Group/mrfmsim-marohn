@@ -1,9 +1,12 @@
 """Test the collection of CERMIT ESR experiments."""
 
-from mrfmsim_marohn.experiment import cermitesr_singlespin, cermitesr_singlespin_approx
+from mrfmsim_marohn.experiment import CermitESRSingleSpinCollection
 from mrfmsim.component import Sample, SphereMagnet
 import numpy as np
 import pytest
+
+CermitESRSingleSpin = CermitESRSingleSpinCollection["CermitESRSingleSpin"]
+CermitESRSingleSpinApprox = CermitESRSingleSpinCollection["CermitESRSingleSpinApprox"]
 
 
 class TestCermitesrSinglespin:
@@ -18,7 +21,7 @@ class TestCermitesrSinglespin:
         """Return the sample object."""
 
         return Sample(
-            spin_type="electron",
+            spin="e",
             temperature=4.2,
             T1=1.0e-3,
             T2=450e-9,
@@ -35,21 +38,21 @@ class TestCermitesrSinglespin:
     def test_cermitesr_singlespin_spam(self, sample, n_pts, x_0p):
         """Compare the numerical solution with the exact solution."""
 
-        magnet_spin_dist = 300
-        ogrid = np.ogrid[0:0:1j, -300:-300:1j, 0:0:1j]
+        ogrid = np.ogrid[0:0:1j, 0:0:1j, 0:0:1j]
         magnet = SphereMagnet(radius=3300.0, mu0_Ms=440.0, origin=[0, 3000, 0])
 
-        approx = cermitesr_singlespin_approx(
+        approx = CermitESRSingleSpinApprox(
             magnet=magnet,
             sample=sample,
-            sample_ogrid=ogrid,
+            grid_array=ogrid,
+            h=[0, 300, 0],
             x_0p=x_0p,
             trapz_pts=n_pts,
         )
-        exact = cermitesr_singlespin(
+        exact = CermitESRSingleSpin(
             magnet=magnet,
             sample=sample,
-            magnet_spin_dist=magnet_spin_dist,
+            magnet_spin_dist=300,
             x_0p=x_0p,
             geometry="spam",
         )
@@ -60,21 +63,21 @@ class TestCermitesrSinglespin:
     def test_cermitesr_singlespin_hangdown(self, sample, n_pts, x_0p):
         """Compare the numerical solution with the exact solution."""
 
-        magnet_spin_dist = 300
-        ogrid = np.ogrid[0:0:1j, 0:0:1j, -300:-300:1j]
+        ogrid = np.ogrid[0:0:1j, 0:0:1j, 0:0:1j]
         magnet = SphereMagnet(radius=3300.0, mu0_Ms=440.0, origin=[0, 0, 4000])
 
-        approx = cermitesr_singlespin_approx(
+        approx = CermitESRSingleSpinApprox(
             magnet=magnet,
             sample=sample,
-            sample_ogrid=ogrid,
+            grid_array=ogrid,
+            h=[0, 0, 300],
             x_0p=x_0p,
             trapz_pts=n_pts,
         )
-        exact = cermitesr_singlespin(
+        exact = CermitESRSingleSpin(
             magnet=magnet,
             sample=sample,
-            magnet_spin_dist=magnet_spin_dist,
+            magnet_spin_dist=300,
             x_0p=x_0p,
             geometry="hangdown",
         )

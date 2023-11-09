@@ -1,6 +1,10 @@
 import math
 import numpy as np
 import scipy.special
+from functools import reduce
+import operator
+
+HBAR = 1.054571628e-7  # aN nm s - reduced Planck constant
 
 
 def convert_grid_pts(distance, grid_step):
@@ -12,7 +16,7 @@ def convert_grid_pts(distance, grid_step):
 
 
 def singlespin_analytical(
-    geometry, magnet_spin_dist, magnet_origin, magnet_radius, mu0_Ms, mu_z, x_0p
+    Gamma, geometry, J, magnet_spin_dist, magnet_origin, magnet_radius, mu0_Ms, x_0p
 ):
     r"""The analytical calculation for a single spin.
 
@@ -70,6 +74,8 @@ def singlespin_analytical(
         - (\hat{y}^2 -1)K(-1/\hat{y}^2)
 
 
+    :param float Gamma: the gyromagnetic ratio
+    :param float J: the spin angular momentum
     :param array magnet_origin: the origin of the magnet
     :param float magnet_radius: the radius of the magnet
     :param float mu0_Ms: the saturation magnetization of the magnet
@@ -79,6 +85,8 @@ def singlespin_analytical(
     :return: The analytical solution for a single spin (effective force).
         The spin constant shift is the effective force divided by the 0 to peak amplitude.
     """
+
+    mu_z = HBAR * Gamma * J
 
     if geometry.lower() == "spam":
         origin_sample_distance = magnet_origin[1] + magnet_spin_dist
@@ -122,3 +130,23 @@ def singlespin_analytical(
     dF_spin = -const_term * I_term
 
     return dF_spin
+
+
+def sum_of_product(*args):
+    """Calculate the sum of the product input values.
+
+    The args can be a list of values, since numpy multiple can calculate
+    the value.
+    """
+    return np.sum(reduce(np.multiply, args))
+
+
+def neg_sum_of_product(*args):
+    """Calculate the negative sum of the product input values.
+
+    The args can be a list of values, since numpy multiple can calculate
+    the value. The function is used to simplify the definition in some of
+    the experiments. The approximation of the signal results in a negative
+    sign at the front.
+    """
+    return - np.sum(reduce(np.multiply, args))
