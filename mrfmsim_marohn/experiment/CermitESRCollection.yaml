@@ -1,5 +1,5 @@
 !Collection
-name: CermitESR
+name: CermitESRCollection
 description: Simulates a Cornell-style frequency shift magnetic resonance   
     force microscope experiment in which microwaves are applied for half a 
     cantilever cyclic to saturate electron spin resonance in a bowl-shaped 
