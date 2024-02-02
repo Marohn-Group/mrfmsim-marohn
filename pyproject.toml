@@ -11,8 +11,8 @@ readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-numpy = ">=1.22" # conflict with numba 0.57 requirement
-numba = ">=0.58"
+numpy = ">=1.22"
+numba = ">=0.59"
 pyyaml = "^6.0"
 mmodel = ">=0.6.2"
 mrfmsim = { git = "https://github.com/marohn-group/mrfmsim.git", branch="develop" }
