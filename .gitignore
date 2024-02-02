@@ -164,11 +164,14 @@ test.ipynb
 *.gv
 *.gv.pdf
 
+*.afdesign
+
 # sphinx documentation
 
 docs/_build/
-docs/_static/
+# docs/_static/
 docs/_templates/
 
 _build
 _experiment_/
+temp.rst
