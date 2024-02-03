@@ -53,7 +53,6 @@ from docutils.parsers.rst import Directive
 from docutils import nodes
 import importlib
 
-
 class CollectionDirective(Directive):
     """Discover all experiments in a collection and output their string representation."""
 
@@ -69,11 +68,11 @@ class CollectionDirective(Directive):
         node_out = []
         for expt in module.experiments:
             child_node = nodes.literal_block(text=str(module[expt]))
-            # create a indentation
-            list_node = nodes.bullet_list(
-                "", nodes.line(text=f"{name_list[-1]}['{expt}']"), child_node
+            node = nodes.list_item(
+                "", nodes.strong(text=f"{name_list[-1]}['{expt}']"), child_node
             )
-
+            # the bullet_list doesn't do anything but create an indentation
+            list_node = nodes.bullet_list("", node)
             node_out.append(list_node)
 
         return node_out
@@ -92,10 +91,9 @@ class ExperimentDirective(Directive):
         module = importlib.import_module(".".join(name_list[:-1]))
         module = getattr(module, name_list[-1])
 
-        # create a indentation
         child_node = nodes.literal_block(text=str(module))
+        # the bullet_list doesn't do anything but create an indentation
         list_node = nodes.bullet_list("", child_node)
-
         return [list_node]
 
 
