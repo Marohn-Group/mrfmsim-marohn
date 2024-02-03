@@ -1,10 +1,10 @@
-MrfmSim-Marohn
+mrfmsim-marohn
 ==============
 
 |GitHub version| |Unit tests| |DOI|
 
-The MrfmSim-Marohn package can be used as a standalone or used as a plugin for
-the `MrfmSim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
+The mrfmsim-marohn package can be used as a standalone or used as a plugin for
+the `mrfmsim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
 `documentation <https://github.com/Marohn-Group/mrfmsim-docs>`__.
 
 This package contains tools to simulate signals in a Magnetic Resonance Force 
@@ -27,7 +27,7 @@ experimental geometries.
 Installation 
 -------------
 
-To install the MrfmSim-Marohn package, *under root directory*::
+To install the mrfmsim-marohn package, *under root directory*::
 
     python -m pip install .
 
@@ -45,9 +45,6 @@ Contribute
 
 Peter Sun (hs859@cornell.edu) and John Marohn (jam99@cornell.edu)
 maintain the package. 
-Collaborating on code development is encouraged, 
-using the `fork & pull` model 
-[`link <https://help.github.com/articles/using-pull-requests/>`__].
 
 References
 ----------
