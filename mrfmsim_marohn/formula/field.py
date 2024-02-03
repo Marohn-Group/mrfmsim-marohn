@@ -1,8 +1,8 @@
-"""Cacluations related to field."""
+"""Cacluations related to magnetic field."""
+
 import numpy as np
 import numba as nb
 from .math import as_strided_x
-import scipy
 from operator import sub
 
 
@@ -21,22 +21,37 @@ def min_abs_offset(ext_B_offset, ext_pts):
     the expanded grid. The points to the left and right of each grid point
     give the resonance offset as the cantilever moves. Find the minimum
     resonance offset over the range of array values corresponding to the
-    cantilever motion, and compute the saturation polarization using that
-    minimum offset and the given B1.
+    cantilever motion and compute the saturation polarization using that
+    minimum offset and the given :math:`B_1`.
 
     To calculate the spin polarization profile resulting from the cantilever
-    moving while spin-saturating irradiation is applied we use the following
+    moving while spin-saturating irradiation is applied, we use the following
     algorithm:
+
         If the resonance offset changed sign during the sweep, then the spin
         must have experienced a zero resonance offset during the sweep, so set
         the resonance offset to zero manually.
+
     This procedure mitigates the problem of previous algorithms not finding
     the true minimum resonance offset (and polarization) due to the finite grid
     size. While this new procedure will still not capture the shape of the
     polarization at the edge of the sensitive slice, it should produce a
-    polarization which is properly saturated inside the sensitive slice.
-    :param float b_offset: resonance offset of extended grid [mT]
-    :param int window: number of grid points used to determine the minimum offset
+    polarization that is properly saturated inside the sensitive slice.
+
+    This is used for calculating :math:`\delta F` of the experiment
+    calculate the corresponding gradient based on the grid array
+    points and tip-sample separation (equation 3 in "Overview").
+    The integral is approximated with Trapezoid summation over
+    :math:`2 \pi` with n points.
+    The summation is over pi to increase the performance since it is
+    symmetric in :math:`[-\pi, 0]` to :math:`[0, \pi]` for the summation.
+
+    .. math::
+
+        \Delta f = \frac{\sum_j \int_{-\pi}^{\pi} \mu_z(\vec{r}_j,\theta) \frac{\partial B_z^\mathrm{tip}(x - x_\mathrm{pk} \cos{\theta},y,z)}{\partial x} x_\mathrm{pk} \cos{\theta} d\theta}{\pi x_\mathrm{pk}^2}
+
+    :param float ext_B_offset: resonance offset of extended grid [mT]
+    :param int ext_pts: number of grid points used to determine the minimum offset
     """
     window = 2 * ext_pts + 1
     b_offset_strided = as_strided_x(ext_B_offset, window)
@@ -86,8 +101,8 @@ def xtrapz_fxdtheta(method, ogrid, n_pts, xrange, x_0p):
 def xtrapz_field_gradient(Bzx_method, grid_array, h, trapz_pts, x_0p):
     r"""Calculate CERMIT integral using Trapezoidal summation.
 
-    The integrand is an odd function, therefore we can approximate the
-    integral from -pi to pi, -pi to 0. Here we make an important
+    The integrand is an odd function. Therefore, we can approximate the
+    integral from -pi to pi and -pi to 0. Here, we make an important
     assumption that the magnet is symmetric in the x direction. Therefore
     we approximate the integral from -np/2 to 0 and time the final result by 4.
     The result has the unit of mT/nm^2.

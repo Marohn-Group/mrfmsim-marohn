@@ -1,21 +1,45 @@
+.. include:: ../README.rst
 
-MrfmSim-Marohn documentation
-===============================
+License
+=========
+
+.. include:: ../LICENSE
+
+Documentation
+=============
+
 .. toctree::
-   :caption: Getting Started
    :maxdepth: 2
+   :caption: Setups
 
-   readme.rst
+   setup/cermit_protocol.rst
+   setup/tip_size.rst
+   setup/geometry.rst
+   setup/spin_count.rst
 
-
+ 
 .. toctree::
    :maxdepth: 2
-   :caption: Theory and Experiments
+   :caption: Experiments
 
-   overview.rst
-   theory.rst
+
+   experiment/IBMCyclic.rst
+   experiment/CermitARP.rst
+   experiment/CermitSat.rst
+   experiment/CermitTD.rst
+
    experiment.rst
    simulation.rst
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
+   ref_magnetization.rst
+   ref_polarization.rst
+   ref_field.rst
+   ref_math.rst
+   ref_misc.rst
 
 .. toctree::
    :maxdepth: 2

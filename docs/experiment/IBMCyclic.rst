@@ -1,5 +1,6 @@
-Overview
-==========
+IBM Cyclic
+=====================
+
 
 A number of methods have been devised for detecting spin magnetic resonance 
 using a cantilever. The methods are different enough that numerically 
@@ -20,10 +21,10 @@ this small-ensemble limit, nuclear magnetic resonance (NMR) was detected as a
 change in the *variance* of the cantilever position fluctuations observed in 
 the in-phase channel of the lock-in detector.
 
-- :doc:`experiment <experiment>`: summarizes all the experimental method
-- :doc:`polarization <theory>`: summarizes polarization and magnetization calculations
-- :doc:`Trapezoid Integration <simulation>`: summarizes using Trapezoid integration
-  to calculate the field change during cantilever motion.
+
+.. autosummary::
+
+    mrfmsim_marohn.experiment.IBMCyclic
 
 
 **Reference**

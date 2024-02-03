@@ -22,7 +22,7 @@ This procedure mitigates the problem of previous algorithms not finding
 the true minimum resonance offset (and polarization) due to the finite grid
 size. While this new procedure will still not capture the shape of the
 polarization at the edge of the sensitive slice, it should produce a
-polarization which is properly saturated inside the sensitive slice.
+polarization, which is properly saturated inside the sensitive slice.
 
 This is used for calculating :math:`\delta F` of the experiment
 calculate the corresponding gradient based on the grid array
