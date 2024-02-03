@@ -1,6 +1,6 @@
 !Collection
 name: CermitARPCollection
-description: Simulates a Cornell-style frequency-shift magnetic resonance 
+doc: Simulates a Cornell-style frequency-shift magnetic resonance 
     force microscope experiment in which a single frequency-sweep adiabatic 
     rapid passage through resonance is used to invert the spins.
 node_objects:

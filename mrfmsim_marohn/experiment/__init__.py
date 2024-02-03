@@ -10,7 +10,7 @@ import yaml
 DIR = os.path.dirname(os.path.realpath(__file__))
 exp_list = glob.glob(os.path.join(DIR, "**/*.yaml"), recursive=True)
 # symbolic link to the experiment directory
-# the experiments are not loaded
+# the experiments are not loaded yet
 experiment_path_dict = {}
 for exp_path in sorted(exp_list):
     exp_name = os.path.splitext(os.path.basename(exp_path))[0]
@@ -23,7 +23,7 @@ current_module = sys.modules[__name__]
 # helps to debug errors. Otherwise, an error in the configuration
 # gives errors to all testing modules.
 # The design does not affect the plugin loading, however, since all the
-# attributes are accessed at the front, therefore loaded.
+# attributes are accessed at the front and are therefore loaded.
 
 
 def __getattr__(name: str):
