@@ -59,8 +59,7 @@ class TestIBMCyclic:
         f_rf = 112.0e6
         h = [0, 0, 64.1]
         df_fm = 2e6
-        B1 = 2.0
 
-        dF2_spin, dF_spin = IBMCyclic(B0, df_fm, f_rf, grid, h, magnet, sample)
+        dF2_spin, _ = IBMCyclic(B0, df_fm, f_rf, grid, h, magnet, sample)
 
         assert np.isclose(dF2_spin, -477.032, rtol=5e-4)

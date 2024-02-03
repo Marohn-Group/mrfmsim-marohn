@@ -13,7 +13,7 @@ class TestCermitesrSinglespin:
     """Test the CERMIT ESR experiment with a single spin.
 
     See test_misc.py for the test of the numerical solution.
-    Here we test that the approximated solution is similar to the exact solution.
+    Here, we test that the approximated solution is similar to the exact solution.
     """
 
     @pytest.fixture

@@ -29,7 +29,7 @@ class TestCERMITARP:
     :math:`1.0 \times 10^{9} \: \mathrm{spins} \: \mathrm{nm}^{3}`.
     Other notable features of the calculations:
 
-    * We work at 10 millikevin and 10.0 tesla so that the electron spin is
+    * We work at 10 millikelvin and 10.0 tesla so that the electron spin is
       nearly fully polarized
     * In the ARP experiment, we set the irradiation frequency to be in
       resonance with spins directly below the tip.  These spins experience
@@ -39,7 +39,7 @@ class TestCERMITARP:
       care to set ``B_0_start`` to 10000.0 mT and not 10437.318 mT.
 
     We check to see that the single-spin signal and the pulse time agree with
-    expected values to within 2 percent (relative) error.
+    expected values to be within a 2 percent (relative) error.
     """
 
     @pytest.fixture
@@ -139,7 +139,7 @@ class TestCERMITESRSmallTip:
         )  # polystyrene
 
     def test_smallamp_arp_vs_exact_solution_small_amp(self, sample):
-        """Test smalltip_arp vs cornellcermit_arp
+        """Test smalltip_arp vs. cornellcermit_arp
 
         Test that in small amplitude conditions, the approximation is the
         same as the small tip, which does not ignore the amplitude."""

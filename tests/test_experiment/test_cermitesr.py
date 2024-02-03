@@ -78,7 +78,7 @@ class TestCERMITESR_smalltip:
     def test_compare_smalltip_vs_singlespin_approximation(self, cantilever):
         """Compare the small tip result against the single spin result.
 
-        We cannot use the single spin exact solution, therefore we use the approximation.
+        We cannot use the single spin exact solution therefore we use the approximation.
         """
 
         magnet = RectangularMagnet(
