@@ -1,10 +1,8 @@
 CERMIT Adiabatic Rapid Passage
 =========================================
 
-.. autosummary::
-
-    mrfmsim_marohn.formula.polarization.rel_dpol_arp
-
+Overview
+--------
 
 The Zeeman field :math:`B_z(\vec{r})` experienced by spins at location
 :math:`\vec{r}` is a sum of the :math:`z` component of the tip field and the 
@@ -36,7 +34,7 @@ the leading minus sign here.
 
 Let us now derive the equations we will use to calculate the change in 
 magnetization density :math:`\delta M_z (\vec{r})` resulting from the 
-adiabatic rapid passage. In a frame of reference rotating counter clockwise 
+adiabatic rapid passage. In a frame of reference rotating counter-clockwise 
 about the :math:`z` axis at frequency :math:`\omega`, the magnetization 
 density evolves under the action of the effective field
 
@@ -270,7 +268,7 @@ We would also like to assess the adiabaticity of the sweep.  With
 
     M_{z}(t) = M_{z}(0) \: \cos{(\theta(t))},
 
-the adiabaticity parameter is defined generally as
+the adiabaticity parameter is generally defined as
 
 .. math::
 
@@ -323,8 +321,8 @@ during the cantilever motion. Nevertheless, we will use it to access the
 adiabaticity of the spin inversion in the swept-tip experiment. Since :math:`
 \alpha` is smaller for sample spins that do not pass through resonance, 
 equation :eq:`Eq:alpha-swept-tip` provides an upper-bound estimate for the 
-adiabaticity parameter at any location. The spins which contribute most to 
-the signal are those which pass through resonance; for these spins, equation :eq:`
+adiabaticity parameter at any location. The spins that contribute most to 
+the signal are those that pass through resonance; for these spins, equation :eq:`
 Eq:alpha-swept-tip` should be reasonably accurate.
 
 In the swept-frequency experiment, the irradiation frequency is ramped from 
@@ -348,9 +346,6 @@ from the resonant slice will experience an :math:`\alpha` even smaller and
 :math:`\alpha_{\mathrm{res}}`.  We can therefore regard equation :eq:`
 Eq:alpha-swept-freq` as an upper bound for the adiabaticity parameter 
 experienced by any spin in the sample.
-
-Reference
-----------
 
 .. [#Klein2000aug] Klein, O.; Naletov, V. & Alloul, H. "Mechanical Detection 
     of Nuclear Spin Relaxation in a Micron-size Crystal", *Eur. Phys. J. B*, 
@@ -377,5 +372,12 @@ Reference
     **1996**, *118*, 299 - 303
     [`10.1006/jmra.1996.0042 <http://dx.doi.org/10.1006/jmra.1996.0042>`__].
 
+Experiment Summary
+-------------------------
 
+.. autosummary::
 
+    mrfmsim_marohn.experiment.CermitARPCollection
+    mrfmsim_marohn.formula.polarization.rel_dpol_arp
+
+.. collection:: mrfmsim_marohn.experiment.CermitARPCollection

@@ -1,4 +1,5 @@
-
+Mathematical Functions
+======================
 
 :py:mod:`formula.math` module
 ----------------------------------------------------

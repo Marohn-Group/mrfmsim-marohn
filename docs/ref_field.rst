@@ -1,4 +1,5 @@
-
+Magnetic Field Functions
+===========================
 
 :py:mod:`formula.field` module
 ----------------------------------------------------

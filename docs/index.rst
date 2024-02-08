@@ -22,19 +22,17 @@ Documentation
    :maxdepth: 2
    :caption: Experiments
 
-
    experiment/IBMCyclic.rst
-   experiment/CermitARP.rst
    experiment/CermitSat.rst
    experiment/CermitTD.rst
-
-   experiment.rst
-   simulation.rst
+   experiment/CermitARP.rst
+   experiment/CermitSingleSpin.rst
 
 .. toctree::
    :maxdepth: 2
    :caption: Reference
 
+   ref_experiment.rst
    ref_magnetization.rst
    ref_polarization.rst
    ref_field.rst
@@ -45,7 +43,6 @@ Documentation
    :maxdepth: 2
    :caption: About
 
-   develop.rst
    changelog.rst
    tests.rst
    license.rst

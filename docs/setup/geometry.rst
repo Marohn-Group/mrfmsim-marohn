@@ -1,4 +1,4 @@
-"handgdown" vs. SPAM geometry
+Experiment Geometry
 =============================
 
 For experiments in the *mrfmsim-marohn* package, two experimental geometry

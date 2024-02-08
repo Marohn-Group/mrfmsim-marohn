@@ -1,4 +1,5 @@
-
+Miscellaneous Functions
+=======================
 
 :py:mod:`formula.misc` module
 ----------------------------------------------------

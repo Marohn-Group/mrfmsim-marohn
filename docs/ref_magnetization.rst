@@ -1,7 +1,7 @@
-Equilibrium magnetization and Variance
+Equilibrium Magnetization and Variance
 ========================================
 
-equilibrium magnetization
+Equilibrium magnetization
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :py:func:`formula.magnetization.mz_eq`: equilibrium magnetization per 
@@ -47,7 +47,7 @@ tends towards the Curie-Weiss law,
     \approx \dfrac{\hbar^2 \gamma^2 \: J (J + 1)}{3 \: k_b T} B_0
 
 
-equilibrium variance
+Equilibrium variance
 ^^^^^^^^^^^^^^^^^^^^
 
 :py:func:`formula.magnetization.mz2_eq`: magnetization variance per 

@@ -8,20 +8,19 @@ the `mrfmsim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
 `documentation <https://github.com/Marohn-Group/mrfmsim-docs>`__.
 
 This package contains tools to simulate signals in a Magnetic Resonance Force 
-Microscope [#Sidles1995jan]_ [#Kuehn2008feb]_ [#Poggio2010aug]_ experiment.
+Microscope (MRFM) [#Sidles1995jan]_ [#Kuehn2008feb]_ [#Poggio2010aug]_ experiment.
 The code in the package simulates signal from **electron spins**, 
-particularly the **nitroxide spin radical** ``TEMPO`` to **selected nuclear 
+particularly the **nitroxide spin radical** "TEMPO" to **selected nuclear 
 spins (1H, 19F, and 71Ga)**.
 
+The package host variety of MRFM experiments with the tip-on-cantilever setup.
 It can simulate signals from both **Curie-law spin magnetization** and **spin 
 fluctuations** (in the small polarization limit); and can simulate **force 
 experiments** and **force-gradient experiments** (in the 
 small-cantilever-amplitude limit and without the small amplitude approximation 
---- in the large amplitude limit). 
-
-It can simulate signal with the cantilever and field-aligned in both the 
-**hangdown** [#Mamin2003nov]_ and **SPAM** [#Marohn1998dec]_ [#Garner2004jun]_ 
-experimental geometries.
+--- in the large amplitude limit). It can simulate signal with the cantilever 
+and field-aligned in both the **hangdown** [#Mamin2003nov]_ and **SPAM** [#Marohn1998dec]_
+[#Garner2004jun]_ experimental geometries.
 
 
 Installation 

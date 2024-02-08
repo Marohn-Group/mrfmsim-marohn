@@ -1,14 +1,14 @@
-Small tip vs. Large tip
+Small Tip vs. Large Tip
 =======================
 
 Currently, we have two different sizes of magnets --- the large tips
-are micron-sized spherical magnets (1 - 4 :math:`\mathrm{\mu}` in diameter);
+are micron-sized spherical magnets (1 - 4 µm in diameter);
 the small tips are nanometer-sized rectangular prism 
-(~100 :math:`\mathrm{nm}` in cross-section length).
+(~100 nm in cross-section length).
 
 For large tips, the cantilever amplitude (100 - 300 nm) is small compared to the
 tip size, and for small tips, the cantilever amplitude is comparable to
-the tip size. They result in different approximations for the CERMIT protocol.
+the tip size. They result in different approximations for the **CERMIT protocol**.
 
 Large tip - small amplitude limit
 --------------------------------------
@@ -41,8 +41,8 @@ shift of
 
 Equations :eq:`Eq:LargeTipDf` and :eq:`Eq:LargeTipDk` are valid when the 
 zero-to-peak amplitude of the cantilever oscillation is much smaller than the 
-distance between the center of the (spherical) magnet and the sample spins
-[#Lee2012apra]_.
+distance between the center of the (spherical) magnet and the sample spins.
+[#Lee2012apra]_
 
 In the ESR-CERMIT experiment of Moore *et al.*, the magnetization distribution 
 :math:`\mu_z (\vec{r})` depends, according to the steady-state Bloch 
@@ -53,7 +53,7 @@ magnetic field :math:`B_z^{\mathrm{tip}}`, and cantilever position.  In the
 Moore experiment, the cantilever sweeps out a region of saturated 
 magnetization as it moves.
 
-In the NMR-CERMIT experiment of Garner *et al.*, 
+In the NMR-CERMIT experiment of Garner *et al.*, [#Garner2004jun]_ 
 the frequency of the applied radio frequency field :math:`f_{\mathrm{rf}}` is 
 swept. The initial magnetization follows the effective field at each location 
 in the sample, resulting in a region of inverted magnetization below the tip.
@@ -63,8 +63,8 @@ Small tip - large amplitude limit
 ----------------------------------
 
 The small-amplitude approximation used to derive the above equations may not 
-be valid in a small-tip ESR-CERMIT experiment [#Lee2012apra]_. In this case, we 
-must calculate the signal using Equation 20 [#Lee2012apra]_ [#Lee2012note]_:
+be valid in a small-tip ESR-CERMIT experiment.[#Lee2012apra]_ In this case, we 
+must calculate the signal using Equation 20: [#Lee2012apra]_ [#Lee2012note]_
 
 .. math::
     :label: Eq:SmallTipDf
@@ -76,11 +76,11 @@ must calculate the signal using Equation 20 [#Lee2012apra]_ [#Lee2012note]_:
             x_{\mathrm{pk}} \cos{\theta} d\theta 
 
 where :math:`x_{\mathrm{pk}}` is the zero-to-peak amplitude of the cantilever 
-oscillation. We write :math:`\mu_z(\vec{r}_j,\theta)` to indicate that, if the 
+oscillation. We write :math:`\mu_z(\vec{r}_j,\theta)` to indicate that if the 
 microwaves are left on during cantilever motion, then the magnetization may 
-vary in syncrony with the cantilever oscillation. In the i-OSCAR experiment of 
-Rugar and coworkers [#Rugar2004jul]_, the resulting position-dependent change 
-in magnetization led to a measurable freqency shift.
+vary in synchrony with the cantilever oscillation. In the i-OSCAR experiment of 
+Rugar and coworkers, [#Rugar2004jul]_ the resulting position-dependent change 
+in magnetization led to a measurable frequency shift.
 
 Equation :eq:`Eq:SmallTipDf` is exact.  To understand the nature of the 
 large-tip approximation, Eq. :eq:`Eq:LargeTipDf`, let us expand the Eq. 
@@ -94,7 +94,7 @@ large-tip approximation, Eq. :eq:`Eq:LargeTipDf`, let us expand the Eq.
     - x_{\mathrm{pk}} \cos{\theta} \frac{\partial^2 B_z^{\mathrm{tip}}(x,y,z)}
     {\partial x^2} + {\cal O}(x_{\mathrm{pk}}^2)
 
-In calculating the signal from our ESR-CERMIT experiment we will assume for 
+In calculating the signal from our ESR-CERMIT experiment, we will assume for 
 simplicity that the spin distribution :math:`\mu_z(\vec{r}_j)` has reached 
 steady-state; we neglect any change in the magnetization during the cantilever 
 motion. In this approximation
@@ -151,10 +151,10 @@ motion of the cantilever.
 Let us rewrite Eq. :eq:`Eq:SmallTipDf` by 
 
 1. assuming that the magnetization distribution is in steady-state, 
-2. writing the frequency shift in terms of an eqivalent spring constant shift,
+2. writing the frequency shift in terms of an equivalent spring constant shift,
 3. expressing the result in terms of an equivalent force.  
 
-We showed in Reference [#Lee2012apra]_ that maximizing this equivalent force 
+We showed in Ref. [#Lee2012apra]_ that maximizing this equivalent force 
 will maximize the signal-to-noise ratio in a frequency-shift experiment. In 
 terms of a force, the ESR-CERMIT signal is
 
@@ -183,7 +183,7 @@ Eric Moore and co-workers previously implemented Eqs. :eq:`Eq:SmallTipDf` and
 
 And to simulate the amplitude dependence of the 
 signal from a single slice whose magnetization has been inverted *via* an 
-adiabatic rapid passage [#Moore2009dec]_. 
+adiabatic rapid passage.[#Moore2009dec]_
 
 Reference
 ----------
@@ -209,3 +209,8 @@ Reference
     Spin Detection by Magnetic Resonance Force Microscopy", *Nature*, **2004**
     , *430*, 329 - 332 
     [`10.1038/nature02658 <http://dx.doi.org/10.1038/nature02658>`__].
+
+.. [#Garner2004jun] Garner, S. R.; Kuehn, S.; Dawlaty, J. M.; Jenkins, N. E. &
+    Marohn, J. A.  "Force-Gradient Detected Nuclear Magnetic Resonance" *Appl. 
+    Phys. Lett.*, **2004**, *84*, 5091 - 5093
+    [`10.1063/1.1762700 <http://dx.doi.org/10.1063/1.1762700>`__].
