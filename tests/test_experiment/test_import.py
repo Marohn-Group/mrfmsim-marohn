@@ -13,7 +13,7 @@ def test_show(capsys):
     The list of available collections/experiments:
     CermitARPCollection
     CermitESRCollection
-    CermitESRSingleSpinCollection
+    CermitSingleSpinCollection
     CermitTDCollection
     IBMCyclic
     """

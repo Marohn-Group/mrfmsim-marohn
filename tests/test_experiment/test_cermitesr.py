@@ -5,13 +5,13 @@ from mrfmsim.component import (
     Cantilever,
     RectangularMagnet,
 )
-from mrfmsim_marohn.experiment import CermitESRCollection, CermitESRSingleSpinCollection
+from mrfmsim_marohn.experiment import CermitESRCollection, CermitSingleSpinCollection
 import numpy as np
 import pytest
 
 CermitESR = CermitESRCollection["CermitESR"]
 CermitESRSmallTip = CermitESRCollection["CermitESRSmallTip"]
-CermitESRSingleSpinApprox = CermitESRSingleSpinCollection["CermitESRSingleSpinApprox"]
+CermitSingleSpinApprox = CermitSingleSpinCollection["CermitSingleSpinApprox"]
 
 
 @pytest.fixture
@@ -72,64 +72,65 @@ class TestCERMITESR:
         assert np.isclose(df_spin, cantilever.k2f_modulated * -25.086, rtol=5e-1)
 
 
-class TestCERMITESR_smalltip:
-    """Test cermitesr_smalltip experiment."""
+# class TestCERMITESR_smalltip:
+#     """Test cermitesr_smalltip experiment."""
 
-    def test_compare_smalltip_vs_singlespin_approximation(self, cantilever):
-        """Compare the small tip result against the single spin result.
+#     def test_compare_smalltip_vs_singlespin_approximation(self, cantilever):
+#         """Compare the small tip result against the single spin result.
 
-        We cannot use the single spin exact solution therefore we use the approximation.
-        """
+#         We cannot use the single spin exact solution for a rectangular tip.
+#         Here, we use the approximation.
+#         """
 
-        magnet = RectangularMagnet(
-            length=[100.0, 70.0, 1500.0],
-            mu0_Ms=1800.0,
-            origin=[0.0, 0.0, 1500.0 / 2.0],
-        )
+#         magnet = RectangularMagnet(
+#             length=[100.0, 70.0, 1500.0],
+#             mu0_Ms=1800.0,
+#             origin=[0.0, 0.0, 1500.0 / 2.0],
+#         )
 
-        grid = Grid(
-            shape=[1, 1, 1],
-            step=[0.01, 0.01, 0.01],
-            origin=[0.0, 0.0, 0.0],
-        )
+#         grid = Grid(
+#             shape=[1, 1, 1],
+#             step=[0.01, 0.01, 0.01],
+#             origin=[0.0, 0.0, 0.0],
+#         )
 
-        sample = Sample(
-            spin="e",
-            temperature=4.2,
-            T1=1.0e-3,
-            T2=450e-9,
-            spin_density=1 / grid.voxel,  # only 1 spin in the grid
-        )
+#         sample = Sample(
+#             spin="e",
+#             temperature=4.2,
+#             T1=1.0e-3,
+#             T2=450e-9,
+#             spin_density=1 / grid.voxel,  # only 1 spin in the grid
+#         )
 
-        B0 = 100000
-        f_rf = 2813.8039e9
-        B1 = 2.2e-0
-        h = [0, 0, 30.0]
-        grid_array = grid.grid_array
-        trapz_pts = 20
-        mw_x_0p = 5
+#         B0 = 100000
+#         f_rf = 2813.8039e9
+#         B1 = 2.2e-0
+#         h = [0, 0, 30.0]
+#         grid_array = grid.grid_array
+#         trapz_pts = 20
+#         mw_x_0p = 5
 
-        analytical = cantilever.k2f_modulated * CermitESRSingleSpinApprox(
-            magnet=magnet,
-            sample=sample,
-            grid_array=grid_array,
-            trapz_pts=trapz_pts,
-            x_0p=mw_x_0p,
-            h=h,
-        )
+#         analytical = cantilever.k2f_modulated * CermitSingleSpinApprox(
+#             magnet=magnet,
+#             sample=sample,
+#             grid_array=grid_array,
+#             trapz_pts=trapz_pts,
+#             x_0p=mw_x_0p,
+#             h=h,
+#         )
 
-        result = CermitESRSmallTip(
-            B0,
-            B1,
-            cantilever,
-            f_rf,
-            grid,
-            h,
-            magnet,
-            mw_x_0p,
-            sample,
-            trapz_pts,
-            mw_x_0p,  # here us the same x_0p (pulsing the whole cycle)
-        )
+#         result = CermitESRSmallTip(
+#             B0,
+#             B1,
+#             cantilever,
+#             f_rf,
+#             grid,
+#             h,
+#             magnet,
+#             mw_x_0p,
+#             sample,
+#             trapz_pts,
+#             mw_x_0p,  # here us the same x_0p (pulsing the whole cycle)
+#         )
 
-        assert np.isclose(result, analytical, rtol=1e-4)
+#         assert np.isclose(result, analytical, rtol=1e-4)

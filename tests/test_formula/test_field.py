@@ -67,7 +67,7 @@ class TestXTrapzFxDtheta:
     def test_xtrapz_fxdtheta_cos(self):
         r"""Test xtrapz_fxdtheta against :math: `\cos{x}dx`
 
-        Let's consider the field method returns 1, the trapz integral
+        Let's consider the field method returns 1, the Trapezoid integral
         should return the value of
 
         .. math::

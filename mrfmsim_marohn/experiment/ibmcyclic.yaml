@@ -40,7 +40,7 @@ graph:
             func: !import mrfmsim_marohn.formula.B_offset
             output: B_offset
         rel_dpol:
-            func: !import mrfmsim_marohn.formula.rel_dpol_arp_ibm
+            func: !import mrfmsim_marohn.formula.rel_dpol_ibm_cyclic
             output: rel_dpol
         force signal:
             func: !import mrfmsim_marohn.formula.sum_of_product

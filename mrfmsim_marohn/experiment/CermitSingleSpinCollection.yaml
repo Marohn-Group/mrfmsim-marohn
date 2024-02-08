@@ -1,6 +1,6 @@
 !Collection
-name: CermitESRSingleSpinCollection
-doc: Simulates an MRFM experiment in the hangdown or SPAM geometry
+name: CermitSingleSpinCollection
+doc: Simulates an MRFM experiment in the "hangdown" or SPAM geometry
     where a single electron spin is located directly below the tip. With a
     small tip, the motion of the cantilever is not negligible on the scale of 
     the magnet tip and the tip sample separation. We evaluate the full 
@@ -24,18 +24,17 @@ node_objects:
         doc: Calculate the effective spring constant shift.
 settings:
     components:
-      magnet: [[magnet_radius, radius], mu0_Ms, [magnet_origin, origin],
-        Bzx_method]
-      sample: [Gamma, J]
+        magnet: [[magnet_radius, radius], mu0_Ms, [magnet_origin, origin],
+            Bzx_method]
+        sample: [Gamma, J]
 instructions:
-    CermitESRSingleSpinApprox:
+    CermitSingleSpinApprox:
         grouped_edges: 
             - [field, spring constant shift]
-        doc: Approximated solution with Trapezoid rules for single spin 
-            CEMRIT ESR.
-
-            The experiments is for spherical magnets.
-    CermitESRSingleSpin:
+        doc: Approximated solution with Trapezoid rules for single 
+            spin CEMRIT ESR. The experiments is for a single spin located directly under a spherical magnet.
+    CermitSingleSpin:
         grouped_edges:
             - [effective force shift, effective spring constant shift]
-        doc: Full solution using analytical expression.
+        doc: Full spring constant solution using analytical expression. 
+            The experiments is for a single spin located directly under a spherical magnet.

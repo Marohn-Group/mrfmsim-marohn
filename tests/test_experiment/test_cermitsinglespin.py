@@ -1,15 +1,15 @@
 """Test the collection of CERMIT ESR experiments."""
 
-from mrfmsim_marohn.experiment import CermitESRSingleSpinCollection
+from mrfmsim_marohn.experiment import CermitSingleSpinCollection
 from mrfmsim.component import Sample, SphereMagnet
 import numpy as np
 import pytest
 
-CermitESRSingleSpin = CermitESRSingleSpinCollection["CermitESRSingleSpin"]
-CermitESRSingleSpinApprox = CermitESRSingleSpinCollection["CermitESRSingleSpinApprox"]
+CermitESRSingleSpin = CermitSingleSpinCollection["CermitSingleSpin"]
+CermitSingleSpinApprox = CermitSingleSpinCollection["CermitSingleSpinApprox"]
 
 
-class TestCermitesrSinglespin:
+class TestCermitSinglespin:
     """Test the CERMIT ESR experiment with a single spin.
 
     See test_misc.py for the test of the numerical solution.
@@ -41,7 +41,7 @@ class TestCermitesrSinglespin:
         ogrid = np.ogrid[0:0:1j, 0:0:1j, 0:0:1j]
         magnet = SphereMagnet(radius=3300.0, mu0_Ms=440.0, origin=[0, 3000, 0])
 
-        approx = CermitESRSingleSpinApprox(
+        approx = CermitSingleSpinApprox(
             magnet=magnet,
             sample=sample,
             grid_array=ogrid,
@@ -66,7 +66,7 @@ class TestCermitesrSinglespin:
         ogrid = np.ogrid[0:0:1j, 0:0:1j, 0:0:1j]
         magnet = SphereMagnet(radius=3300.0, mu0_Ms=440.0, origin=[0, 0, 4000])
 
-        approx = CermitESRSingleSpinApprox(
+        approx = CermitSingleSpinApprox(
             magnet=magnet,
             sample=sample,
             grid_array=ogrid,

@@ -33,7 +33,7 @@ def test_rel_dpol_sat_steadystate(sample_e):
     assert np.allclose([0.0, -1.0, 0.0], [p1, p2, p3])
 
 
-def test_rel_dpol_arp_ibm(sample_h):
+def test_rel_dpol_ibm_cyclic(sample_h):
     """Test rpol_arp_ibm.
 
     Sample -> proton spin -> rpol_arp_ibm() limiting cases
@@ -41,11 +41,11 @@ def test_rel_dpol_arp_ibm(sample_h):
     """
 
     # on resonance
-    n1 = pol.rel_dpol_arp_ibm(0.0, 2.0e6, sample_h.Gamma)
+    n1 = pol.rel_dpol_ibm_cyclic(0.0, 2.0e6, sample_h.Gamma)
     # below resonance
-    n2 = pol.rel_dpol_arp_ibm(-100.0, 2.0e6, sample_h.Gamma)
+    n2 = pol.rel_dpol_ibm_cyclic(-100.0, 2.0e6, sample_h.Gamma)
     # above resonance
-    n3 = pol.rel_dpol_arp_ibm(100.0, 2.0e6, sample_h.Gamma)
+    n3 = pol.rel_dpol_ibm_cyclic(100.0, 2.0e6, sample_h.Gamma)
 
     assert np.allclose([n1, n2, n3], [-1.0, 0.0, 0.0])
 

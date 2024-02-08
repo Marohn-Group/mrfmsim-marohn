@@ -57,7 +57,7 @@ def rel_dpol_sat_steadystate(B_offset, B1, dB_sat, dB_hom):
 
 
 @numba.jit(nopython=True, parallel=True)
-def rel_dpol_arp_ibm(B_offset, df_fm, Gamma):
+def rel_dpol_ibm_cyclic(B_offset, df_fm, Gamma):
     r"""Relative change in polarization for IBM adiabatic rapid passage.
 
     .. math::
