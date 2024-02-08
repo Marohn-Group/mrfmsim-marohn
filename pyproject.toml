@@ -34,7 +34,7 @@ build-backend = "poetry.core.masonry.api"
 tox = ">=3.24.5"
 pytest = ">=7.1.1"
 pytest-cov = ">=3.0.0"
-sphinx = "^4.4.0"
+sphinx = "^6.2.1"
 sphinx-book-theme = "^1.0.1"
 nbsphinx = "^0.9.3"
 
@@ -103,9 +103,9 @@ commands =
 [testenv:docs]
 deps = 
     pytest >= 7.1.1
-    sphinx == 4.4.0
-    sphinx-book-theme == 0.3.2
-    nbsphinx == 0.8.8
+    sphinx == 6.2.1
+    sphinx-book-theme == 1.0.1
+    nbsphinx == 0.9.3
 commands =
     # sphinx-build -W -b html ./docs ./docs/_build/html
     sphinx-build -W -b html -d "{toxworkdir}/docs" docs "{toxinidir}/docs/_build/html"
