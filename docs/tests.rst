@@ -175,27 +175,6 @@ the force gradient is
 Testing Lists
 -------------
 
-
-.. automodule:: tests.test_component.test_magnet
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. automodule:: tests.test_component.test_cantilever
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. automodule:: tests.test_component.test_sample
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. automodule:: tests.test_component.test_grid
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 .. automodule:: tests.test_experiment.test_cermitesr
     :members:
     :undoc-members:
@@ -237,11 +216,6 @@ Testing Lists
     :show-inheritance:
 
 .. automodule:: tests.test_formula.test_polarization
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. automodule:: tests.test_units
     :members:
     :undoc-members:
     :show-inheritance:

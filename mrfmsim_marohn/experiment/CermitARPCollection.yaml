@@ -1,0 +1,61 @@
+!Collection
+name: CermitARPCollection
+doc: Simulates a Cornell-style frequency-shift magnetic resonance 
+    force microscope experiment in which a single frequency-sweep adiabatic 
+    rapid passage through resonance is used to invert the spins.
+node_objects:
+    Bz:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bz_method, grid_array, h]
+        output: Bz
+    B_tot:
+        func: !import operator.add
+        inputs: [Bz, B0]
+        output: B_tot
+        doc: Calculate combined magnetic field.
+    Bzxx:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bzxx_method, grid_array, h]
+        output: Bzxx
+    Bzxx trapz:
+        func: !import mrfmsim_marohn.formula.xtrapz_field_gradient
+        output: Bzxx_trapz
+    mz_eq:
+        func: !import mrfmsim_marohn.formula.mz_eq
+        output: mz_eq
+    B_offset:
+        func: !import mrfmsim_marohn.formula.B_offset
+        output: B_offset
+    rel_dpol:
+        func: !import mrfmsim_marohn.formula.rel_dpol_arp
+        output: rel_dpol
+    spring constant shift:
+        func: !import mrfmsim_marohn.formula.neg_sum_of_product
+        output: dk_spin
+        inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
+        doc: Calculate dk_spin account for the negative sign in the 
+            approximation.
+    spring constant shift trapz:
+        func: !import mrfmsim_marohn.formula.sum_of_product
+        output: dk_spin
+        inputs: [Bzxx_trapz, rel_dpol, mz_eq, spin_density, grid_voxel]
+settings:
+    components:
+        magnet: [Bz_method, Bzx_method, Bzxx_method]
+        sample: [J, Gamma, spin_density, temperature]
+        grid: [grid_array, [grid_voxel, voxel]]
+instructions:
+    CermitARP:
+        doc: Simulate CERMIT ARP for a large tip.
+        grouped_edges:
+            - [Bz, B_tot]
+            - [B_tot, [mz_eq, B_offset]]
+            - [B_offset, rel_dpol]
+            - [[mz_eq, Bzxx, rel_dpol], spring constant shift]
+    CermitARPSmallTip:
+        doc: Simulate CERMIT ARP for a small tip.
+        grouped_edges:
+            - [Bz, B_tot]
+            - [B_tot, [mz_eq, B_offset]]
+            - [B_offset, rel_dpol]
+            - [[mz_eq, Bzxx trapz, rel_dpol], spring constant shift trapz]

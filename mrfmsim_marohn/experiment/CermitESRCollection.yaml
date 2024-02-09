@@ -1,0 +1,126 @@
+!Collection
+name: CermitESRCollection
+doc: Simulates a Cornell-style frequency shift magnetic resonance   
+    force microscope experiment in which microwaves are applied for half a 
+    cantilever cyclic to saturate electron spin resonance in a bowl-shaped 
+    region swept out by the cantilever motion.
+node_objects:
+    grid extended:
+        func: !func:extend_grid "lambda extend_grid_by_length, mw_x_0p: 
+            extend_grid_by_length([mw_x_0p, 0, 0])"
+        output: ext_grid
+    Bz:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bz_method, grid_array, h]
+        output: Bz
+    Bz extended:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bz_method, ext_grid, h]
+        output: ext_Bz
+    B_tot:
+        func: !import operator.add
+        inputs: [Bz, B0]
+        output: B_tot
+        doc: Calculate combined magnetic field.
+    B_tot sliced:
+        func: !import mrfmsim_marohn.formula.slice_matrix
+        inputs: [ext_B_tot, grid_shape]
+        output: B_tot
+    B_tot extended:
+        func: !import operator.add
+        inputs: [ext_Bz, B0]
+        output: ext_B_tot
+        doc: Calculate combined magnetic field.
+    Bzxx:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bzxx_method, grid_array, h]
+        output: Bzxx
+    Bzxx trapz:
+        func: !import mrfmsim_marohn.formula.xtrapz_field_gradient
+        output: Bzxx_trapz
+    mz_eq:
+        func: !import mrfmsim_marohn.formula.mz_eq
+        output: mz_eq
+    B_offset:
+        func: !import mrfmsim_marohn.formula.B_offset
+        output: B_offset
+    B_offset extended:
+        func: !import mrfmsim_marohn.formula.B_offset
+        inputs: [ext_B_tot, f_rf, Gamma]
+        output: ext_B_offset
+    x_0p window pts:
+        func: !import mrfmsim_marohn.formula.convert_grid_pts
+        inputs: [mw_x_0p, grid_step]
+        output: ext_pts
+    minimum absolute x offset:
+        func: !import mrfmsim_marohn.formula.min_abs_offset
+        output: B_offset
+    rel_dpol:
+        func: !import mrfmsim_marohn.formula.rel_dpol_sat_steadystate
+        output: rel_dpol
+    rel_dpol periodic_irrad:
+        func: !import mrfmsim_marohn.formula.rel_dpol_periodic_irrad
+        output: rel_dpol
+    spring constant shift:
+        func: !import mrfmsim_marohn.formula.neg_sum_of_product
+        output: dk_spin
+        inputs: [Bzxx, rel_dpol, mz_eq, spin_density, grid_voxel]
+    spring constant shift trapz:
+        func: !import mrfmsim_marohn.formula.sum_of_product
+        output: dk_spin
+        inputs: [Bzxx_trapz, rel_dpol, mz_eq, spin_density, grid_voxel]
+    frequency shift:
+        func: !import operator.mul
+        inputs: [dk_spin, k2f_modulated]
+        output: df_spin
+        doc: Convert the spring constant shift to frequency shift.
+settings:
+    components:
+        magnet: [Bz_method, Bzx_method, Bzxx_method]
+        sample: [J, Gamma, spin_density, temperature, dB_sat, dB_hom]
+        grid: [grid_array, [grid_shape, shape], [grid_step, step], 
+            [grid_voxel, voxel], extend_grid_by_length]
+        cantilever: [k2f_modulated]
+instructions:
+    CermitESR:
+        doc: CERMIT ESR experiment for a large tip. 
+        grouped_edges:
+            - [grid extended, Bz extended]
+            - [Bz extended, B_tot extended]
+            - [B_tot extended, [B_offset extended, B_tot sliced]]
+            - [B_tot sliced, mz_eq]
+            - [[B_offset extended, x_0p window pts],
+                minimum absolute x offset]
+            - [minimum absolute x offset, rel_dpol]
+            - [[mz_eq, Bzxx, rel_dpol], spring constant shift]
+            - [spring constant shift, frequency shift]
+    CermitESRStationaryTip:
+        doc: CERMIT ESR experiment for a stationary tip.
+        grouped_edges:
+            - [Bz, B_tot]
+            - [B_tot, [mz_eq, B_offset]]
+            - [B_offset, rel_dpol]
+            - [[mz_eq, Bzxx, rel_dpol], spring constant shift]
+            - [spring constant shift, frequency shift]
+    CermitESRSmallTip:
+        doc: CERMIT ESR experiment for a small tip.
+        grouped_edges:
+            - [grid extended, Bz extended]
+            - [Bz extended, B_tot extended]
+            - [B_tot extended, [B_offset extended, B_tot sliced]]
+            - [B_tot sliced, mz_eq]
+            - [[B_offset extended, x_0p window pts],
+                minimum absolute x offset]
+            - [minimum absolute x offset, rel_dpol]
+            - [[mz_eq, Bzxx trapz, rel_dpol], spring constant shift trapz]
+            - [spring constant shift trapz, frequency shift]
+    CermitESRStationaryTipPulsed:
+        doc: CERMIT ESR experiment for a stationary tip with a pulsed   
+            microwave.
+        grouped_edges:
+            - [Bz, B_tot]
+            - [B_tot, [mz_eq, B_offset]]
+            - [B_offset, rel_dpol periodic_irrad]
+            - [[mz_eq, Bzxx, rel_dpol periodic_irrad], 
+                spring constant shift]
+            - [spring constant shift, frequency shift]

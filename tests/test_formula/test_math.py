@@ -1,8 +1,4 @@
-from mrfmsim_marohn.formula.math import (
-    slice_matrix,
-    as_strided_x,
-    ogrid_sub,
-)
+from mrfmsim_marohn.formula.math import slice_matrix, as_strided_x
 import numpy as np
 
 
@@ -43,27 +39,3 @@ def test_as_strided_x():
     strided_result = as_strided_x(matrix_a, window).max(axis=1)
 
     assert np.array_equal(result, strided_result)
-
-
-def test_ogrid_sub():
-    """Test ogrid_sub.
-
-    The sub results in a iterable mapping. Here tests if the
-    dimension and values are correct.
-    """
-
-    array2d = list(ogrid_sub(np.ogrid[-1:1:3j, -1:1:3j], [1, 2]))
-    result0 = [[-2], [-1], [0]]  # (3, 1)
-    result1 = [[-3, -2, -1]]  # (1, 3)
-
-    assert np.array_equal(array2d[0], result0)
-    assert np.array_equal(array2d[1], result1)
-
-    array3d = list(ogrid_sub(np.ogrid[-1:1:2j, -1:1:2j, -1:1:2j], [1, 2, 3]))
-    result0 = [[[-2.0]], [[0.0]]]  # (2, 1, 1)
-    result1 = [[[-3.0], [-1.0]]]  # (1, 2, 1)
-    result2 = [[[-4.0, -2.0]]]  # (1, 1, 2)
-
-    assert np.array_equal(array3d[0], result0)
-    assert np.array_equal(array3d[1], result1)
-    assert np.array_equal(array3d[2], result2)

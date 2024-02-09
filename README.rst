@@ -1,33 +1,32 @@
-MrfmSim-Marohn
+mrfmsim-marohn
 ==============
 
 |GitHub version| |Unit tests| |DOI|
 
-The MrfmSim-Marohn package can be used as a standalone or used as a plugin for
-the `MrfmSim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
+The mrfmsim-marohn package can be used as a standalone or used as a plugin for
+the `mrfmsim package <https://github.com/Marohn-Group/mrfmsim>`__ and the
 `documentation <https://github.com/Marohn-Group/mrfmsim-docs>`__.
 
 This package contains tools to simulate signals in a Magnetic Resonance Force 
-Microscope [#Sidles1995jan]_ [#Kuehn2008feb]_ [#Poggio2010aug]_ experiment.
+Microscope (MRFM) [#Sidles1995jan]_ [#Kuehn2008feb]_ [#Poggio2010aug]_ experiment.
 The code in the package simulates signal from **electron spins**, 
-particularly the **nitroxide spin radical** ``TEMPO`` to **selected nuclear 
+particularly the **nitroxide spin radical** "TEMPO" to **selected nuclear 
 spins (1H, 19F, and 71Ga)**.
 
+The package host variety of MRFM experiments with the tip-on-cantilever setup.
 It can simulate signals from both **Curie-law spin magnetization** and **spin 
 fluctuations** (in the small polarization limit); and can simulate **force 
 experiments** and **force-gradient experiments** (in the 
 small-cantilever-amplitude limit and without the small amplitude approximation 
---- in the large amplitude limit). 
-
-It can simulate signal with the cantilever and field-aligned in both the 
-**hangdown** [#Mamin2003nov]_ and **SPAM** [#Marohn1998dec]_ [#Garner2004jun]_ 
-experimental geometries.
+--- in the large amplitude limit). It can simulate signal with the cantilever 
+and field-aligned in both the **hangdown** [#Mamin2003nov]_ and **SPAM** [#Marohn1998dec]_
+[#Garner2004jun]_ experimental geometries.
 
 
 Installation 
 -------------
 
-To install the MrfmSim-Marohn package, *under root directory*::
+To install the mrfmsim-marohn package, *under root directory*::
 
     python -m pip install .
 
@@ -45,9 +44,6 @@ Contribute
 
 Peter Sun (hs859@cornell.edu) and John Marohn (jam99@cornell.edu)
 maintain the package. 
-Collaborating on code development is encouraged, 
-using the `fork & pull` model 
-[`link <https://help.github.com/articles/using-pull-requests/>`__].
 
 References
 ----------

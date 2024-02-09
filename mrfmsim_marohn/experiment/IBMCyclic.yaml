@@ -1,0 +1,57 @@
+!Experiment
+name: IBMCyclic
+doc: Simulate an IBM-style cyclic-inversion magnetic resonance force
+    microscope experiment.
+graph:
+    !Graph
+    name: ibm_cyclic_graph
+    grouped_edges:
+        - [Bz, B_tot]
+        - [B_tot, [mz_eq, B offset]]
+        - [B offset, rel_dpol]
+        - [[mz_eq, Bzx, rel_dpol], force signal]
+        - [Bzx, Bzx squared]
+        - [[Bzx squared, rel_dpol, mz2_eq], force variance signal]
+    node_objects:
+        Bz:
+            func: !import mrfmsim_marohn.formula.field_func
+            inputs: [Bz_method, grid_array, h]
+            output: Bz
+        B_tot:
+            func: !import operator.add
+            inputs: [Bz, B0]
+            output: B_tot
+            doc: Calculate combined magnetic field.
+        Bzx:
+            func: !import mrfmsim_marohn.formula.field_func
+            inputs: [Bzx_method, grid_array, h]
+            output: Bzx
+        Bzx squared:
+            func: !func:squared "lambda Bzx: Bzx**2"
+            output: Bzx2
+            doc: Bzx squared.
+        mz_eq:
+            func: !import mrfmsim_marohn.formula.mz_eq
+            output: mz_eq
+        mz2_eq:
+            func: !import mrfmsim_marohn.formula.mz2_eq
+            output: mz2_eq
+        B offset:
+            func: !import mrfmsim_marohn.formula.B_offset
+            output: B_offset
+        rel_dpol:
+            func: !import mrfmsim_marohn.formula.rel_dpol_ibm_cyclic
+            output: rel_dpol
+        force signal:
+            func: !import mrfmsim_marohn.formula.sum_of_product
+            inputs: [Bzx, rel_dpol, mz_eq, spin_density, grid_voxel]
+            output: dF_spin
+        force variance signal:
+            func: !import mrfmsim_marohn.formula.sum_of_product
+            inputs: [Bzx2, rel_dpol, mz2_eq, spin_density, grid_voxel]
+            output: dF2_spin
+
+components:
+    magnet: [Bz_method, Bzx_method]
+    sample: [J, Gamma, spin_density, temperature]
+    grid: [grid_array, [grid_voxel, voxel]]

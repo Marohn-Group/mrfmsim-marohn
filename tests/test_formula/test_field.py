@@ -3,6 +3,7 @@ from mrfmsim_marohn.formula import (
     xtrapz_fxdtheta,
     xtrapz_field_gradient,
     min_abs_offset,
+    field_func,
 )
 import numpy as np
 
@@ -32,7 +33,6 @@ def test_min_abs_offset():
 
     offset_min_exp = np.zeros(new_shape)
     for i in range(new_shape[0]):
-
         matrix_offset_max = np.amax(matrix_a[i : i + window, :, :], axis=0)
         matrix_offset_min = np.amin(matrix_a[i : i + window, :, :], axis=0)
         minabs_pos = np.argmin(abs(matrix_a[i : i + window, :, :]), axis=0)
@@ -67,7 +67,7 @@ class TestXTrapzFxDtheta:
     def test_xtrapz_fxdtheta_cos(self):
         r"""Test xtrapz_fxdtheta against :math: `\cos{x}dx`
 
-        Let's consider the field method returns 1, the trapz integral
+        Let's consider the field method returns 1, the Trapezoid integral
         should return the value of
 
         .. math::
@@ -141,7 +141,7 @@ class TestXTrapzFxDtheta:
         .. math::
 
             \int_{-\pi}^{\pi}{(x-x_0 \cos\theta)x_0 \cos\theta d\theta}
-        
+
         The results:
         (-pi/2 -> 0): x^2*x0 - pi/2*x*x0^2 + 2/3 * x0^3
         (-pi -> 0): - pi*x*x0^2
@@ -204,22 +204,25 @@ class TestXTrapzFieldGradient:
         150 nm away from the sample.
         """
 
-        from mrfmsim_marohn.component import RectangularMagnet, Grid
+        from mrfmsim.component import RectangularMagnet, Grid
 
         magnet = RectangularMagnet(
-            length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[10.0, 0.0, 200.0]
+            length=[40.0, 60.0, 100.0],
+            mu0_Ms=1800.0,
+            origin=[10.0, 0.0, 200.0],
         )
 
-        grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
+        grid = Grid(shape=[3, 2, 1], step=[50, 50, 50], origin=[0, 0, 0])
 
         trapz_pts = 32
         x_0p = 0.01
+        h = [0, 0, 0]
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p
+            magnet.Bzx_method, grid.grid_array, h, trapz_pts, x_0p
         )
 
-        real = - magnet.Bzxx_method(*grid.grid_array)
+        real = -magnet.Bzxx_method(*grid.grid_array)
 
         assert gradient.shape == (3, 2, 1)
         assert np.allclose(gradient, real, atol=1e-6)
@@ -227,23 +230,75 @@ class TestXTrapzFieldGradient:
     def test_xtrapz_field_gradient_large_distance(self):
         """Test gradient against a large tip-sample separation.
 
-        When the distance is very large, the change of Bzx in between grid points
-        are small.
+        When the distance is very large, the change of Bzx in between the 
+        grid points are small.
         """
 
-        from mrfmsim_marohn.component import RectangularMagnet, Grid
+        from mrfmsim.component import RectangularMagnet, Grid
 
         magnet = RectangularMagnet(
-            length=[40.0, 60.0, 100.0], mu0_Ms=1800.0, origin=[10.0, 0.0, 3000.0]
+            length=[40.0, 60.0, 100.0],
+            mu0_Ms=1800.0,
+            origin=[10.0, 0.0, 3000.0],
         )
-        grid = Grid(shape=[3, 2, 1], step=[50, 50, 50])
+        grid = Grid(shape=[3, 2, 1], step=[50, 50, 50], origin=[0, 0, 0])
 
         trapz_pts = 32
         x_0p = 50
+        h = [0, 0, 0]
 
         gradient = xtrapz_field_gradient(
-            magnet.Bzx_method, grid.grid_array, trapz_pts, x_0p=x_0p
+            magnet.Bzx_method, grid.grid_array, h, trapz_pts, x_0p=x_0p
         )
 
-        real = - magnet.Bzxx_method(*grid.grid_array)
+        real = -magnet.Bzxx_method(*grid.grid_array)
         assert np.allclose(gradient, real, atol=1e-6)
+
+
+def test_field_func():
+    """Test field.
+
+    Test the field calculation against ogrid and mgrid.
+    """
+
+    def field_method(x, y, z):
+        """Field method."""
+        return x + y + z
+
+    ogrid = np.ogrid[0:2:3j, 0:1:2j, 0:1:2j]
+    mgrid = np.mgrid[0:2:3j, 0:1:2j, 0:1:2j]
+
+    assert field_func(field_method, ogrid, [1, 2, 3]).shape == (3, 2, 2)
+    assert np.array_equal(
+        field_func(field_method, mgrid, [1, 2, 3]),
+        field_func(field_method, ogrid, [1, 2, 3]),
+    )
+    assert np.array_equal(
+        field_func(field_method, mgrid, [1, 2, 3]),
+        ([[-6, -5], [-5, -4]], [[-5, -4], [-4, -3]], [[-4, -3], [-3, -2]]),
+    )
+
+
+def test_field_func_singularity():
+    """Test field when the grid has one point in one direction.
+
+    In this example, the z direction has only one point. The resulting
+    grid is effectively a 2d plane.
+    """
+
+    def field_method(x, y, z):
+        """Field method."""
+        return x + y + z
+
+    ogrid = np.ogrid[0:2:2j, 0:1:2j, 0:1:1j]
+    mgrid = np.mgrid[0:2:2j, 0:1:2j, 0:1:1j]
+
+    assert field_func(field_method, ogrid, [1, 2, 3]).shape == (2, 2, 1)
+    assert np.array_equal(
+        field_func(field_method, mgrid, [1, 2, 3]),
+        field_func(field_method, ogrid, [1, 2, 3]),
+    )
+    assert np.array_equal(
+        field_func(field_method, mgrid, [1, 2, 3]),
+        ([[-6], [-5]], [[-4], [-3]]),
+    )

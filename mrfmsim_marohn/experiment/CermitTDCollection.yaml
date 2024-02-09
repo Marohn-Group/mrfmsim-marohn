@@ -1,0 +1,108 @@
+!Collection
+name: CermitTDCollection
+doc: Simulates a Cornell-style frequency shift magnetic 
+    resonance force microscope experiment considering the time-dependent 
+    nature of the saturation, averaged over multiple pulses and with 
+    small-step approximation.
+node_objects:
+    grid extended:
+        func: !func:extend_grid "lambda extend_grid_by_length, mw_x_0p: 
+            extend_grid_by_length([mw_x_0p, 0, 0])"
+        output: ext_grid
+    Bz extended:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bz_method, ext_grid, h]
+        output: ext_Bz
+    B_tot extended:
+        func: !import operator.add
+        inputs: [ext_Bz, B0]
+        output: ext_B_tot
+        doc: Calculate combined magnetic field extended.
+    B_tot:
+        func: !import mrfmsim_marohn.formula.slice_matrix
+        inputs: [ext_B_tot, grid_shape]
+        output: B_tot
+        doc: Calculate combined magnetic field.
+    Bzx:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bzx_method, grid_array, h]
+        output: Bzx
+    Bzx extended:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bzx_method, ext_grid, h]
+        output: ext_Bzx
+    Bzxx:
+        func: !import mrfmsim_marohn.formula.field_func
+        inputs: [Bzxx_method, grid_array, h]
+        output: Bzxx
+    Bzxx trapz:
+        func: !import mrfmsim_marohn.formula.xtrapz_field_gradient
+        output: Bzxx_trapz
+    mz_eq:
+        func: !import mrfmsim_marohn.formula.mz_eq
+        output: mz_eq
+    B_offset extended:
+        func: !import mrfmsim_marohn.formula.B_offset
+        inputs: [ext_B_tot, f_rf, Gamma]
+        output: ext_B_offset
+    x_0p window pts:
+        func: !import mrfmsim_marohn.formula.convert_grid_pts
+        inputs: [mw_x_0p, grid_step]
+        output: ext_pts
+    rel_dpol td_sat:
+        func: !import mrfmsim_marohn.formula.rel_dpol_sat_td
+        output: rel_dpol
+    rel_dpol small_steps:
+        func: !import mrfmsim_marohn.formula.rel_dpol_sat_td_smallsteps
+        output: rel_dpol
+    rel_dpol averaged:
+        func: !import mrfmsim_marohn.formula.rel_dpol_multipulse
+        output: rel_dpol_avg
+    spring constant shift:
+        func: !import mrfmsim_marohn.formula.neg_sum_of_product
+        inputs: [Bzxx, rel_dpol_avg, mz_eq, spin_density,     
+            grid_voxel]
+        output: dk_spin
+    spring constant shift trapz:
+        func: !import mrfmsim_marohn.formula.sum_of_product
+        inputs: [Bzxx_trapz, rel_dpol_avg, mz_eq, spin_density,     
+            grid_voxel]
+        output: dk_spin
+    frequency shift:
+        func: !import operator.mul
+        inputs: [dk_spin, k2f_modulated]
+        output: df_spin
+        doc: Convert the spring constant shift to frequency shift.
+settings:
+    components:
+        magnet: [Bz_method, Bzx_method, Bzxx_method]
+        sample: [J, Gamma, spin_density, temperature, T1, T2]
+        grid: [grid_array, [grid_step, step], [grid_shape, shape], 
+            [grid_voxel, voxel], extend_grid_by_length]
+        cantilever: [k2f_modulated]
+instructions:
+    CermitTD:
+        doc: Time-dependent CERMIT experiment for a large tip.
+        grouped_edges:
+            - [grid extended, Bz extended]
+            - [Bz extended, B_tot extended]
+            - [B_tot extended, [B_tot, B_offset extended]]
+            - [B_tot, mz_eq]
+            - [[B_offset extended, Bzx, x_0p window pts], rel_dpol td_sat]
+            - [rel_dpol td_sat, rel_dpol averaged]
+            - [[mz_eq, Bzxx, rel_dpol averaged],
+                spring constant shift]
+            - [spring constant shift, frequency shift]
+    CermitTDSmallTip:
+        doc: Time-dependent CERMIT experiment for a small tip.
+        grouped_edges:
+            - [grid extended, [Bz extended, Bzx extended]]
+            - [Bz extended, B_tot extended]
+            - [B_tot extended, [B_tot, B_offset extended]]
+            - [B_tot, mz_eq]
+            - [[B_offset extended, Bzx extended, x_0p window pts],
+                rel_dpol small_steps]
+            - [rel_dpol small_steps, rel_dpol averaged]
+            - [[mz_eq, Bzxx trapz, rel_dpol averaged],
+                spring constant shift trapz]
+            - [spring constant shift trapz, frequency shift]
