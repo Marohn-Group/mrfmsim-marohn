@@ -234,7 +234,7 @@ def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
 
     The result is not a steady-state solution because it ignores T1 relaxation.
     """
-    # ignore division error the Exp takes care of the inf
+    # ignore division error the Exp takes care of the inf, and nan
     np.seterr(divide="ignore", invalid="ignore")
 
     omega_offset_atan = np.arctan(ext_B_offset * Gamma * T2)
@@ -242,8 +242,17 @@ def rel_dpol_sat_td(Bzx, B1, ext_B_offset, ext_pts, Gamma, T2, tip_v):
     atan_omega_i = omega_offset_atan[: -ext_pts * 2]
     atan_omega_f = omega_offset_atan[ext_pts * 2 :]
 
-    rt = Gamma * B1**2 * np.abs((atan_omega_i - atan_omega_f) / Bzx / tip_v)
-    dpol = np.exp(-np.nan_to_num(rt))
+    div = np.divide(atan_omega_f - atan_omega_i, Bzx)
+
+    # adjust for the center slice of the discontinuous issue
+    center_index = div.shape[0] // 2  # if the grid is even it should not be a problem
+    if np.all(np.isnan(div[center_index, :, :])):
+        div[center_index, :, :] = (
+            div[center_index + 1, :, :] + div[center_index - 1, :, :]
+        ) / 2
+
+    rt = Gamma * B1**2 * np.abs(div) / tip_v
+    dpol = np.exp(-rt)
 
     return dpol - 1
 
