@@ -32,9 +32,9 @@ instructions:
         grouped_edges: 
             - [field, spring constant shift]
         doc: Approximated solution with Trapezoid rules for single 
-            spin CEMRIT ESR. The experiments is for a single spin located directly under a spherical magnet.
+            spin CEMRIT ESR. The experiment is for a single spin located directly under a spherical magnet.
     CermitSingleSpin:
         grouped_edges:
             - [effective force shift, effective spring constant shift]
         doc: Full spring constant solution using analytical expression. 
-            The experiments is for a single spin located directly under a spherical magnet.
+            The experiment is for a single spin located directly under a spherical magnet.
