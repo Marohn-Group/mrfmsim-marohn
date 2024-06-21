@@ -1,12 +1,11 @@
-!Collection
-name: CermitSingleSpinCollection
+!Collection:CermitSingleSpinCollection
 doc: Simulates an MRFM experiment in the "hangdown" or SPAM geometry
     where a single electron spin is located directly below the tip. With a
     small tip, the motion of the cantilever is not negligible on the scale of 
     the magnet tip and the tip sample separation. We evaluate the full 
     expression for the change in cantilever frequency including the effect of 
     the oscillating cantilever tip. 
-node_objects:
+node_objects: !nodes
     field:
         func: !import mrfmsim_marohn.formula.xtrapz_field_gradient
         output: field
@@ -19,7 +18,7 @@ node_objects:
         output: dF_spin
     effective spring constant shift:
         func: !import operator.truediv
-        inputs: [dF_spin, x_0p]
+        arglist: [dF_spin, x_0p]
         output: dk_spin
         doc: Calculate the effective spring constant shift.
 settings:

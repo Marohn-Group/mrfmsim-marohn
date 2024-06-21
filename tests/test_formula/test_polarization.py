@@ -238,7 +238,7 @@ def test_rel_dpol_multipulse_long(sample_e):
     """Test rel_dpol_multipulse when the time between pulses is long.
 
     In this case, the final polarization should be
-    relaxed to 1 and change in polarization 0
+    relaxed to 1 and the chang in polarization is 0.
     """
 
     rpol = pol.rel_dpol_multipulse(-0.5, sample_e.T1, 500.0)
