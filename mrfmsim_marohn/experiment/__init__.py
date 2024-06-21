@@ -44,6 +44,3 @@ def show():
     print("The list of available collections/experiments:")
     for exp_name in experiment_path_dict:
         print(f"{exp_name}")
-
-
-__mrfmsim_plugin__ = list(experiment_path_dict.keys())
