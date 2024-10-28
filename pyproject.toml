@@ -44,9 +44,9 @@ docs = ["nbsphinx", "sphinx", "sphinx_book_theme"]
 
 
 [tool.poetry.plugins."mrfmsim_plugin"]
-experiment = """
-mrfmsim_marohn.experiment 
-[CermitARPCollection, CermitSingleSpinCollection, 
+experiment = """\
+mrfmsim_marohn.experiment \
+[CermitARPCollection, CermitSingleSpinCollection, \
 CermitTDCollection, CermitESRCollection, IBMCylic]
 """
 
