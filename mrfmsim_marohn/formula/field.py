@@ -45,7 +45,7 @@ def min_abs_offset(ext_B_offset, ext_pts):
     :math:`2 \pi` with n points.
     The summation is over pi to increase the performance since it is
     symmetric in :math:`[-\pi, 0]` to :math:`[0, \pi]` for the summation.
-    
+
     .. math::
         \Delta f = \frac{\sum_j \int_{-\pi}^{\pi} \mu_z(\vec{r}_j,\theta)
         \frac{\partial B_z^\mathrm{tip}(x - x_\mathrm{pk} \cos{\theta},y,z)}{\partial x}
@@ -67,6 +67,9 @@ def min_abs_offset(ext_B_offset, ext_pts):
 def xtrapz_fxdtheta(method, ogrid, n_pts, xrange, x_0p):
     r"""Calculate the integral of a function over a range of theta.
 
+    The calculation is done by extend the original ogrid to a new grid
+    by extend the number of points in the x direction.
+
     .. math::
         \int_{x_\mathrm{min}}^{x_\mathrm{max}} f(x - x_0\cos\theta)x_0\cos\theta d\theta
     """
@@ -87,8 +90,7 @@ def xtrapz_fxdtheta(method, ogrid, n_pts, xrange, x_0p):
     # the final (x, y, z) is (pts * x_shape, 1, 1)
     grid_x = np.expand_dims(ogrid[0], axis=0)
     dx = np.expand_dims(x_0p * np.cos(theta), axis=list(range(1, grid_dim + 1)))
-
-    new_ogrid = [(grid_x - dx).reshape(new_ogrid_shape)] + ogrid[1:]
+    new_ogrid = [(grid_x - dx).reshape(new_ogrid_shape)] + list(ogrid[1:])
 
     # calculate the integral
     # new grid shape is (trapz_pts, x_shape, y_shape, z_shape)
